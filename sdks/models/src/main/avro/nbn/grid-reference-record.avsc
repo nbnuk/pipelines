@@ -1,0 +1,17 @@
+/**
+ * Additional structure for GridReference model
+ */
+{
+  "name": "GridReferenceRecord",
+  "namespace": "org.gbif.pipelines.io.avro",
+  "type": "record",
+  "doc": "Grid Reference details",
+  "fields": [
+    {"name": "id","type":"string", "doc":"Pipelines identifier"},
+    {"name": "coreId","type":["null","string"],"default":null, "doc":"Id of the core record when this record belongs to an extension"},
+    {"name": "gridReference", "type":["null","string"], "default":null, "doc":"Grid reference location"},
+    {"name": "gridSizeInMeters", "type": ["null","int"], "default":null, "doc":"Grid size"},
+    {"name": "coordinateUncertaintyInMeters", "type": ["null","double"], "default":null, "doc":"Coordinate Uncertainty"},
+    {"name": "issues", "type": "IssueRecord", "default":{}}
+  ]
+}

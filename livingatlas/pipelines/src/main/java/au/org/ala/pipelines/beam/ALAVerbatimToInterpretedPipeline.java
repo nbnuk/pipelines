@@ -33,6 +33,8 @@ import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.PipelineResult;
 import org.apache.beam.sdk.transforms.Create;
 import org.apache.beam.sdk.transforms.View;
+import org.apache.beam.sdk.transforms.join.CoGroupByKey;
+import org.apache.beam.sdk.transforms.join.KeyedPCollectionTuple;
 import org.apache.beam.sdk.values.PCollection;
 import org.apache.beam.sdk.values.PCollectionView;
 import org.gbif.api.model.pipelines.StepType;
@@ -47,6 +49,7 @@ import org.gbif.pipelines.factory.FileVocabularyFactory;
 import org.gbif.pipelines.factory.OccurrenceStatusKvStoreFactory;
 import org.gbif.pipelines.io.avro.ALAMetadataRecord;
 import org.gbif.pipelines.io.avro.ExtendedRecord;
+import org.gbif.pipelines.io.avro.LocationRecord;
 import org.gbif.pipelines.io.avro.MetadataRecord;
 import org.gbif.pipelines.transforms.converters.OccurrenceExtensionTransform;
 import org.gbif.pipelines.transforms.core.VerbatimTransform;
@@ -54,6 +57,7 @@ import org.gbif.pipelines.transforms.extension.MeasurementOrFactTransform;
 import org.gbif.pipelines.transforms.extension.MultimediaTransform;
 import org.gbif.pipelines.transforms.metadata.DefaultValuesTransform;
 import org.slf4j.MDC;
+import uk.org.nbn.transforms.OSGridExtensionTransform;
 
 /**
  * Interpretation pipeline that reads verbatim AVRO files ({@link ExtendedRecord} and parses and
@@ -287,10 +291,32 @@ public class ALAVerbatimToInterpretedPipeline {
         .apply("Interpret ALA taxonomy", alaTaxonomyTransform.interpret())
         .apply("Write ALA taxon to avro", alaTaxonomyTransform.write(pathFn));
 
+
+    PCollection<LocationRecord> locationRecords =
     uniqueRecords
         .apply("Check location transform condition", locationTransform.check(types))
-        .apply("Interpret location", locationTransform.interpret())
-        .apply("Write location to avro", locationTransform.write(pathFn));
+        .apply("Interpret location", locationTransform.interpret());
+       // .apply("Write location to avro", locationTransform.write(pathFn));
+
+    locationRecords.apply("Write location to avro", locationTransform.write(pathFn));
+
+    KeyedPCollectionTuple<String> inputTuples =
+            KeyedPCollectionTuple
+                    // Core
+                    .of(verbatimTransform.getTag(), uniqueRecords.apply("Map Verbatim to KV", verbatimTransform.toKv()))
+                    .and(locationTransform.getTag(), locationRecords.apply("Map Location to KV",locationTransform.toKv()));
+
+    OSGridExtensionTransform osGridExtensionTransform = OSGridExtensionTransform
+            .builder()
+            .erTag(verbatimTransform.getTag())
+            .lrTag(locationTransform.getTag())
+            .create();
+
+    inputTuples
+            .apply("Grouping objects", CoGroupByKey.create())
+            //.apply("Check grid reference transform condition", osGridExtensionTransform.check(types))
+            .apply("Interpret OSGrids", osGridExtensionTransform.interpret())
+            .apply("Write OSGrids to avro", osGridExtensionTransform.write(pathFn));
 
     uniqueRecords
         .apply("Check location transform condition", measurementOrFactTransform.check(types))

@@ -17,6 +17,8 @@ import org.gbif.pipelines.core.parsers.common.ParsedField;
 import org.gbif.pipelines.core.parsers.location.parser.CoordinateParseUtils;
 import org.gbif.pipelines.core.parsers.location.parser.Wgs84Projection;
 import org.gbif.pipelines.io.avro.ExtendedRecord;
+import uk.org.nbn.parser.OSGridParser;
+import uk.org.nbn.term.OSGridTerm;
 
 /**
  * Copy from org.gbif.pipelines.parsers.parsers.location.parser.CoordinateParser - - cannot be used
@@ -45,15 +47,31 @@ public class CoordinatesParser {
               extractValue(er, DwcTerm.verbatimLatitude),
               extractValue(er, DwcTerm.verbatimLongitude)));
 
-  // parses verbatim coordinates fields
+  // NBN parses verbatim coordinates fields
   private static final Function<ExtendedRecord, ParsedField<LatLng>> VERBATIM_COORDS_FN =
       (er ->
           CoordinateParseUtils.parseVerbatimCoordinates(
               extractValue(er, DwcTerm.verbatimCoordinates)));
 
+  // NBN parses OSGrid extension easting and northing fields
+  private static final Function<ExtendedRecord, ParsedField<LatLng>> EASTING_NORTHING_FN =
+          (er ->
+                  OSGridParser.parseEastingAndNorthing(
+                          extractValue(er, DwcTerm.verbatimSRS),
+                          extractValue(er, OSGridTerm.easting),
+                          extractValue(er, OSGridTerm.northing),
+                          extractValue(er, OSGridTerm.zone)));
+
+  // parses OSGrid extension gridRefernce field
+  private static final Function<ExtendedRecord, ParsedField<LatLng>> GRID_REFERENCE_FN =
+          (er ->
+                  OSGridParser.parseGridReference(
+                          extractValue(er, OSGridTerm.gridReference)));
+
+
   // list with all the parsing functions
   private static final List<Function<ExtendedRecord, ParsedField<LatLng>>> PARSING_FUNCTIONS =
-      Arrays.asList(DECIMAL_LAT_LNG_FN, VERBATIM_LAT_LNG_FN, VERBATIM_COORDS_FN);
+      Arrays.asList(DECIMAL_LAT_LNG_FN, VERBATIM_LAT_LNG_FN, VERBATIM_COORDS_FN, EASTING_NORTHING_FN, GRID_REFERENCE_FN);
 
   /**
    * Parses the coordinates fields of a {@link ExtendedRecord}.
