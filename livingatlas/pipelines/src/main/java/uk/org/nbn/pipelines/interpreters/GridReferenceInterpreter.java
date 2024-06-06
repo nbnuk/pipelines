@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
 import static org.gbif.api.vocabulary.OccurrenceIssue.COORDINATE_UNCERTAINTY_METERS_INVALID;
 
 import static org.gbif.pipelines.core.utils.ModelUtils.*;
+import static uk.org.nbn.util.NBNModelUtils.extractNullAwareExtensionTerm;
 
 public class GridReferenceInterpreter {
 
@@ -99,8 +100,8 @@ public class GridReferenceInterpreter {
 
         ExtendedRecord extendedRecord = source.v1();
 
-        String gridReference = extractNullAwareValue(extendedRecord, OSGridTerm.gridReference);
-        String gridSizeInMeters = extractNullAwareValue(extendedRecord, OSGridTerm.gridSizeInMeters);
+        String gridReference = extractNullAwareExtensionTerm(extendedRecord, OSGridTerm.gridReference);
+        String gridSizeInMeters = extractNullAwareExtensionTerm(extendedRecord, OSGridTerm.gridSizeInMeters);
 
         // this doesn't feel necessarry as we're no longer mutating in place
         if(gridReferenceRecord.getGridSizeInMeters() == null)
@@ -133,16 +134,16 @@ public class GridReferenceInterpreter {
         ExtendedRecord extendedRecord = source.v1();
         LocationRecord locationRecord = source.v2();
 
-        String gridReference = extractNullAwareValue(extendedRecord, OSGridTerm.gridReference);
-        String gridSizeInMeters = extractNullAwareValue(extendedRecord, OSGridTerm.gridSizeInMeters);
+        String gridReference = extractNullAwareExtensionTerm(extendedRecord, OSGridTerm.gridReference);
+        String gridSizeInMeters = extractNullAwareExtensionTerm(extendedRecord, OSGridTerm.gridSizeInMeters);
 
 
         if(Strings.isNullOrEmpty(gridReference)) {
             return;
         }
 
-        String decimalLatitude = extractNullAwareValue(extendedRecord, DwcTerm.decimalLatitude);
-        String decimalLongitude = extractNullAwareValue(extendedRecord, DwcTerm.decimalLongitude);
+        String decimalLatitude = extractNullAwareExtensionTerm(extendedRecord, DwcTerm.decimalLatitude);
+        String decimalLongitude = extractNullAwareExtensionTerm(extendedRecord, DwcTerm.decimalLongitude);
 
         boolean hasLatLon = !Strings.isNullOrEmpty(decimalLatitude) && !Strings.isNullOrEmpty(decimalLongitude);
         boolean latLonIsCentroidOfGridReference = hasLatLon && GridUtil.isCentroid(Double.valueOf(decimalLatitude), Double.valueOf(decimalLongitude), gridReference);
@@ -253,7 +254,7 @@ public class GridReferenceInterpreter {
             }
 
             //todo - what about northing and easting?
-            boolean suppliedWithGridReference = hasValueNullAware(extendedRecord, OSGridTerm.gridReference);
+            boolean suppliedWithGridReference = extractNullAwareExtensionTerm(extendedRecord, OSGridTerm.gridReference) != null;
 
             if (!Strings.isNullOrEmpty(gridCalc)) {
                 gridReferenceRecord.setGridReference(gridCalc);

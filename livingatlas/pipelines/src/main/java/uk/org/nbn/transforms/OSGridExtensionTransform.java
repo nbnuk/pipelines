@@ -103,7 +103,7 @@ public class OSGridExtensionTransform extends Transform<KV<String,CoGbkResult>, 
                     .when(er -> !er.v1().getCoreTerms().isEmpty())
                     .via(GridReferenceInterpreter::addGridSize)
                     .via(GridReferenceInterpreter::possiblyRecalculateCoordinateUncertainty)
-                    .via(GridReferenceInterpreter::setGridRefFromCoordinates)
+                    //.via(GridReferenceInterpreter::setGridRefFromCoordinates)
                     .get();
 
     result.ifPresent(r -> this.incCounter());

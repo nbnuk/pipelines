@@ -1,6 +1,7 @@
 package au.org.ala.pipelines.parser;
 
 import static org.gbif.pipelines.core.utils.ModelUtils.extractValue;
+import static uk.org.nbn.util.NBNModelUtils.extractNullAwareExtensionTerm;
 
 import au.org.ala.pipelines.vocabulary.ALAOccurrenceIssue;
 import com.google.common.base.Strings;
@@ -57,16 +58,16 @@ public class CoordinatesParser {
   private static final Function<ExtendedRecord, ParsedField<LatLng>> EASTING_NORTHING_FN =
           (er ->
                   OSGridParser.parseEastingAndNorthing(
-                          extractValue(er, DwcTerm.verbatimSRS),
-                          extractValue(er, OSGridTerm.easting),
-                          extractValue(er, OSGridTerm.northing),
-                          extractValue(er, OSGridTerm.zone)));
+                          extractNullAwareExtensionTerm(er, DwcTerm.verbatimSRS),
+                          extractNullAwareExtensionTerm(er, OSGridTerm.easting),
+                          extractNullAwareExtensionTerm(er, OSGridTerm.northing),
+                          extractNullAwareExtensionTerm(er, OSGridTerm.zone)));
 
   // parses OSGrid extension gridRefernce field
   private static final Function<ExtendedRecord, ParsedField<LatLng>> GRID_REFERENCE_FN =
           (er ->
                   OSGridParser.parseGridReference(
-                          extractValue(er, OSGridTerm.gridReference)));
+                          extractNullAwareExtensionTerm(er, OSGridTerm.gridReference)));
 
 
   // list with all the parsing functions
