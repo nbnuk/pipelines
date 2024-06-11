@@ -1,7 +1,6 @@
 package uk.org.nbn.transforms;
 
 import au.org.ala.kvs.ALAPipelinesConfig;
-import au.org.ala.pipelines.interpreters.ALALocationInterpreter;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.SneakyThrows;
@@ -18,7 +17,7 @@ import org.gbif.pipelines.io.avro.ExtendedRecord;
 import org.gbif.pipelines.io.avro.GridReferenceRecord;
 import org.gbif.pipelines.io.avro.LocationRecord;
 import org.gbif.pipelines.transforms.Transform;
-import uk.org.nbn.pipelines.interpreters.GridReferenceInterpreter;
+import uk.org.nbn.pipelines.interpreters.OSGridInterpreter;
 
 import java.util.Optional;
 
@@ -28,8 +27,6 @@ import static uk.org.nbn.pipelines.common.NBNRecordTypes.GRID_REFERENCE;
 public class OSGridExtensionTransform extends Transform<KV<String,CoGbkResult>, GridReferenceRecord> {
 
   private final ALAPipelinesConfig alaConfig;
-  private ALALocationInterpreter alaLocationInterpreter;
-
   @NonNull
   private final TupleTag<ExtendedRecord> erTag;
   @NonNull private final TupleTag<LocationRecord> lrTag;
@@ -101,9 +98,13 @@ public class OSGridExtensionTransform extends Transform<KV<String,CoGbkResult>, 
             Interpretation.from(new Tuple<>(extendedRecord, locationRecord))
                     .to(gridReferenceRecord)
                     .when(er -> !er.v1().getCoreTerms().isEmpty())
-                    .via(GridReferenceInterpreter::addGridSize)
-                    .via(GridReferenceInterpreter::possiblyRecalculateCoordinateUncertainty)
-                    //.via(GridReferenceInterpreter::setGridRefFromCoordinates)
+                    //This populate grid sizes for those supplied with gridreference or gridsizeinmeters
+                    .via(OSGridInterpreter::addGridSize)
+                    .via(OSGridInterpreter::possiblyRecalculateCoordinateUncertainty)
+                    .via(OSGridInterpreter::setGridRefFromCoordinates)
+                    //This populates grids sizes for those supplied with a lat lot and have had gridreference computed
+                    .via(OSGridInterpreter::addGridSize)
+                    .via(OSGridInterpreter::processGridWKT)
                     .get();
 
     result.ifPresent(r -> this.incCounter());

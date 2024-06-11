@@ -12,15 +12,36 @@ import org.gbif.pipelines.io.avro.ExtendedRecord;
 import scala.Option;
 import scala.collection.JavaConverters;
 import scala.collection.mutable.ListBuffer;
+import uk.org.nbn.term.OSGridTerm;
 import uk.org.nbn.util.GISPoint;
 import uk.org.nbn.util.GridUtil;
 import uk.org.nbn.vocabulary.NBNOccurrenceIssue;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.function.Function;
+
+import static uk.org.nbn.util.NBNModelUtils.extractNullAwareExtensionTerm;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OSGridParser {
+
+    // NBN parses OSGrid extension easting and northing fields
+    public static final Function<ExtendedRecord, ParsedField<LatLng>> EASTING_NORTHING_FN =
+            (er ->
+                    parseEastingAndNorthing(
+                            extractNullAwareExtensionTerm(er, DwcTerm.verbatimSRS),
+                            extractNullAwareExtensionTerm(er, OSGridTerm.easting),
+                            extractNullAwareExtensionTerm(er, OSGridTerm.northing),
+                            extractNullAwareExtensionTerm(er, OSGridTerm.zone)));
+
+    // parses OSGrid extension gridRefernce field
+    public static final Function<ExtendedRecord, ParsedField<LatLng>> GRID_REFERENCE_FN =
+            (er ->
+                    parseGridReference(
+                            extractNullAwareExtensionTerm(er, OSGridTerm.gridReference)));
+
 
     public static ParsedField<LatLng> parseGridReference(final String gridReference) {
         if (Strings.isNullOrEmpty(gridReference)) {

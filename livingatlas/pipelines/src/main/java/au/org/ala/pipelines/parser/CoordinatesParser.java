@@ -54,25 +54,9 @@ public class CoordinatesParser {
           CoordinateParseUtils.parseVerbatimCoordinates(
               extractValue(er, DwcTerm.verbatimCoordinates)));
 
-  // NBN parses OSGrid extension easting and northing fields
-  private static final Function<ExtendedRecord, ParsedField<LatLng>> EASTING_NORTHING_FN =
-          (er ->
-                  OSGridParser.parseEastingAndNorthing(
-                          extractNullAwareExtensionTerm(er, DwcTerm.verbatimSRS),
-                          extractNullAwareExtensionTerm(er, OSGridTerm.easting),
-                          extractNullAwareExtensionTerm(er, OSGridTerm.northing),
-                          extractNullAwareExtensionTerm(er, OSGridTerm.zone)));
-
-  // parses OSGrid extension gridRefernce field
-  private static final Function<ExtendedRecord, ParsedField<LatLng>> GRID_REFERENCE_FN =
-          (er ->
-                  OSGridParser.parseGridReference(
-                          extractNullAwareExtensionTerm(er, OSGridTerm.gridReference)));
-
-
   // list with all the parsing functions
   private static final List<Function<ExtendedRecord, ParsedField<LatLng>>> PARSING_FUNCTIONS =
-      Arrays.asList(DECIMAL_LAT_LNG_FN, VERBATIM_LAT_LNG_FN, VERBATIM_COORDS_FN, EASTING_NORTHING_FN, GRID_REFERENCE_FN);
+      Arrays.asList(DECIMAL_LAT_LNG_FN, VERBATIM_LAT_LNG_FN, VERBATIM_COORDS_FN, OSGridParser.EASTING_NORTHING_FN, OSGridParser.GRID_REFERENCE_FN);
 
   /**
    * Parses the coordinates fields of a {@link ExtendedRecord}.

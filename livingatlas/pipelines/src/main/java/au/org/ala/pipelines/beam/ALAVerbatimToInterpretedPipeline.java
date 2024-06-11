@@ -292,6 +292,11 @@ public class ALAVerbatimToInterpretedPipeline {
         .apply("Write ALA taxon to avro", alaTaxonomyTransform.write(pathFn));
 
 
+//    uniqueRecords
+//            .apply("Check location transform condition", locationTransform.check(types))
+//            .apply("Interpret location", locationTransform.interpret())
+//            .apply("Write location to avro", locationTransform.write(pathFn));
+
     PCollection<LocationRecord> locationRecords =
     uniqueRecords
         .apply("Check location transform condition", locationTransform.check(types))
