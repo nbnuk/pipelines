@@ -1,24 +1,21 @@
 package uk.org.nbn.pipelines.beam;
 
+import static org.gbif.pipelines.common.PipelinesVariables.Pipeline.ALL_AVRO;
+
 import au.org.ala.kvs.ALAPipelinesConfig;
 import au.org.ala.kvs.ALAPipelinesConfigFactory;
-import au.org.ala.kvs.cache.SDSCheckKVStoreFactory;
-import au.org.ala.kvs.cache.SDSReportKVStoreFactory;
-import au.org.ala.kvs.client.SDSConservationServiceFactory;
-import au.org.ala.pipelines.transforms.ALASensitiveDataRecordTransform;
-import au.org.ala.pipelines.transforms.ALATaxonomyTransform;
 import au.org.ala.pipelines.util.VersionInfo;
-import au.org.ala.utils.ArchiveUtils;
 import au.org.ala.utils.CombinedYamlConfiguration;
 import au.org.ala.utils.ValidationUtils;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.function.UnaryOperator;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.PipelineResult;
-import org.apache.beam.sdk.extensions.joinlibrary.Join;
-import org.apache.beam.sdk.transforms.DoFn;
-import org.apache.beam.sdk.transforms.ParDo;
 import org.apache.beam.sdk.transforms.join.CoGroupByKey;
 import org.apache.beam.sdk.transforms.join.KeyedPCollectionTuple;
 import org.apache.beam.sdk.values.KV;
@@ -30,23 +27,12 @@ import org.gbif.pipelines.common.beam.options.PipelinesOptionsFactory;
 import org.gbif.pipelines.common.beam.utils.PathBuilder;
 import org.gbif.pipelines.core.pojo.HdfsConfigs;
 import org.gbif.pipelines.core.utils.FsUtils;
-import org.gbif.pipelines.io.avro.ALATaxonRecord;
 import org.gbif.pipelines.io.avro.ExtendedRecord;
 import org.gbif.pipelines.io.avro.LocationRecord;
-import org.gbif.pipelines.io.avro.TemporalRecord;
-import org.gbif.pipelines.transforms.core.EventCoreTransform;
 import org.gbif.pipelines.transforms.core.LocationTransform;
-import org.gbif.pipelines.transforms.core.TemporalTransform;
 import org.gbif.pipelines.transforms.core.VerbatimTransform;
 import org.slf4j.MDC;
-import uk.org.nbn.transforms.NBNAccessControlRecordTransform;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.function.UnaryOperator;
-
-import static org.gbif.pipelines.common.PipelinesVariables.Pipeline.ALL_AVRO;
+import uk.org.nbn.pipelines.transforms.NBNAccessControlRecordTransform;
 
 /** ALA Beam pipeline to process sensitive data. */
 @Slf4j
@@ -102,10 +88,10 @@ public class NBNInterpretedToAccessControlledPipeline {
     // Core
     VerbatimTransform verbatimTransform = VerbatimTransform.create();
     LocationTransform locationTransform = LocationTransform.builder().create();
-    //TODO HMJ osgrid eventCoreTransform = EventCoreTransform.builder().create();
+    // TODO HMJ osgrid eventCoreTransform = EventCoreTransform.builder().create();
 
     NBNAccessControlRecordTransform nbnAccessControlRecordTransform =
-            NBNAccessControlRecordTransform.builder()
+        NBNAccessControlRecordTransform.builder()
             .config(config)
             .datasetId(options.getDatasetId())
             .erTag(verbatimTransform.getTag())
@@ -127,11 +113,11 @@ public class NBNInterpretedToAccessControlledPipeline {
             .of(verbatimTransform.getTag(), inputVerbatimCollection)
             .and(locationTransform.getTag(), inputLocationCollection);
 
-
     log.info("Creating access controlled records");
     inputTuples
         .apply("Grouping objects", CoGroupByKey.create())
-        .apply("Converting to access controlled records", nbnAccessControlRecordTransform.interpret())
+        .apply(
+            "Converting to access controlled records", nbnAccessControlRecordTransform.interpret())
         .apply("Write to AVRO", nbnAccessControlRecordTransform.write(outputPathFn));
 
     log.info("Running the pipeline");
@@ -142,7 +128,6 @@ public class NBNInterpretedToAccessControlledPipeline {
 
     log.info("Pipeline has been finished");
   }
-
 
   public static void deletePreviousAccessControl(InterpretationPipelineOptions options) {
 

@@ -41,7 +41,7 @@ import org.gbif.pipelines.transforms.core.LocationTransform;
 import org.gbif.pipelines.transforms.extension.MultimediaTransform;
 import org.slf4j.MDC;
 import uk.org.nbn.pipelines.io.avro.NBNAccessControlledRecord;
-import uk.org.nbn.transforms.NBNAccessControlRecordTransform;
+import uk.org.nbn.pipelines.transforms.NBNAccessControlRecordTransform;
 
 /**
  * Pipeline for creating an index of the records in AVRO.
@@ -148,7 +148,7 @@ public class IndexRecordPipeline {
     ALASensitiveDataRecordTransform alaSensitiveDataRecordTransform =
         ALASensitiveDataRecordTransform.builder().create();
     NBNAccessControlRecordTransform nbnAccessControlRecordTransform =
-            NBNAccessControlRecordTransform.builder().create();
+        NBNAccessControlRecordTransform.builder().create();
 
     log.info("Adding step 3: Creating beam pipeline");
     PCollection<KV<String, ExtendedRecord>> verbatimCollection =
@@ -236,9 +236,8 @@ public class IndexRecordPipeline {
     }
 
     PCollection<KV<String, NBNAccessControlledRecord>> nbnAccessControlledDataCollection =
-              p.apply("Read access controlled data", nbnAccessControlRecordTransform.read(pathFn))
-                      .apply("Map access controlled data to KV", nbnAccessControlRecordTransform.toKv());
-
+        p.apply("Read access controlled data", nbnAccessControlRecordTransform.read(pathFn))
+            .apply("Map access controlled data to KV", nbnAccessControlRecordTransform.toKv());
 
     final TupleTag<ImageRecord> imageRecordTupleTag = new TupleTag<ImageRecord>() {};
     final TupleTag<TaxonProfile> speciesListsRecordTupleTag = new TupleTag<TaxonProfile>() {};
@@ -259,7 +258,7 @@ public class IndexRecordPipeline {
             options.getIncludeSensitiveDataChecks()
                 ? alaSensitiveDataRecordTransform.getTag()
                 : null,
-                nbnAccessControlRecordTransform.getTag(),
+            nbnAccessControlRecordTransform.getTag(),
             EVENT_CORE_TAG,
             EVENT_LOCATION_TAG,
             EVENT_TEMPORAL_TAG,
