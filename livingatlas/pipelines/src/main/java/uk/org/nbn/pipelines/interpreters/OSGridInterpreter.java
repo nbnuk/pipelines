@@ -8,7 +8,7 @@ import org.gbif.common.parsers.core.ParseResult;
 import org.gbif.common.parsers.geospatial.MeterRangeParser;
 import org.gbif.dwc.terms.DwcTerm;
 import org.gbif.pipelines.io.avro.ExtendedRecord;
-import org.gbif.pipelines.io.avro.GridReferenceRecord;
+import org.gbif.pipelines.io.avro.OSGridRecord;
 import org.gbif.pipelines.io.avro.LocationRecord;
 import uk.org.nbn.term.OSGridTerm;
 import uk.org.nbn.util.GridUtil;
@@ -46,7 +46,7 @@ public class OSGridInterpreter {
 
 
 
-    public static void addGridSize(Tuple<ExtendedRecord,LocationRecord> source, GridReferenceRecord gridReferenceRecord) {
+    public static void addGridSize(Tuple<ExtendedRecord,LocationRecord> source, OSGridRecord osGridRecord) {
 
         ExtendedRecord extendedRecord = source.v1();
 
@@ -54,20 +54,20 @@ public class OSGridInterpreter {
         String gridSizeInMeters = extractNullAwareExtensionTerm(extendedRecord, OSGridTerm.gridSizeInMeters);
 
         //if we didn't call this twice this could go
-        if(gridReferenceRecord.getGridSizeInMeters() == null)
+        if(osGridRecord.getGridSizeInMeters() == null)
         {
-            if(!Strings.isNullOrEmpty(gridReferenceRecord.getGridReference())) {
+            if(!Strings.isNullOrEmpty(osGridRecord.getGridReference())) {
                 //I think this will only ever be hit for records supplied with lat lon on the second call and the other two only on the first call
-                Integer computedGridSizeInMeters = (Integer) GridUtil.getGridSizeInMeters(gridReferenceRecord.getGridReference()).getOrElse(null);
-                gridReferenceRecord.setGridSizeInMeters(computedGridSizeInMeters);
+                Integer computedGridSizeInMeters = (Integer) GridUtil.getGridSizeInMeters(osGridRecord.getGridReference()).getOrElse(null);
+                osGridRecord.setGridSizeInMeters(computedGridSizeInMeters);
 
             } else if (!Strings.isNullOrEmpty(gridReference)) {
                 Integer computedGridSizeInMeters = (Integer) GridUtil.getGridSizeInMeters(gridReference).getOrElse(null);
-                gridReferenceRecord.setGridSizeInMeters(computedGridSizeInMeters);
+                osGridRecord.setGridSizeInMeters(computedGridSizeInMeters);
 
             } else if (!Strings.isNullOrEmpty(gridSizeInMeters)) {
                 Integer computedGridSizeInMeters = Ints.tryParse(gridSizeInMeters);
-                gridReferenceRecord.setGridSizeInMeters(computedGridSizeInMeters);
+                osGridRecord.setGridSizeInMeters(computedGridSizeInMeters);
 
             }
 
@@ -75,7 +75,7 @@ public class OSGridInterpreter {
         }
     }
 
-    public static void possiblyRecalculateCoordinateUncertainty(Tuple<ExtendedRecord,LocationRecord> source, GridReferenceRecord gridReferenceRecord) {
+    public static void possiblyRecalculateCoordinateUncertainty(Tuple<ExtendedRecord,LocationRecord> source, OSGridRecord osGridRecord) {
         // comments from biocache-store
         // f grid and no lat/long
         //or if grid and lat/long, and lat/long is centroid
@@ -105,15 +105,15 @@ public class OSGridInterpreter {
 
         if(hasRawLatLon && !rawLatLonIsCentroidOfGridReference)
         {
-            addIssue(gridReferenceRecord, NBNOccurrenceIssue.COORDINATES_NOT_CENTRE_OF_GRID.name());
+            addIssue(osGridRecord, NBNOccurrenceIssue.COORDINATES_NOT_CENTRE_OF_GRID.name());
         }
 
         if(recalcCoordUncertainty) {
 
             double cornerDistanceFromCentre = -1;
 
-            if(gridReferenceRecord.getGridSizeInMeters() != null) {
-                cornerDistanceFromCentre = gridReferenceRecord.getGridSizeInMeters() / Math.sqrt(2.0);
+            if(osGridRecord.getGridSizeInMeters() != null) {
+                cornerDistanceFromCentre = osGridRecord.getGridSizeInMeters() / Math.sqrt(2.0);
             } else if (!Strings.isNullOrEmpty(rawGridSizeInMeters)) {
                 //todo this should never happen as the above should always be true if not then we have a problem?
                 cornerDistanceFromCentre = Doubles.tryParse(rawGridSizeInMeters) / Math.sqrt(2.0);
@@ -126,22 +126,22 @@ public class OSGridInterpreter {
 
                 if (result != null) {
                     //todo - make sure this is used in indexing if set
-                    gridReferenceRecord.setCoordinateUncertaintyInMeters(result);
+                    osGridRecord.setCoordinateUncertaintyInMeters(result);
                 } else {
-                    addIssue(gridReferenceRecord, COORDINATE_UNCERTAINTY_METERS_INVALID);
+                    addIssue(osGridRecord, COORDINATE_UNCERTAINTY_METERS_INVALID);
                 }
             }
         }
     }
 
-    public static void setGridRefFromCoordinates(Tuple<ExtendedRecord,LocationRecord> source, GridReferenceRecord gridReferenceRecord) {
+    public static void setGridRefFromCoordinates(Tuple<ExtendedRecord,LocationRecord> source, OSGridRecord osGridRecord) {
 
         ExtendedRecord extendedRecord = source.v1();
         LocationRecord locationRecord = source.v2();
-        Double coordinateUncertaintyToUse = gridReferenceRecord.getCoordinateUncertaintyInMeters() != null ? gridReferenceRecord.getCoordinateUncertaintyInMeters() : locationRecord.getCoordinateUncertaintyInMeters();
+        Double coordinateUncertaintyToUse = osGridRecord.getCoordinateUncertaintyInMeters() != null ? osGridRecord.getCoordinateUncertaintyInMeters() : locationRecord.getCoordinateUncertaintyInMeters();
 
         if(locationRecord.getHasCoordinate() &&
-                Strings.isNullOrEmpty(gridReferenceRecord.getGridReference()) &&
+                Strings.isNullOrEmpty(osGridRecord.getGridReference()) &&
                 coordinateUncertaintyToUse != null &&
                 coordinateUncertaintyToUse > 0
         ) {
@@ -158,19 +158,19 @@ public class OSGridInterpreter {
             }
 
             //double coordinateUncertaintyToUse = gridReferenceRecord.getCoordinateUncertaintyInMeters() != null ? gridReferenceRecord.getCoordinateUncertaintyInMeters() : locationRecord.getCoordinateUncertaintyInMeters();
-            if (gridReferenceRecord.getGridSizeInMeters() != null) {
-                gridCalc = scalaOptionToString(GridUtil.latLonToOsGrid(locationRecord.getDecimalLatitude(), locationRecord.getDecimalLongitude(), coordinateUncertaintyToUse, "WGS84", gridToUse, gridReferenceRecord.getGridSizeInMeters()));
+            if (osGridRecord.getGridSizeInMeters() != null) {
+                gridCalc = scalaOptionToString(GridUtil.latLonToOsGrid(locationRecord.getDecimalLatitude(), locationRecord.getDecimalLongitude(), coordinateUncertaintyToUse, "WGS84", gridToUse, osGridRecord.getGridSizeInMeters()));
             } else {
                 //todo we could cobmine these two calls as does seem to allow optional argument to be ommited so just supplying default
                 gridCalc = scalaOptionToString(GridUtil.latLonToOsGrid(locationRecord.getDecimalLatitude(), locationRecord.getDecimalLongitude(), coordinateUncertaintyToUse, "WGS84", gridToUse, -1));
             }
 
             if (!Strings.isNullOrEmpty(gridCalc)) {
-                gridReferenceRecord.setGridReference(gridCalc);
+                osGridRecord.setGridReference(gridCalc);
 
                 //todo - what about northing and easting? this is how it's alway been though
                 if (!suppliedWithGridReference(extendedRecord)) {
-                    addIssue(gridReferenceRecord, NBNOccurrenceIssue.GRID_REF_CALCULATED_FROM_LAT_LONG.name());
+                    addIssue(osGridRecord, NBNOccurrenceIssue.GRID_REF_CALCULATED_FROM_LAT_LONG.name());
                 }
             }
         }
@@ -189,7 +189,7 @@ public class OSGridInterpreter {
                 !Strings.isNullOrEmpty(extractNullAwareValue(extendedRecord, DwcTerm.decimalLongitude));
     }
 
-    public static void processGridWKT(Tuple<ExtendedRecord,LocationRecord> source, GridReferenceRecord gridReferenceRecord) {
+    public static void processGridWKT(Tuple<ExtendedRecord,LocationRecord> source, OSGridRecord gridReferenceRecord) {
 
         ExtendedRecord extendedRecord = source.v1();
 

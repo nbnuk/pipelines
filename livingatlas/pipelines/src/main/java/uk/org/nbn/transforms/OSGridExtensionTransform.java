@@ -14,17 +14,17 @@ import org.elasticsearch.common.collect.Tuple;
 import org.gbif.pipelines.core.functions.SerializableConsumer;
 import org.gbif.pipelines.core.interpreters.Interpretation;
 import org.gbif.pipelines.io.avro.ExtendedRecord;
-import org.gbif.pipelines.io.avro.GridReferenceRecord;
+import org.gbif.pipelines.io.avro.OSGridRecord;
 import org.gbif.pipelines.io.avro.LocationRecord;
 import org.gbif.pipelines.transforms.Transform;
 import uk.org.nbn.pipelines.interpreters.OSGridInterpreter;
 
 import java.util.Optional;
 
-import static uk.org.nbn.pipelines.common.NBNRecordTypes.GRID_REFERENCE;
+import static uk.org.nbn.pipelines.common.NBNRecordTypes.OS_GRID;
 
 @Slf4j
-public class OSGridExtensionTransform extends Transform<KV<String,CoGbkResult>, GridReferenceRecord> {
+public class OSGridExtensionTransform extends Transform<KV<String,CoGbkResult>, OSGridRecord> {
 
   private final ALAPipelinesConfig alaConfig;
   @NonNull
@@ -37,10 +37,10 @@ public class OSGridExtensionTransform extends Transform<KV<String,CoGbkResult>, 
   ) {
 
     super(
-            GridReferenceRecord.class,
-            GRID_REFERENCE,
+            OSGridRecord.class,
+            OS_GRID,
             OSGridExtensionTransform.class.getName(),
-            "gridReferenceRecordCount");
+            "osGridRecordCount");
 
     this.alaConfig = alaConfig;
     this.erTag = erTag;
@@ -72,7 +72,7 @@ public class OSGridExtensionTransform extends Transform<KV<String,CoGbkResult>, 
   }
 
   @Override
-  public Optional<GridReferenceRecord> convert(KV<String, CoGbkResult> source) {
+  public Optional<OSGridRecord> convert(KV<String, CoGbkResult> source) {
 
     CoGbkResult v = source.getValue();
     String id = source.getKey();
@@ -89,14 +89,14 @@ public class OSGridExtensionTransform extends Transform<KV<String,CoGbkResult>, 
     //Run location transform
     //Set grid from lat lon
 
-    GridReferenceRecord gridReferenceRecord =
-            GridReferenceRecord.newBuilder()
+    OSGridRecord osGridRecord =
+            OSGridRecord.newBuilder()
                     .setId(source.getKey())
                     .build();
 
-    Optional<GridReferenceRecord> result =
+    Optional<OSGridRecord> result =
             Interpretation.from(new Tuple<>(extendedRecord, locationRecord))
-                    .to(gridReferenceRecord)
+                    .to(osGridRecord)
                     .when(er -> !er.v1().getCoreTerms().isEmpty())
                     //This populate grid sizes for those supplied with gridreference or gridsizeinmeters
                     .via(OSGridInterpreter::addGridSize)
@@ -113,8 +113,8 @@ public class OSGridExtensionTransform extends Transform<KV<String,CoGbkResult>, 
   }
 
 
-  public MapElements<GridReferenceRecord, KV<String, GridReferenceRecord>> toKv() {
-    return MapElements.into(new TypeDescriptor<KV<String, GridReferenceRecord>>() {})
-            .via((GridReferenceRecord lr) -> KV.of(lr.getId(), lr));
+  public MapElements<OSGridRecord, KV<String, OSGridRecord>> toKv() {
+    return MapElements.into(new TypeDescriptor<KV<String, OSGridRecord>>() {})
+            .via((OSGridRecord lr) -> KV.of(lr.getId(), lr));
   }
 }

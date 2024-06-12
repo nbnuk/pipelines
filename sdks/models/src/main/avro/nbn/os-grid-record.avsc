@@ -2,10 +2,10 @@
  * Additional structure for GridReference model
  */
 {
-  "name": "GridReferenceRecord",
+  "name": "OSGridRecord",
   "namespace": "org.gbif.pipelines.io.avro",
   "type": "record",
-  "doc": "Grid Reference details",
+  "doc": "OS Grid details",
   "fields": [
     {"name": "id","type":"string", "doc":"Pipelines identifier"},
     {"name": "coreId","type":["null","string"],"default":null, "doc":"Id of the core record when this record belongs to an extension"},
@@ -13,6 +13,7 @@
     {"name": "gridSizeInMeters", "type": ["null","int"], "default":null, "doc":"Grid size"},
     {"name": "gridReferenceWKT", "type":["null","string"], "default":null, "doc":"Grid reference WKT"},
     {"name": "coordinateUncertaintyInMeters", "type": ["null","double"], "default":null, "doc":"Coordinate Uncertainty"},
+    {"name": "created", "type": ["null", "long"], "default" : null, "doc":"The timestamp the record was created"},
     {"name": "issues", "type": "IssueRecord", "default":{}}
   ]
 }
