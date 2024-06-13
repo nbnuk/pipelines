@@ -21,6 +21,7 @@ import org.gbif.pipelines.core.functions.SerializableConsumer;
 import org.gbif.pipelines.core.interpreters.core.TaxonomyInterpreter;
 import org.gbif.pipelines.io.avro.ExtendedRecord;
 import org.gbif.pipelines.io.avro.LocationRecord;
+import org.gbif.pipelines.io.avro.OSGridRecord;
 import org.gbif.pipelines.io.avro.TaxonRecord;
 import org.gbif.pipelines.transforms.Transform;
 import uk.org.nbn.pipelines.interpreters.NBNAccessControlledDataInterpreter;
@@ -50,13 +51,15 @@ public class NBNAccessControlRecordTransform
 
   @NonNull private final TupleTag<ExtendedRecord> erTag;
   @NonNull private final TupleTag<LocationRecord> lrTag;
+  @NonNull private final TupleTag<OSGridRecord> osgrTag;
 
   @Builder(buildMethodName = "create")
   private NBNAccessControlRecordTransform(
       ALAPipelinesConfig config,
       String datasetId,
       TupleTag<ExtendedRecord> erTag,
-      TupleTag<LocationRecord> lrTag) {
+      TupleTag<LocationRecord> lrTag,
+      TupleTag<OSGridRecord> osgrTag) {
     super(
         NBNAccessControlledRecord.class,
         NBN_ACCESS_CONTROLLED_DATA,
@@ -67,6 +70,7 @@ public class NBNAccessControlRecordTransform
     this.datasetId = datasetId;
     this.erTag = erTag;
     this.lrTag = lrTag;
+    this.osgrTag = osgrTag;
   }
 
   /**
@@ -119,7 +123,7 @@ public class NBNAccessControlRecordTransform
 
     LocationRecord lr = lrTag == null ? null : v.getOnly(lrTag, null);
     ExtendedRecord er = erTag == null ? null : v.getOnly(erTag, null);
-    // TODO HMJ OSGridRecord osgr = osgTag == null ? null : v.getOnly(osgTag, null);
+    OSGridRecord osgr = osgrTag == null ? null : v.getOnly(osgrTag, null);
 
     NBNAccessControlledRecord accessControlledRecord =
         NBNAccessControlledRecord.newBuilder().setId(id).build();
@@ -128,7 +132,7 @@ public class NBNAccessControlRecordTransform
         datasetId,
         er,
         lr,
-        // TODO HMJ     osgr,
+        osgr,
         accessControlledRecord);
 
     return Optional.of(accessControlledRecord);

@@ -117,7 +117,7 @@ public class OSGridInterpreter {
      *
      * Adds issue if lat lon is not centroid of grid
      *
-     * todo - if above is correct this method can be simplified
+     * todo - if above is correct this method can be simplified and osgridrecords.coordinateuncertaintyinmeters removed
      *
      * @param source
      * @param osGridRecord

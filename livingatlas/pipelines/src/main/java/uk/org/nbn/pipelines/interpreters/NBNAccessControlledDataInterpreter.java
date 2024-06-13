@@ -2,6 +2,8 @@ package uk.org.nbn.pipelines.interpreters;
 
 import au.org.ala.sds.generalise.FieldAccessor;
 import java.util.*;
+
+import com.google.common.base.Strings;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +16,7 @@ import org.gbif.pipelines.io.avro.*;
 import uk.org.nbn.accesscontrol.DataResourceNbnCache;
 import uk.org.nbn.dto.DataResourceNbn;
 import uk.org.nbn.pipelines.io.avro.NBNAccessControlledRecord;
+import uk.org.nbn.term.OSGridTerm;
 import uk.org.nbn.util.GeneralisedLocation;
 import uk.org.nbn.util.GridUtil;
 import uk.org.nbn.util.ScalaToJavaUtil;
@@ -78,17 +81,17 @@ public class NBNAccessControlledDataInterpreter {
    * @param sr The access controlled record
    * @param osGridRecord An OS grid record
    */
-  //  public static void applyAccessControls(
-  //          NBNAccessControlledRecord sr, OSGridRecord osGridRecord) {
-  //    Map<String, String> altered = sr.getAltered();
-  //
-  //    if (altered == null || altered.isEmpty()) {
-  //      return;
-  //    }
-  //    osGridRecord.setGridReference(altered.get("gridReference"));
-  //    osGridRecord.setGridSizeInMeters(altered.get("gridSizeInMeters"));
-  //
-  //  }
+    public static void applyAccessControls(
+            NBNAccessControlledRecord sr, OSGridRecord osGridRecord) {
+      Map<String, String> altered = sr.getAltered();
+
+      if (altered == null || altered.isEmpty()) {
+        return;
+      }
+      osGridRecord.setGridReference(altered.get("gridReference"));
+      osGridRecord.setGridSizeInMeters(Integer.parseInt(altered.get("gridSizeInMeters")));
+      osGridRecord.setGridReferenceWKT(altered.get("gridReferenceWKT"));
+    }
 
   /**
    * Apply access control data changes to an AVRO location record.
@@ -165,6 +168,13 @@ public class NBNAccessControlledDataInterpreter {
                   original.get("gridReference"), String.valueOf(publicResolutionToBeApplied))));
     }
 
+    if(Strings.isNullOrEmpty(original.get("gridReferenceWKT"))
+            && blurred.containsKey("gridReference")) {
+
+      String blurredGridReferenceWKT = GridUtil.getGridWKT(blurred.get("gridReference"));
+      blurred.put("gridReferenceWKT", blurredGridReferenceWKT);
+    }
+
     String blurredCoordinateUncertainty =
         GridUtil.gridToCoordinateUncertaintyString(publicResolutionToBeApplied);
 
@@ -175,9 +185,10 @@ public class NBNAccessControlledDataInterpreter {
       blurred.put("coordinateUncertaintyInMeters", blurredCoordinateUncertainty);
     }
 
+    //todo - should this be retained as an int?
     if (original.get("gridSizeInMeters") != null
         && !original.get("gridSizeInMeters").isEmpty()
-        && java.lang.Integer.parseInt(original.get("coordinateUncertaintyInMeters"))
+        && java.lang.Integer.parseInt(original.get("gridSizeInMeters"))
             < publicResolutionToBeApplied) {
       blurred.put("gridSizeInMeters", String.valueOf(publicResolutionToBeApplied));
     }
@@ -206,7 +217,7 @@ public class NBNAccessControlledDataInterpreter {
       // NBNDataResourceService
       ExtendedRecord extendedRecord,
       LocationRecord locationRecord,
-      // OSGridRecord osGridRecord,
+       OSGridRecord osGridRecord,
       NBNAccessControlledRecord accessControlledRecord) {
 
     //TODO HMJ implement this using the ALA ws framework (which includes caching)
@@ -237,8 +248,10 @@ public class NBNAccessControlledDataInterpreter {
           locationRecord.getCoordinateUncertaintyInMeters() != null
               ? locationRecord.getCoordinateUncertaintyInMeters().toString()
               : null);
-      // original.put("gridReference", osGridRecord.getGridReference());
-      // original.put("gridSizeInMeters", osGridRecord.getGridSizeInMeters());
+      original.put("gridReference", osGridRecord.getGridReference());
+      original.put("gridSizeInMeters", osGridRecord.getGridSizeInMeters().toString());
+      original.put("gridReferenceWKT", osGridRecord.getGridReferenceWKT());
+
       original.put("locality", locationRecord.getLocality());
       original.put(
           "verbatimLatitude",

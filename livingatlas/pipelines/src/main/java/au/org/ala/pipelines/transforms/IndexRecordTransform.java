@@ -88,6 +88,8 @@ public class IndexRecordTransform implements Serializable, IndexFields {
 
   @NonNull private TupleTag<NBNAccessControlledRecord> accessControlledRecordTag;
 
+  @NonNull private TupleTag<OSGridRecord> osGridRecordTag;
+
   @NonNull private TupleTag<EventCoreRecord> eventCoreTag;
 
   @NonNull private TupleTag<LocationRecord> eventLocationTag;
@@ -120,6 +122,7 @@ public class IndexRecordTransform implements Serializable, IndexFields {
       TupleTag<TaxonProfile> tpTag,
       TupleTag<ALASensitivityRecord> srTag,
       TupleTag<NBNAccessControlledRecord> accessControlledRecordTag,
+      TupleTag<OSGridRecord> osGridRecordTag,
       TupleTag<EventCoreRecord> eventCoreTag,
       TupleTag<LocationRecord> eventLocationTag,
       TupleTag<TemporalRecord> eventTemporalTag,
@@ -146,6 +149,7 @@ public class IndexRecordTransform implements Serializable, IndexFields {
     t.lastLoadDate = lastLoadDate;
     t.lastLoadProcessed = lastLoadProcessed;
     t.accessControlledRecordTag = accessControlledRecordTag;
+    t.osGridRecordTag = osGridRecordTag;
     return t;
   }
 
@@ -168,6 +172,7 @@ public class IndexRecordTransform implements Serializable, IndexFields {
       TaxonProfile tpr,
       ALASensitivityRecord sr,
       NBNAccessControlledRecord accessControlledRecord,
+      OSGridRecord osGridRecord,
       MultimediaRecord mr,
       EventCoreRecord ecr,
       LocationRecord elr,
@@ -264,10 +269,10 @@ public class IndexRecordTransform implements Serializable, IndexFields {
       }
 
       // TODO HMJ - need to implement this
-      //      if (osgridRecord ! = null) {
-      //        osgridRecord = OSGridRecord.newBuilder(osgridRecord).build();
-      //        SensitiveDataInterpreter.applyAccessControls(accessControlledRecord, osgridRecord);
-      //      }
+      if (osGridRecord != null) {
+        osGridRecord = OSGridRecord.newBuilder(osGridRecord).build();
+        SensitiveDataInterpreter.applySensitivity(sensitiveTerms, sr, osGridRecord);
+      }
     }
 
     boolean isAccessControlled =
@@ -287,16 +292,15 @@ public class IndexRecordTransform implements Serializable, IndexFields {
         NBNAccessControlledDataInterpreter.applyAccessControls(accessControlledRecord, er);
       }
 
-      // TODO HMJ - need to implement this
-      //      if (osgridRecord ! = null) {
-      //        osgridRecord = OSGridRecord.newBuilder(osgridRecord).build();
-      //        NBNAccessControlledDataInterpreter.applyAccessControls(accessControlledRecord,
-      // osgridRecord);
-      //      }
+     //TODO HMJ - need to implement this
+      if (osGridRecord != null) {
+        osGridRecord = OSGridRecord.newBuilder(osGridRecord).build();
+        NBNAccessControlledDataInterpreter.applyAccessControls(accessControlledRecord, osGridRecord);
+      }
     }
 
     // TODO HMJ addToIndexRecord(osgridRecord, indexRecord, skipKeys);
-
+    addToIndexRecord(osGridRecord, indexRecord, skipKeys);
     addToIndexRecord(lr, indexRecord, skipKeys);
     addToIndexRecord(tr, indexRecord, skipKeys);
     addToIndexRecord(br, indexRecord, skipKeys);
@@ -1085,6 +1089,11 @@ public class IndexRecordTransform implements Serializable, IndexFields {
                 accessControlledRecord = v.getOnly(accessControlledRecordTag, null);
               }
 
+              OSGridRecord osGridRecord = null;
+              if (osGridRecordTag != null) {
+                osGridRecord = v.getOnly(osGridRecordTag, null);
+              }
+
               MultimediaRecord mr = null;
               if (srTag != null) {
                 mr = v.getOnly(mrTag, null);
@@ -1109,6 +1118,7 @@ public class IndexRecordTransform implements Serializable, IndexFields {
                         tpr,
                         sr,
                         accessControlledRecord,
+                        osGridRecord,
                         mr,
                         ecr,
                         elr,

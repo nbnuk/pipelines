@@ -11,32 +11,7 @@ import java.util.function.Consumer;
 import org.gbif.dwc.terms.DcTerm;
 import org.gbif.dwc.terms.DwcTerm;
 import org.gbif.dwc.terms.Term;
-import org.gbif.pipelines.io.avro.ALAAttributionRecord;
-import org.gbif.pipelines.io.avro.ALASensitivityRecord;
-import org.gbif.pipelines.io.avro.ALATaxonRecord;
-import org.gbif.pipelines.io.avro.ALAUUIDRecord;
-import org.gbif.pipelines.io.avro.AgentIdentifier;
-import org.gbif.pipelines.io.avro.BasicRecord;
-import org.gbif.pipelines.io.avro.Diagnostic;
-import org.gbif.pipelines.io.avro.EntityReference;
-import org.gbif.pipelines.io.avro.EventDate;
-import org.gbif.pipelines.io.avro.ExtendedRecord;
-import org.gbif.pipelines.io.avro.Image;
-import org.gbif.pipelines.io.avro.ImageRecord;
-import org.gbif.pipelines.io.avro.IndexRecord;
-import org.gbif.pipelines.io.avro.LocationRecord;
-import org.gbif.pipelines.io.avro.MatchType;
-import org.gbif.pipelines.io.avro.Multimedia;
-import org.gbif.pipelines.io.avro.MultimediaRecord;
-import org.gbif.pipelines.io.avro.Nomenclature;
-import org.gbif.pipelines.io.avro.ParsedName;
-import org.gbif.pipelines.io.avro.Rank;
-import org.gbif.pipelines.io.avro.RankedName;
-import org.gbif.pipelines.io.avro.Status;
-import org.gbif.pipelines.io.avro.TaxonProfile;
-import org.gbif.pipelines.io.avro.TaxonRecord;
-import org.gbif.pipelines.io.avro.TemporalRecord;
-import org.gbif.pipelines.io.avro.VocabularyConcept;
+import org.gbif.pipelines.io.avro.*;
 import org.junit.Assert;
 import org.junit.Test;
 import uk.org.nbn.pipelines.io.avro.NBNAccessControlledRecord;
@@ -741,6 +716,14 @@ public class CoreTsvConverterTest {
             .setAltered(Collections.singletonMap("acr_Altered_key", "acr_Altered_value"))
             .build();
 
+    OSGridRecord osgr =
+            OSGridRecord.newBuilder()
+                    .setId(DwcTerm.occurrenceID.simpleName())
+                    .setCreated(8L)
+                    .setGridReference("osgr_Grid_Reference")
+                    .setGridSizeInMeters(333)
+                    .build();
+
     Long lastLoadDate = 9L;
     Long lastProcessedDate = 10L;
 
@@ -758,6 +741,7 @@ public class CoreTsvConverterTest {
             tp,
             asr,
             acr,
+            osgr,
             mr,
             null,
             null,
@@ -1072,6 +1056,9 @@ public class CoreTsvConverterTest {
     NBNAccessControlledRecord acr =
         NBNAccessControlledRecord.newBuilder().setId(DwcTerm.occurrenceID.simpleName()).build();
 
+    OSGridRecord osgr =
+            OSGridRecord.newBuilder().setId(DwcTerm.occurrenceID.simpleName()).build();
+
     Long lastLoadDate = 9L;
     Long lastProcessedDate = 10L;
 
@@ -1089,6 +1076,7 @@ public class CoreTsvConverterTest {
             tp,
             asr,
             acr,
+            osgr,
             mr,
             null,
             null,

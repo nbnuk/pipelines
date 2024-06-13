@@ -28,13 +28,12 @@ import static uk.org.nbn.pipelines.common.NBNRecordTypes.OS_GRID;
 public class OSGridTransform extends Transform<KV<String,CoGbkResult>, OSGridRecord> {
 
   private final ALAPipelinesConfig alaConfig;
-  @NonNull
-  private final TupleTag<ExtendedRecord> erTag;
+  @NonNull private final TupleTag<ExtendedRecord> erTag;
   @NonNull private final TupleTag<LocationRecord> lrTag;
 
   @Builder(buildMethodName = "create")
   private OSGridTransform(
-          ALAPipelinesConfig alaConfig, @NonNull TupleTag<ExtendedRecord> erTag, @NonNull TupleTag<LocationRecord> lrTag
+          ALAPipelinesConfig alaConfig, TupleTag<ExtendedRecord> erTag, TupleTag<LocationRecord> lrTag
   ) {
 
     super(
