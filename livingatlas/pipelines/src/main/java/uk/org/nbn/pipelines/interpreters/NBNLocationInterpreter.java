@@ -7,14 +7,13 @@ import org.gbif.dwc.terms.DwcTerm;
 import org.gbif.pipelines.io.avro.ExtendedRecord;
 import org.gbif.pipelines.io.avro.LocationRecord;
 import org.spark_project.guava.primitives.Doubles;
-import sun.misc.FloatingDecimal;
 import org.gbif.common.parsers.NumberParser;
 
 import static org.gbif.pipelines.core.utils.ModelUtils.addIssue;
 import static org.gbif.pipelines.core.utils.ModelUtils.extractNullAwareValue;
 
 public class NBNLocationInterpreter {
-    public static void interpretCoordinateUncertaintyInMeters(ExtendedRecord er, LocationRecord lr) {
+    public static void interpretCoordinateUncertaintyInMetersFromPrecisionFormat(ExtendedRecord er, LocationRecord lr) {
 
         String precisionValue = extractNullAwareValue(er, DwcTerm.coordinatePrecision);
 

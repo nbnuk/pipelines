@@ -10,7 +10,8 @@ public enum OSGridTerm implements Term {
   easting,
   northing,
   zone,
-  gridSizeInMeters;
+  gridSizeInMeters,
+  issues;
   private static final URI NS_URI = URI.create("http://nbn.org.uk/dwc/terms/osgrid/");
 
   OSGridTerm() {}

@@ -16,44 +16,56 @@ import uk.org.nbn.vocabulary.NBNOccurrenceIssue;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.gbif.api.vocabulary.OccurrenceIssue.COORDINATE_UNCERTAINTY_METERS_INVALID;
 
 import static org.gbif.pipelines.core.utils.ModelUtils.*;
-import static uk.org.nbn.util.NBNModelUtils.extractNullAwareExtensionTerm;
+import static uk.org.nbn.util.NBNModelUtils.extractNullAwareExtensionTermValue;
 import static uk.org.nbn.util.ScalaToJavaUtil.scalaOptionToString;
 
 public class OSGridInterpreter {
 
-    public static void interpretCoordinateUncertaintyInMetersFromGridSize(ExtendedRecord er, LocationRecord lr) {
-        String uncertaintyValue = extractNullAwareValue(er, DwcTerm.coordinateUncertaintyInMeters);
-        String gridSizeInMetersValue = extractNullAwareExtensionTerm(er, OSGridTerm.gridSizeInMeters);
+//    public static void interpretCoordinateUncertaintyInMetersFromGridSize(ExtendedRecord er, LocationRecord lr) {
+//        String uncertaintyValue = extractNullAwareValue(er, DwcTerm.coordinateUncertaintyInMeters);
+//        String gridSizeInMetersValue = extractNullAwareExtensionTerm(er, OSGridTerm.gridSizeInMeters);
+//
+//        if((Strings.isNullOrEmpty(uncertaintyValue) ||
+//                lr.getCoordinateUncertaintyInMeters() == null ||
+//                lr.getCoordinateUncertaintyInMeters() < 0.000001) &&
+//                !Strings.isNullOrEmpty(gridSizeInMetersValue)
+//        ) {
+//            Double gridSizeInMeters = Doubles.tryParse(gridSizeInMetersValue);
+//
+//            // old version didn't have null check
+//            if(gridSizeInMeters != null) {
+//                double cornerDistFromCentre = roundToDecimalPlaces( gridSizeInMeters / Math.sqrt(2.0),1);
+//                lr.setCoordinateUncertaintyInMeters(cornerDistFromCentre);
+//            }
+//        }
+//    }
 
-        if((Strings.isNullOrEmpty(uncertaintyValue) ||
-                lr.getCoordinateUncertaintyInMeters() == null ||
-                lr.getCoordinateUncertaintyInMeters() < 0.000001) &&
-                !Strings.isNullOrEmpty(gridSizeInMetersValue)
-        ) {
-            Double gridSizeInMeters = Doubles.tryParse(gridSizeInMetersValue);
 
-            // old version didn't have null check
-            if(gridSizeInMeters != null) {
-                double cornerDistFromCentre = roundToDecimalPlaces( gridSizeInMeters / Math.sqrt(2.0),1);
-                lr.setCoordinateUncertaintyInMeters(cornerDistFromCentre);
-            }
-        }
-    }
-
-
-
+    /**
+     * This method is currently/historically called twice
+     * Expect OSGrid records to be updated the first time but not second
+     * Expect non-OSGrid records to be updated the second time but not the first
+     *
+     * Expect to be set from gridReference when supplied
+     * Expect to be set from gridSizeInMeteres when Easting and Northing supplied
+     * Expect to be set from computed gridReference when lan lon supplied with coordinateUncertainty
+     * Expect not to be set when lan lon supplie without coordinateUncertainty
+     *
+     * @param source
+     * @param osGridRecord
+     */
     public static void addGridSize(Tuple<ExtendedRecord,LocationRecord> source, OSGridRecord osGridRecord) {
 
         ExtendedRecord extendedRecord = source.v1();
 
-        String gridReference = extractNullAwareExtensionTerm(extendedRecord, OSGridTerm.gridReference);
-        String gridSizeInMeters = extractNullAwareExtensionTerm(extendedRecord, OSGridTerm.gridSizeInMeters);
+        String gridReference = extractNullAwareExtensionTermValue(extendedRecord, OSGridTerm.gridReference);
+        String gridSizeInMeters = extractNullAwareExtensionTermValue(extendedRecord, OSGridTerm.gridSizeInMeters);
 
-        //if we didn't call this twice this could go
         if(osGridRecord.getGridSizeInMeters() == null)
         {
             if(!Strings.isNullOrEmpty(osGridRecord.getGridReference())) {
@@ -75,6 +87,41 @@ public class OSGridInterpreter {
         }
     }
 
+
+    /**
+     * Extract issue from OSGrid extension term and apply to model
+     * @param source
+     * @param osGridRecord
+     */
+    public static void applyIssues(Tuple<ExtendedRecord,LocationRecord> source, OSGridRecord osGridRecord) {
+
+        ExtendedRecord extendedRecord = source.v1();
+        String gridReferenceIssues = extractNullAwareExtensionTermValue(extendedRecord, OSGridTerm.issues);
+
+        if(!Strings.isNullOrEmpty(gridReferenceIssues)) {
+            Arrays.stream(gridReferenceIssues.split("[,|]"))
+                    .map(issue -> Arrays.stream(NBNOccurrenceIssue.values())
+                            .filter(i -> i.name().equals(issue))
+                            .findFirst())
+                    .filter(issue -> issue.isPresent())
+                    .forEach(issue -> addIssue(osGridRecord, issue.get().name()));
+
+        }
+    }
+
+    /**
+     * Recalculated coordinateUncertainty from OSGrid values if:
+     * - no lat lon (this should already have been done if OSGridExtensionTransform is applied)
+     * - lat lon is centroid of grid (this should already have been done if OSGridExtensionTransform is applied)
+     * - there's no coordinate uncertainty set (this should already have been done if OSGridExtensionTransform is applied)
+     *
+     * Adds issue if lat lon is not centroid of grid
+     *
+     * todo - if above is correct this method can be simplified
+     *
+     * @param source
+     * @param osGridRecord
+     */
     public static void possiblyRecalculateCoordinateUncertainty(Tuple<ExtendedRecord,LocationRecord> source, OSGridRecord osGridRecord) {
         // comments from biocache-store
         // f grid and no lat/long
@@ -84,8 +131,8 @@ public class OSGridInterpreter {
 
         ExtendedRecord extendedRecord = source.v1();
 
-        String rawGridReference = extractNullAwareExtensionTerm(extendedRecord, OSGridTerm.gridReference);
-        String rawGridSizeInMeters = extractNullAwareExtensionTerm(extendedRecord, OSGridTerm.gridSizeInMeters);
+        String rawGridReference = extractNullAwareExtensionTermValue(extendedRecord, OSGridTerm.gridReference);
+        String rawGridSizeInMeters = extractNullAwareExtensionTermValue(extendedRecord, OSGridTerm.gridSizeInMeters);
 
         if(Strings.isNullOrEmpty(rawGridReference)) {
             return;
@@ -95,15 +142,15 @@ public class OSGridInterpreter {
         String decimalLongitudeValue = extractNullAwareValue(extendedRecord, DwcTerm.decimalLongitude);
         String coordinateUncertaintyValue = extractNullAwareValue(extendedRecord, DwcTerm.coordinateUncertaintyInMeters);
 
-        boolean hasRawLatLon = !Strings.isNullOrEmpty(decimalLatitudeValue) && !Strings.isNullOrEmpty(decimalLongitudeValue);
-        boolean rawLatLonIsCentroidOfGridReference = hasRawLatLon && GridUtil.isCentroid(Double.valueOf(decimalLatitudeValue), Double.valueOf(decimalLongitudeValue), rawGridReference);
+        boolean suppliedWithLatLon = suppliedWithLatLon(extendedRecord, osGridRecord);
+        boolean rawLatLonIsCentroidOfGridReference = suppliedWithLatLon && GridUtil.isCentroid(Double.valueOf(decimalLatitudeValue), Double.valueOf(decimalLongitudeValue), rawGridReference);
 
         // It feels odd to be checking for a raw uncertainty here as the location processor will have done parsing on this and tried to resolve from precission
-        boolean hasRawLatLonButNoUncertaintySupplied = hasRawLatLon && Strings.isNullOrEmpty(coordinateUncertaintyValue);
+        boolean hasRawLatLonButNoUncertaintySupplied = suppliedWithLatLon && Strings.isNullOrEmpty(coordinateUncertaintyValue);
 
-        boolean recalcCoordUncertainty = !hasRawLatLon || rawLatLonIsCentroidOfGridReference || hasRawLatLonButNoUncertaintySupplied;
+        boolean recalcCoordUncertainty = !suppliedWithLatLon || rawLatLonIsCentroidOfGridReference || hasRawLatLonButNoUncertaintySupplied;
 
-        if(hasRawLatLon && !rawLatLonIsCentroidOfGridReference)
+        if(suppliedWithLatLon && !rawLatLonIsCentroidOfGridReference)
         {
             addIssue(osGridRecord, NBNOccurrenceIssue.COORDINATES_NOT_CENTRE_OF_GRID.name());
         }
@@ -134,6 +181,16 @@ public class OSGridInterpreter {
         }
     }
 
+    /**
+     * This sets the grid reference from lat lon for all records
+     * OSGrid records - OSGrid > lat lon > OSGrid
+     * Non OSGrid records - lat lon > OSGrid
+     *
+     * Expect OSGrid records to be based on lat lon and gridSizeInMeters set in addGridSize
+     *
+     * @param source
+     * @param osGridRecord
+     */
     public static void setGridRefFromCoordinates(Tuple<ExtendedRecord,LocationRecord> source, OSGridRecord osGridRecord) {
 
         ExtendedRecord extendedRecord = source.v1();
@@ -181,43 +238,47 @@ public class OSGridInterpreter {
     }
 
     private static boolean suppliedWithGridReference(ExtendedRecord extendedRecord) {
-        return !Strings.isNullOrEmpty(extractNullAwareExtensionTerm(extendedRecord, OSGridTerm.gridReference));
+        return !Strings.isNullOrEmpty(extractNullAwareExtensionTermValue(extendedRecord, OSGridTerm.gridReference));
     }
 
-    private static boolean suppliedWithLatLon(ExtendedRecord extendedRecord) {
-        return !Strings.isNullOrEmpty(extractNullAwareValue(extendedRecord, DwcTerm.decimalLatitude)) &&
+    private static boolean suppliedWithLatLon(ExtendedRecord extendedRecord, OSGridRecord osGridRecord) {
+
+        boolean rawLatLonWasComputedFromOSGrid = osGridRecord.getIssues().getIssueList().contains(NBNOccurrenceIssue.DECIMAL_LAT_LONG_CALCULATED_FROM_GRID_REF.name()) || osGridRecord.getIssues().getIssueList().contains(NBNOccurrenceIssue.DECIMAL_LAT_LONG_CALCULATED_FROM_EASTING_NORTHING.name());
+
+        return !rawLatLonWasComputedFromOSGrid &&
+                !Strings.isNullOrEmpty(extractNullAwareValue(extendedRecord, DwcTerm.decimalLatitude)) &&
                 !Strings.isNullOrEmpty(extractNullAwareValue(extendedRecord, DwcTerm.decimalLongitude));
     }
 
-    public static void processGridWKT(Tuple<ExtendedRecord,LocationRecord> source, OSGridRecord gridReferenceRecord) {
+    public static void processGridWKT(Tuple<ExtendedRecord,LocationRecord> source, OSGridRecord osGridRecord) {
 
         ExtendedRecord extendedRecord = source.v1();
 
-        if(suppliedWithLatLon(extendedRecord)) {
+        if(suppliedWithLatLon(extendedRecord, osGridRecord)) {
             return;
         }
 
         //surely this will alway be empty in pipelines land
-        if(Strings.isNullOrEmpty(gridReferenceRecord.getGridReferenceWKT()) &&
+        if(Strings.isNullOrEmpty(osGridRecord.getGridReferenceWKT()) &&
                 suppliedWithGridReference(extendedRecord)) {
 
             boolean computed = false;
 
-            String gridReference = extractNullAwareExtensionTerm(extendedRecord, OSGridTerm.gridReference);
+            String gridReference = extractNullAwareExtensionTermValue(extendedRecord, OSGridTerm.gridReference);
 
             //should this not be empty checked as well?
-            if (gridReferenceRecord.getGridReference() != null) {
-                gridReferenceRecord.setGridReferenceWKT(GridUtil.getGridWKT(gridReferenceRecord.getGridReference()));
+            if (osGridRecord.getGridReference() != null) {
+                osGridRecord.setGridReferenceWKT(GridUtil.getGridWKT(osGridRecord.getGridReference()));
                 computed = true;
             }
             //should this not be empty checked as well? and if so surely this is always true as it was previously empty checked
             //and if so what's the point of computed?
             else if (gridReference != null) {
-                gridReferenceRecord.setGridReferenceWKT(GridUtil.getGridWKT(gridReference));
+                osGridRecord.setGridReferenceWKT(GridUtil.getGridWKT(gridReference));
                 computed = true;
             }
 
-            //todo - why is this being added to the sds term informationWithheld?
+            //todo - agreed to remove however this should be handled in sds or access controls
 //            if (computed) {
 //                if (processed.occurrence.informationWithheld == null)
 //                    processed.occurrence.informationWithheld = ""
@@ -230,9 +291,7 @@ public class OSGridInterpreter {
         }
     }
 
-    private static Double roundToDecimalPlaces(double input, int decimalPlaces)
-    {
-        double shift = Math.pow(100, decimalPlaces);
-        return Math.round(input * shift) / shift;
+    public static void setCoreId(ExtendedRecord er, OSGridRecord e) {
+        Optional.ofNullable(er.getCoreId()).ifPresent(e::setCoreId);
     }
 }

@@ -1,120 +1,126 @@
-package uk.org.nbn.transforms;
+package uk.org.nbn.pipelines.transforms;
 
-import au.org.ala.kvs.ALAPipelinesConfig;
-import lombok.Builder;
-import lombok.NonNull;
-import lombok.SneakyThrows;
+import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.beam.sdk.transforms.MapElements;
-import org.apache.beam.sdk.transforms.join.CoGbkResult;
-import org.apache.beam.sdk.values.KV;
-import org.apache.beam.sdk.values.TupleTag;
-import org.apache.beam.sdk.values.TypeDescriptor;
-import org.elasticsearch.common.collect.Tuple;
+import org.apache.beam.sdk.metrics.Counter;
+import org.apache.beam.sdk.metrics.Metrics;
+import org.apache.beam.sdk.transforms.DoFn;
+import org.apache.beam.sdk.transforms.ParDo;
+import org.apache.beam.sdk.transforms.ParDo.SingleOutput;
+import org.gbif.dwc.terms.DwcTerm;
+import org.gbif.kvs.geocode.LatLng;
 import org.gbif.pipelines.core.functions.SerializableConsumer;
-import org.gbif.pipelines.core.interpreters.Interpretation;
+import org.gbif.pipelines.core.parsers.common.ParsedField;
 import org.gbif.pipelines.io.avro.ExtendedRecord;
-import org.gbif.pipelines.io.avro.OSGridRecord;
-import org.gbif.pipelines.io.avro.LocationRecord;
-import org.gbif.pipelines.transforms.Transform;
-import uk.org.nbn.pipelines.interpreters.OSGridInterpreter;
+import org.gbif.pipelines.transforms.converters.OccurrenceJsonTransform;
+import org.spark_project.guava.primitives.Ints;
+import uk.org.nbn.parser.OSGridParser;
+import uk.org.nbn.term.OSGridTerm;
+import uk.org.nbn.util.GridUtil;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
-import static uk.org.nbn.pipelines.common.NBNRecordTypes.OS_GRID;
+import static org.gbif.pipelines.core.utils.ModelUtils.extractNullAwareValue;
+import static uk.org.nbn.util.NBNModelUtils.*;
 
+/**
+ * Transform to augment the core location terms from osGrid extension terms
+ */
 @Slf4j
-public class OSGridExtensionTransform extends Transform<KV<String,CoGbkResult>, OSGridRecord> {
+public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecord> {
 
-  private final ALAPipelinesConfig alaConfig;
-  @NonNull
-  private final TupleTag<ExtendedRecord> erTag;
-  @NonNull private final TupleTag<LocationRecord> lrTag;
+    private static final String OSGRID_RECORD_COUNTER = "oSGridExtensionCount";
 
-  @Builder(buildMethodName = "create")
-  private OSGridExtensionTransform(
-          ALAPipelinesConfig alaConfig, @NonNull TupleTag<ExtendedRecord> erTag, @NonNull TupleTag<LocationRecord> lrTag
-  ) {
+    private final Counter counter = Metrics.counter(OccurrenceJsonTransform.class, OSGRID_RECORD_COUNTER);
 
-    super(
-            OSGridRecord.class,
-            OS_GRID,
-            OSGridExtensionTransform.class.getName(),
-            "osGridRecordCount");
+    private SerializableConsumer<String> counterFn = v -> counter.inc();
 
-    this.alaConfig = alaConfig;
-    this.erTag = erTag;
-    this.lrTag = lrTag;
-  }
-
-  /** Beam @Setup initializes resources */
-  @SneakyThrows
-  @Setup
-  public void setup() {
-
-  }
-
-  /** Beam @Setup can be applied only to void method */
-  public OSGridExtensionTransform init() {
-    setup();
-    return this;
-  }
-
-  /** Beam @Teardown closes initialized resources */
-  @Teardown
-  public void tearDown() {
-
-  }
-
-  public OSGridExtensionTransform counterFn(SerializableConsumer<String> counterFn) {
-    setCounterFn(counterFn);
-    return this;
-  }
-
-  @Override
-  public Optional<OSGridRecord> convert(KV<String, CoGbkResult> source) {
-
-    CoGbkResult v = source.getValue();
-    String id = source.getKey();
-
-    if (v == null) {
-      return Optional.empty();
+    public static SingleOutput<ExtendedRecord, ExtendedRecord> create() {
+        return ParDo.of(new OSGridExtensionTransform());
     }
 
-    LocationRecord locationRecord = lrTag == null ? null : v.getOnly(lrTag, null);
-    ExtendedRecord extendedRecord = erTag == null ? null : v.getOnly(erTag, null);
+    public void setCounterFn(SerializableConsumer<String> counterFn) {
+        this.counterFn = counterFn;
+    }
 
-    //We need to:
-    //Set lat lon from grid when grid provided
-    //Run location transform
-    //Set grid from lat lon
-
-    OSGridRecord osGridRecord =
-            OSGridRecord.newBuilder()
-                    .setId(source.getKey())
-                    .build();
-
-    Optional<OSGridRecord> result =
-            Interpretation.from(new Tuple<>(extendedRecord, locationRecord))
-                    .to(osGridRecord)
-                    .when(er -> !er.v1().getCoreTerms().isEmpty())
-                    //This populate grid sizes for those supplied with gridreference or gridsizeinmeters
-                    .via(OSGridInterpreter::addGridSize)
-                    .via(OSGridInterpreter::possiblyRecalculateCoordinateUncertainty)
-                    .via(OSGridInterpreter::setGridRefFromCoordinates)
-                    //This populates grids sizes for those supplied with a lat lot and have had gridreference computed
-                    .via(OSGridInterpreter::addGridSize)
-                    .via(OSGridInterpreter::processGridWKT)
-                    .get();
-
-    result.ifPresent(r -> this.incCounter());
-
-    return result;
-  }
+    @ProcessElement
+    public void processElement(@Element ExtendedRecord er, OutputReceiver<ExtendedRecord> out) {
+        convert(er, out::output);
+    }
 
 
-  public MapElements<OSGridRecord, KV<String, OSGridRecord>> toKv() {
-    return MapElements.into(new TypeDescriptor<KV<String, OSGridRecord>>() {})
-            .via((OSGridRecord lr) -> KV.of(lr.getId(), lr));
-  }
+    public void convert(ExtendedRecord er, Consumer<ExtendedRecord> resultConsumer) {
+
+        String gridReferenceValue = extractNullAwareExtensionTermValue(er, OSGridTerm.gridReference);
+
+        if (Strings.isNullOrEmpty(gridReferenceValue)) {
+            resultConsumer.accept(er);
+            return;
+        }
+
+        ExtendedRecord alteredEr = ExtendedRecord.newBuilder(er).build();
+        List<String> issues = new ArrayList<>();
+
+        String decimalLatitudeValue = extractNullAwareValue(er, DwcTerm.decimalLatitude);
+        String decimalLongitudeValue = extractNullAwareValue(er, DwcTerm.decimalLongitude);
+        String coordinateUncertaintyValue = extractNullAwareValue(er, DwcTerm.coordinateUncertaintyInMeters);
+
+        boolean hasSuppliedLatLon = !Strings.isNullOrEmpty(decimalLatitudeValue) && !Strings.isNullOrEmpty(decimalLongitudeValue);
+
+        if (!hasSuppliedLatLon) {
+            setLatLonFromGridReference(er, alteredEr, issues);
+        }
+
+        //if grid and:
+        //    - no lat/long supplied
+        //    - lat/long supplied is centroid of grid
+        //    - lat/long supplied but no coordinate uncertainty
+        //then amend coordinate uncertainty to radius of circle through corners of grid
+
+        if (!hasSuppliedLatLon ||
+                Strings.isNullOrEmpty(coordinateUncertaintyValue) ||
+                GridUtil.isCentroid(Double.valueOf(decimalLatitudeValue), Double.valueOf(decimalLongitudeValue), gridReferenceValue)) {
+
+            setCoordinateUncertaintyFromOSGrid(er, alteredEr);
+        }
+
+        //put the issues in the extension so that we can retrieve and apply them in OSGridTransform
+        setExtensionTermValue(alteredEr, OSGridTerm.issues, String.join("|", issues));
+
+        counter.inc();
+        resultConsumer.accept(alteredEr);
+    }
+
+    private void setLatLonFromGridReference(ExtendedRecord er, ExtendedRecord alteredEr, List<String> issues) {
+        ParsedField<LatLng> result = OSGridParser.parseCoords(er);
+        if (result.isSuccessful()) {
+            alteredEr.getCoreTerms().put(DwcTerm.decimalLatitude.qualifiedName(), result.getResult().getLatitude().toString());
+            alteredEr.getCoreTerms().put(DwcTerm.decimalLongitude.qualifiedName(), result.getResult().getLongitude().toString());
+            // grid util projects all coordinates to WGS84
+            alteredEr.getCoreTerms().put(DwcTerm.geodeticDatum.qualifiedName(), "WGS84");
+            issues.addAll(result.getIssues());
+        }
+    }
+
+    private void setCoordinateUncertaintyFromOSGrid(ExtendedRecord er, ExtendedRecord alteredEr) {
+        String gridReferenceValue = extractNullAwareExtensionTermValue(er, OSGridTerm.gridReference);
+        String gridSizeInMetersValue = extractNullAwareExtensionTermValue(er, OSGridTerm.gridSizeInMeters);
+
+        //todo - should we flag if these fail?  Internally this logs and error but this is not going to be very helpful
+        Integer gridSizeInMetersFromGridReference = GridUtil
+                .getGridSizeInMeters(gridReferenceValue)
+                .getOrElse(null);
+
+        Integer gridSizeInMeters = Optional
+                .ofNullable(gridSizeInMetersFromGridReference)
+                .orElseGet(() -> Ints.tryParse(gridSizeInMetersValue));
+
+        if (gridSizeInMeters != null) {
+            double cornerDistFromCentre = gridSizeInMetersFromGridReference / Math.sqrt(2.0);
+            alteredEr.getCoreTerms().put(DwcTerm.coordinateUncertaintyInMeters.qualifiedName(), String.format("%.1f", cornerDistFromCentre));
+        }
+    }
 }

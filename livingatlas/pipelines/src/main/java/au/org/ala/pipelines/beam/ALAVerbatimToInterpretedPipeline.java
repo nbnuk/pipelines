@@ -57,7 +57,7 @@ import org.gbif.pipelines.transforms.extension.MeasurementOrFactTransform;
 import org.gbif.pipelines.transforms.extension.MultimediaTransform;
 import org.gbif.pipelines.transforms.metadata.DefaultValuesTransform;
 import org.slf4j.MDC;
-import uk.org.nbn.transforms.OSGridExtensionTransform;
+import uk.org.nbn.pipelines.transforms.OSGridExtensionTransform;
 
 /**
  * Interpretation pipeline that reads verbatim AVRO files ({@link ExtendedRecord} and parses and
@@ -260,6 +260,7 @@ public class ALAVerbatimToInterpretedPipeline {
     PCollection<ExtendedRecord> uniqueRecords =
         p.apply("Read ExtendedRecords", verbatimTransform.read(options.getInputPath()))
             .apply("Read occurrences from extension", OccurrenceExtensionTransform.create())
+            .apply("Augment core terms from osgrid extension", OSGridExtensionTransform.create())
             .apply("Set default values", alaDefaultValuesTransform);
 
     uniqueRecords
@@ -311,7 +312,7 @@ public class ALAVerbatimToInterpretedPipeline {
                     .of(verbatimTransform.getTag(), uniqueRecords.apply("Map Verbatim to KV", verbatimTransform.toKv()))
                     .and(locationTransform.getTag(), locationRecords.apply("Map Location to KV",locationTransform.toKv()));
 
-    OSGridExtensionTransform osGridExtensionTransform = OSGridExtensionTransform
+    uk.org.nbn.pipelines.transforms.OSGridTransform osGridTransform = uk.org.nbn.pipelines.transforms.OSGridTransform
             .builder()
             .erTag(verbatimTransform.getTag())
             .lrTag(locationTransform.getTag())
@@ -320,8 +321,8 @@ public class ALAVerbatimToInterpretedPipeline {
     inputTuples
             .apply("Grouping objects", CoGroupByKey.create())
             //.apply("Check grid reference transform condition", osGridExtensionTransform.check(types))
-            .apply("Interpret OSGrids", osGridExtensionTransform.interpret())
-            .apply("Write OSGrids to avro", osGridExtensionTransform.write(pathFn));
+            .apply("Interpret OSGrids", osGridTransform.interpret())
+            .apply("Write OSGrids to avro", osGridTransform.write(pathFn));
 
     uniqueRecords
         .apply("Check location transform condition", measurementOrFactTransform.check(types))

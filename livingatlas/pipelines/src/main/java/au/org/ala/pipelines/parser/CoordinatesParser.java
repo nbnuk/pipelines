@@ -1,7 +1,6 @@
 package au.org.ala.pipelines.parser;
 
 import static org.gbif.pipelines.core.utils.ModelUtils.extractValue;
-import static uk.org.nbn.util.NBNModelUtils.extractNullAwareExtensionTerm;
 
 import au.org.ala.pipelines.vocabulary.ALAOccurrenceIssue;
 import com.google.common.base.Strings;
@@ -18,8 +17,6 @@ import org.gbif.pipelines.core.parsers.common.ParsedField;
 import org.gbif.pipelines.core.parsers.location.parser.CoordinateParseUtils;
 import org.gbif.pipelines.core.parsers.location.parser.Wgs84Projection;
 import org.gbif.pipelines.io.avro.ExtendedRecord;
-import uk.org.nbn.parser.OSGridParser;
-import uk.org.nbn.term.OSGridTerm;
 
 /**
  * Copy from org.gbif.pipelines.parsers.parsers.location.parser.CoordinateParser - - cannot be used
@@ -56,7 +53,7 @@ public class CoordinatesParser {
 
   // list with all the parsing functions
   private static final List<Function<ExtendedRecord, ParsedField<LatLng>>> PARSING_FUNCTIONS =
-      Arrays.asList(DECIMAL_LAT_LNG_FN, VERBATIM_LAT_LNG_FN, VERBATIM_COORDS_FN, OSGridParser.EASTING_NORTHING_FN, OSGridParser.GRID_REFERENCE_FN);
+      Arrays.asList(DECIMAL_LAT_LNG_FN, VERBATIM_LAT_LNG_FN, VERBATIM_COORDS_FN);
 
   /**
    * Parses the coordinates fields of a {@link ExtendedRecord}.

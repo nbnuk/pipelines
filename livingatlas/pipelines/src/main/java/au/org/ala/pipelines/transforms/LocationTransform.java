@@ -28,7 +28,6 @@ import org.gbif.pipelines.io.avro.ExtendedRecord;
 import org.gbif.pipelines.io.avro.LocationRecord;
 import org.gbif.pipelines.transforms.Transform;
 import org.gbif.rest.client.geocode.GeocodeResponse;
-import uk.org.nbn.pipelines.interpreters.OSGridInterpreter;
 import uk.org.nbn.pipelines.interpreters.NBNLocationInterpreter;
 
 @Slf4j
@@ -173,8 +172,7 @@ public class LocationTransform extends Transform<ExtendedRecord, LocationRecord>
             .via(LocationInterpreter::interpretMaximumDistanceAboveSurfaceInMeters)
             .via(LocationInterpreter::interpretCoordinatePrecision)
             .via(ALALocationInterpreter::interpretCoordinateUncertaintyInMeters)
-            .via(NBNLocationInterpreter::interpretCoordinateUncertaintyInMeters)
-            .via(OSGridInterpreter::interpretCoordinateUncertaintyInMetersFromGridSize)
+            .via(NBNLocationInterpreter::interpretCoordinateUncertaintyInMetersFromPrecisionFormat)
             .via(alaLocationInterpreter::interpretGeoreferencedDate)
             .via(ALALocationInterpreter::interpretGeoreferenceTerms)
             .via(

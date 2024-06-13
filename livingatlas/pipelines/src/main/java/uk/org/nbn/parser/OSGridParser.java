@@ -1,9 +1,9 @@
 package uk.org.nbn.parser;
 
+import au.org.ala.pipelines.vocabulary.ALAOccurrenceIssue;
 import com.google.common.base.Strings;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.gbif.common.parsers.NumberParser;
 import org.gbif.dwc.terms.DwcTerm;
 import org.gbif.kvs.geocode.LatLng;
 import org.gbif.pipelines.core.parsers.common.ParsedField;
@@ -17,12 +17,11 @@ import uk.org.nbn.util.GISPoint;
 import uk.org.nbn.util.GridUtil;
 import uk.org.nbn.vocabulary.NBNOccurrenceIssue;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 
-import static uk.org.nbn.util.NBNModelUtils.extractNullAwareExtensionTerm;
+import static org.gbif.pipelines.core.utils.ModelUtils.extractValue;
+import static uk.org.nbn.util.NBNModelUtils.extractNullAwareExtensionTermValue;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OSGridParser {
@@ -31,16 +30,34 @@ public class OSGridParser {
     public static final Function<ExtendedRecord, ParsedField<LatLng>> EASTING_NORTHING_FN =
             (er ->
                     parseEastingAndNorthing(
-                            extractNullAwareExtensionTerm(er, DwcTerm.verbatimSRS),
-                            extractNullAwareExtensionTerm(er, OSGridTerm.easting),
-                            extractNullAwareExtensionTerm(er, OSGridTerm.northing),
-                            extractNullAwareExtensionTerm(er, OSGridTerm.zone)));
+                            extractNullAwareExtensionTermValue(er, DwcTerm.verbatimSRS),
+                            extractNullAwareExtensionTermValue(er, OSGridTerm.easting),
+                            extractNullAwareExtensionTermValue(er, OSGridTerm.northing),
+                            extractNullAwareExtensionTermValue(er, OSGridTerm.zone)));
 
     // parses OSGrid extension gridRefernce field
     public static final Function<ExtendedRecord, ParsedField<LatLng>> GRID_REFERENCE_FN =
             (er ->
                     parseGridReference(
-                            extractNullAwareExtensionTerm(er, OSGridTerm.gridReference)));
+                            extractNullAwareExtensionTermValue(er, OSGridTerm.gridReference)));
+
+
+    private static final List<Function<ExtendedRecord, ParsedField<LatLng>>> PARSING_FUNCTIONS =
+            Arrays.asList(OSGridParser.EASTING_NORTHING_FN, OSGridParser.GRID_REFERENCE_FN);
+
+
+    public static ParsedField<LatLng> parseCoords(ExtendedRecord extendedRecord) {
+        Set<String> issues = new TreeSet<>();
+        for (Function<ExtendedRecord, ParsedField<LatLng>> parsingFunction : PARSING_FUNCTIONS) {
+            ParsedField<LatLng> result = parsingFunction.apply(extendedRecord);
+            if (result.isSuccessful()) {
+                return  result;
+            }
+            issues.addAll(result.getIssues());
+        }
+        issues.add(ALAOccurrenceIssue.LOCATION_NOT_SUPPLIED.name());
+        return ParsedField.fail(issues);
+    }
 
 
     public static ParsedField<LatLng> parseGridReference(final String gridReference) {
