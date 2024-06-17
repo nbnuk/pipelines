@@ -102,7 +102,8 @@ public class OSGridTransform extends Transform<KV<String,CoGbkResult>, OSGridRec
                     .via(OSGridInterpreter::applyIssues)
                     //This populate grid sizes for those supplied with gridreference or gridsizeinmeters
                     .via(OSGridInterpreter::addGridSize)
-                    .via(OSGridInterpreter::possiblyRecalculateCoordinateUncertainty)
+                    //.via(OSGridInterpreter::possiblyRecalculateCoordinateUncertainty)
+                    .via(OSGridInterpreter::validateSuppliedGridReferenceAndLatLon)
                     .via(OSGridInterpreter::setGridRefFromCoordinates)
                     //This populates grids sizes for those supplied with a lat lot and have had gridreference computed
                     .via(OSGridInterpreter::addGridSize)

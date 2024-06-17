@@ -109,7 +109,33 @@ public class OSGridInterpreter {
         }
     }
 
+
     /**
+     * Where both grid reference and lat lon supplied, adds assertion if lat lon is not centroid of grid square
+     * @param source
+     * @param osGridRecord
+     */
+    public  static void validateSuppliedGridReferenceAndLatLon(Tuple<ExtendedRecord,LocationRecord> source, OSGridRecord osGridRecord) {
+
+        ExtendedRecord extendedRecord = source.v1();
+
+        String rawGridReference = extractNullAwareExtensionTermValue(extendedRecord, OSGridTerm.gridReference);
+
+        if(Strings.isNullOrEmpty(rawGridReference)) {
+            return;
+        }
+
+        String decimalLatitudeValue = extractNullAwareValue(extendedRecord, DwcTerm.decimalLatitude);
+        String decimalLongitudeValue = extractNullAwareValue(extendedRecord, DwcTerm.decimalLongitude);
+
+        if(suppliedWithLatLon(extendedRecord, osGridRecord) && !GridUtil.isCentroid(Double.valueOf(decimalLatitudeValue), Double.valueOf(decimalLongitudeValue), rawGridReference))
+        {
+            addIssue(osGridRecord, NBNOccurrenceIssue.COORDINATES_NOT_CENTRE_OF_GRID.name());
+        }
+    }
+
+    /**
+     * @deprecated
      * Recalculated coordinateUncertainty from OSGrid values if:
      * - no lat lon (this should already have been done if OSGridExtensionTransform is applied)
      * - lat lon is centroid of grid (this should already have been done if OSGridExtensionTransform is applied)
@@ -173,7 +199,8 @@ public class OSGridInterpreter {
 
                 if (result != null) {
                     //todo - make sure this is used in indexing if set
-                    osGridRecord.setCoordinateUncertaintyInMeters(result);
+                    throw new RuntimeException();
+                    //osGridRecord.setCoordinateUncertaintyInMeters(result);
                 } else {
                     addIssue(osGridRecord, COORDINATE_UNCERTAINTY_METERS_INVALID);
                 }
@@ -195,12 +222,12 @@ public class OSGridInterpreter {
 
         ExtendedRecord extendedRecord = source.v1();
         LocationRecord locationRecord = source.v2();
-        Double coordinateUncertaintyToUse = osGridRecord.getCoordinateUncertaintyInMeters() != null ? osGridRecord.getCoordinateUncertaintyInMeters() : locationRecord.getCoordinateUncertaintyInMeters();
+        Double coordinateUncertainty = locationRecord.getCoordinateUncertaintyInMeters();
 
         if(locationRecord.getHasCoordinate() &&
                 Strings.isNullOrEmpty(osGridRecord.getGridReference()) &&
-                coordinateUncertaintyToUse != null &&
-                coordinateUncertaintyToUse > 0
+                coordinateUncertainty != null &&
+                coordinateUncertainty > 0
         ) {
             List<String> gbList = Arrays.asList("Wales", "Scotland", "England", "Isle of Man"); //OSGB-grid countries hard-coded
             List<String> niList = Arrays.asList("Northern Ireland"); //Irish grid
@@ -214,12 +241,12 @@ public class OSGridInterpreter {
                 gridToUse = "Irish";
             }
 
-            //double coordinateUncertaintyToUse = gridReferenceRecord.getCoordinateUncertaintyInMeters() != null ? gridReferenceRecord.getCoordinateUncertaintyInMeters() : locationRecord.getCoordinateUncertaintyInMeters();
+            //this will be the case for records supplied with OSGrid details whereas one supplied with lat lon wont get their grid size set until we've computed and grid reference
             if (osGridRecord.getGridSizeInMeters() != null) {
-                gridCalc = scalaOptionToString(GridUtil.latLonToOsGrid(locationRecord.getDecimalLatitude(), locationRecord.getDecimalLongitude(), coordinateUncertaintyToUse, "WGS84", gridToUse, osGridRecord.getGridSizeInMeters()));
+                gridCalc = scalaOptionToString(GridUtil.latLonToOsGrid(locationRecord.getDecimalLatitude(), locationRecord.getDecimalLongitude(), coordinateUncertainty, "WGS84", gridToUse, osGridRecord.getGridSizeInMeters()));
             } else {
                 //todo we could cobmine these two calls as does seem to allow optional argument to be ommited so just supplying default
-                gridCalc = scalaOptionToString(GridUtil.latLonToOsGrid(locationRecord.getDecimalLatitude(), locationRecord.getDecimalLongitude(), coordinateUncertaintyToUse, "WGS84", gridToUse, -1));
+                gridCalc = scalaOptionToString(GridUtil.latLonToOsGrid(locationRecord.getDecimalLatitude(), locationRecord.getDecimalLongitude(), coordinateUncertainty, "WGS84", gridToUse, -1));
             }
 
             if (!Strings.isNullOrEmpty(gridCalc)) {
