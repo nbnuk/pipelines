@@ -22,6 +22,7 @@ import static org.gbif.api.vocabulary.OccurrenceIssue.COORDINATE_UNCERTAINTY_MET
 
 import static org.gbif.pipelines.core.utils.ModelUtils.*;
 import static uk.org.nbn.util.NBNModelUtils.extractNullAwareExtensionTermValue;
+import static uk.org.nbn.util.NBNModelUtils.getListFromString;
 import static uk.org.nbn.util.ScalaToJavaUtil.scalaOptionToString;
 
 public class OSGridInterpreter {
@@ -99,7 +100,7 @@ public class OSGridInterpreter {
         String gridReferenceIssues = extractNullAwareExtensionTermValue(extendedRecord, OSGridTerm.issues);
 
         if(!Strings.isNullOrEmpty(gridReferenceIssues)) {
-            Arrays.stream(gridReferenceIssues.split("[,|]"))
+            getListFromString(gridReferenceIssues).stream()
                     .map(issue -> Arrays.stream(NBNOccurrenceIssue.values())
                             .filter(i -> i.name().equals(issue))
                             .findFirst())

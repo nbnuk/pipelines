@@ -91,7 +91,7 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
         }
 
         //put the issues in the extension so that we can retrieve and apply them in OSGridTransform
-        setExtensionTermValue(alteredEr, OSGridTerm.issues, String.join("|", issues));
+        setExtensionTermValue(alteredEr, OSGridTerm.issues, getStringFromList(issues));
 
         counter.inc();
         return alteredEr;
