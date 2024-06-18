@@ -82,7 +82,7 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
 
         if (!hasSuppliedLatLon ||
                 Strings.isNullOrEmpty(coordinateUncertaintyValue) ||
-                GridUtil.isCentroid(Double.valueOf(decimalLatitudeValue), Double.valueOf(decimalLongitudeValue), gridReferenceValue)) {
+                GridUtil.isCentroid(Double.valueOf(decimalLongitudeValue), Double.valueOf(decimalLatitudeValue), gridReferenceValue)) {
 
             setCoordinateUncertaintyFromOSGrid(er, alteredEr);
         }

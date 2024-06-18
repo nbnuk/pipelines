@@ -128,7 +128,7 @@ public class OSGridInterpreter {
         String decimalLatitudeValue = extractNullAwareValue(extendedRecord, DwcTerm.decimalLatitude);
         String decimalLongitudeValue = extractNullAwareValue(extendedRecord, DwcTerm.decimalLongitude);
 
-        if(suppliedWithLatLon(extendedRecord, osGridRecord) && !GridUtil.isCentroid(Double.valueOf(decimalLatitudeValue), Double.valueOf(decimalLongitudeValue), rawGridReference))
+        if(suppliedWithLatLon(extendedRecord, osGridRecord) && !GridUtil.isCentroid(Double.valueOf(decimalLongitudeValue), Double.valueOf(decimalLatitudeValue), rawGridReference))
         {
             addIssue(osGridRecord, NBNOccurrenceIssue.COORDINATES_NOT_CENTRE_OF_GRID.name());
         }
