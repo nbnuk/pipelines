@@ -1,6 +1,8 @@
 package uk.org.nbn.pipelines;
 
 import static au.org.ala.pipelines.transforms.IndexValues.PIPELINES_GEODETIC_DATUM;
+import static uk.org.nbn.util.NBNModelUtils.extractNullAwareExtensionTermValue;
+import static uk.org.nbn.util.NBNModelUtils.getListFromString;
 
 import au.org.ala.pipelines.vocabulary.CentrePoints;
 import au.org.ala.pipelines.vocabulary.StateProvinceParser;
@@ -12,6 +14,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import uk.org.nbn.pipelines.transforms.OSGridExtensionTransform;
 import uk.org.nbn.term.OSGridTerm;
+import uk.org.nbn.vocabulary.NBNOccurrenceIssue;
 
 @Slf4j
 public class OSGridExtensionTransformTests extends OSGridTestBase {
@@ -30,6 +33,13 @@ public class OSGridExtensionTransformTests extends OSGridTestBase {
         "56.970009", result.getCoreTerms().get(DwcTerm.decimalLatitude.qualifiedName()));
     Assert.assertEquals(
         "-6.361995", result.getCoreTerms().get(DwcTerm.decimalLongitude.qualifiedName()));
+
+
+    String osGridIssuesTerm = extractNullAwareExtensionTermValue(result, OSGridTerm.issues);
+    Assert.assertNotNull(osGridIssuesTerm);
+
+    List<String> osGridIssues = getListFromString(osGridIssuesTerm);
+    Assert.assertTrue(osGridIssues.contains(NBNOccurrenceIssue.DECIMAL_LAT_LONG_CALCULATED_FROM_GRID_REF.name()));
   }
 
   @Test
