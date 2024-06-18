@@ -20,14 +20,13 @@ import uk.org.nbn.vocabulary.NBNOccurrenceIssue;
 import java.util.*;
 import java.util.function.Function;
 
-import static org.gbif.pipelines.core.utils.ModelUtils.extractValue;
 import static uk.org.nbn.util.NBNModelUtils.extractNullAwareExtensionTermValue;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OSGridParser {
 
     // NBN parses OSGrid extension easting and northing fields
-    public static final Function<ExtendedRecord, ParsedField<LatLng>> EASTING_NORTHING_FN =
+    private static final Function<ExtendedRecord, ParsedField<LatLng>> EASTING_NORTHING_FN =
             (er ->
                     parseEastingAndNorthing(
                             extractNullAwareExtensionTermValue(er, DwcTerm.verbatimSRS),
@@ -36,7 +35,7 @@ public class OSGridParser {
                             extractNullAwareExtensionTermValue(er, OSGridTerm.zone)));
 
     // parses OSGrid extension gridRefernce field
-    public static final Function<ExtendedRecord, ParsedField<LatLng>> GRID_REFERENCE_FN =
+    private static final Function<ExtendedRecord, ParsedField<LatLng>> GRID_REFERENCE_FN =
             (er ->
                     parseGridReference(
                             extractNullAwareExtensionTermValue(er, OSGridTerm.gridReference)));
@@ -60,7 +59,7 @@ public class OSGridParser {
     }
 
 
-    public static ParsedField<LatLng> parseGridReference(final String gridReference) {
+    private static ParsedField<LatLng> parseGridReference(final String gridReference) {
         if (Strings.isNullOrEmpty(gridReference)) {
             return ParsedField.fail();
         }
@@ -80,7 +79,7 @@ public class OSGridParser {
         return  ret;
     }
 
-    public static ParsedField<LatLng> parseEastingAndNorthing(final String verbatimSRS, final String easting, final String northing, final String zone) {
+    private static ParsedField<LatLng> parseEastingAndNorthing(final String verbatimSRS, final String easting, final String northing, final String zone) {
         if (
                 Strings.isNullOrEmpty(easting) ||
                 Strings.isNullOrEmpty(northing) ||
