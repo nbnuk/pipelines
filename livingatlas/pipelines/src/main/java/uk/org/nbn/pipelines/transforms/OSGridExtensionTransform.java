@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import static au.org.ala.pipelines.transforms.IndexValues.PIPELINES_GEODETIC_DATUM;
 import static org.gbif.pipelines.core.utils.ModelUtils.extractNullAwareValue;
 import static uk.org.nbn.util.NBNModelUtils.*;
 
@@ -53,12 +54,14 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
 
 
     public void convert(ExtendedRecord er, Consumer<ExtendedRecord> resultConsumer) {
+        resultConsumer.accept(process(er));
+    }
 
+    public ExtendedRecord process(ExtendedRecord er) {
         String gridReferenceValue = extractNullAwareExtensionTermValue(er, OSGridTerm.gridReference);
 
         if (Strings.isNullOrEmpty(gridReferenceValue)) {
-            resultConsumer.accept(er);
-            return;
+            return er;
         }
 
         ExtendedRecord alteredEr = ExtendedRecord.newBuilder(er).build();
@@ -71,7 +74,7 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
         boolean hasSuppliedLatLon = !Strings.isNullOrEmpty(decimalLatitudeValue) && !Strings.isNullOrEmpty(decimalLongitudeValue);
 
         if (!hasSuppliedLatLon) {
-            setLatLonFromGridReference(er, alteredEr, issues);
+            setLatLonFromOSGrid(er, alteredEr, issues);
         }
 
         //if grid and:
@@ -91,16 +94,16 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
         setExtensionTermValue(alteredEr, OSGridTerm.issues, String.join("|", issues));
 
         counter.inc();
-        resultConsumer.accept(alteredEr);
+        return alteredEr;
     }
 
-    private void setLatLonFromGridReference(ExtendedRecord er, ExtendedRecord alteredEr, List<String> issues) {
+    private void setLatLonFromOSGrid(ExtendedRecord er, ExtendedRecord alteredEr, List<String> issues) {
         ParsedField<LatLng> result = OSGridParser.parseCoords(er);
         if (result.isSuccessful()) {
             alteredEr.getCoreTerms().put(DwcTerm.decimalLatitude.qualifiedName(), result.getResult().getLatitude().toString());
             alteredEr.getCoreTerms().put(DwcTerm.decimalLongitude.qualifiedName(), result.getResult().getLongitude().toString());
             // grid util projects all coordinates to WGS84
-            alteredEr.getCoreTerms().put(DwcTerm.geodeticDatum.qualifiedName(), "WGS84");
+            alteredEr.getCoreTerms().put(DwcTerm.geodeticDatum.qualifiedName(), PIPELINES_GEODETIC_DATUM);
             issues.addAll(result.getIssues());
         }
     }
