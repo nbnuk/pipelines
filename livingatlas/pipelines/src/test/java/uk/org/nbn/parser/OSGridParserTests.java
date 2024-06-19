@@ -21,10 +21,6 @@ public class OSGridParserTests extends OSGridTestBase {
             "H99, 54.793876, -6.523798"
     })
     public void parseFromGridReference(String gridReference, Double expectedLatitude, Double expectedLongitude) {
-
-        final String falseEasting = "999999";
-        final String falseNorthing = "999999";
-
         ExtendedRecord er = createTestRecord();
         Map<String,String> osGridMap = getOSGridTerms(er);
 
