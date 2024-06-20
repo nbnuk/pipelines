@@ -1,35 +1,35 @@
 package uk.org.nbn.pipelines;
 
-import org.gbif.pipelines.io.avro.ExtendedRecord;
-import uk.org.nbn.term.OSGridTerm;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.gbif.pipelines.io.avro.ExtendedRecord;
+import uk.org.nbn.term.OSGridTerm;
 
 public abstract class OSGridTestBase {
 
-    protected static final String ID = "777";
-    protected ExtendedRecord createTestRecord() {
+  protected static final String ID = "777";
 
-        Map<String, String> coreMap = new HashMap<>();
-        Map<String, List<Map<String, String>>> extensionsMap = new HashMap<>();
-        Map<String, String> osGridMap = new HashMap<>();
+  protected ExtendedRecord createTestRecord() {
 
-        extensionsMap.put(OSGridTerm.gridReference.namespace().toString(), Arrays.asList(osGridMap));
+    Map<String, String> coreMap = new HashMap<>();
+    Map<String, List<Map<String, String>>> extensionsMap = new HashMap<>();
+    Map<String, String> osGridMap = new HashMap<>();
 
-        ExtendedRecord er =
-                ExtendedRecord.newBuilder()
-                        .setId(ID)
-                        .setCoreTerms(coreMap)
-                        .setExtensions(extensionsMap)
-                        .build();
+    extensionsMap.put(OSGridTerm.gridReference.namespace().toString(), Arrays.asList(osGridMap));
 
-        return er;
-    }
+    ExtendedRecord er =
+        ExtendedRecord.newBuilder()
+            .setId(ID)
+            .setCoreTerms(coreMap)
+            .setExtensions(extensionsMap)
+            .build();
 
-    protected Map<String,String> getOSGridTerms(ExtendedRecord er) {
-        return er.getExtensions().get(OSGridTerm.gridReference.namespace().toString()).get(0);
-    }
+    return er;
+  }
+
+  protected Map<String, String> getOSGridTerms(ExtendedRecord er) {
+    return er.getExtensions().get(OSGridTerm.gridReference.namespace().toString()).get(0);
+  }
 }

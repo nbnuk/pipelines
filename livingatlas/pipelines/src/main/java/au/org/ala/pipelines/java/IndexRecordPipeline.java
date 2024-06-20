@@ -183,8 +183,7 @@ public class IndexRecordPipeline {
     NBNAccessControlRecordTransform nbnAccessControlledTransform =
         NBNAccessControlRecordTransform.builder().create();
 
-    OSGridTransform osGridTransform =
-            OSGridTransform.builder().create();
+    OSGridTransform osGridTransform = OSGridTransform.builder().create();
 
     log.info("Init metrics");
     IngestMetrics metrics = IngestMetricsBuilder.createInterpretedToEsIndexMetrics();
@@ -303,13 +302,11 @@ public class IndexRecordPipeline {
             executor);
 
     CompletableFuture<Map<String, OSGridRecord>> osGridMapFeature =
-            CompletableFuture.supplyAsync(
-                    () ->
-                            AvroReader.readRecords(
-                                    hdfsConfigs,
-                                    OSGridRecord.class,
-                                    pathFn.apply(osGridTransform.getBaseName())),
-                    executor);
+        CompletableFuture.supplyAsync(
+            () ->
+                AvroReader.readRecords(
+                    hdfsConfigs, OSGridRecord.class, pathFn.apply(osGridTransform.getBaseName())),
+            executor);
 
     CompletableFuture<Map<String, ImageRecord>> imageServiceMapFeature =
         CompletableFuture.supplyAsync(
@@ -372,8 +369,7 @@ public class IndexRecordPipeline {
         options.getIncludeImages() ? imageServiceMapFeature.get() : Collections.emptyMap();
     Map<String, NBNAccessControlledRecord> nbnAccessControlledMap =
         nbnAccessControlledMapFeature.get();
-    Map<String, OSGridRecord> osGridMap =
-            osGridMapFeature.get();
+    Map<String, OSGridRecord> osGridMap = osGridMapFeature.get();
     Map<String, TaxonProfile> taxonProfileMap =
         options.getIncludeSpeciesLists() ? taxonProfileMapFeature.get() : Collections.emptyMap();
 

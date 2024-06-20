@@ -1,8 +1,7 @@
 package uk.org.nbn.term;
 
-import org.gbif.dwc.terms.Term;
-
 import java.net.URI;
+import org.gbif.dwc.terms.Term;
 
 /** Set of terms in use by seedbank */
 public enum OSGridTerm implements Term {

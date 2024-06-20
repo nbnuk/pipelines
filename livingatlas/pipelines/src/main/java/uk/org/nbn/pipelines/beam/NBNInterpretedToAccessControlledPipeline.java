@@ -112,15 +112,15 @@ public class NBNInterpretedToAccessControlledPipeline {
             .apply("Map Location to KV", locationTransform.toKv());
 
     PCollection<KV<String, OSGridRecord>> inputOSGridCollection =
-            p.apply("Read OSGrid", osGridTransform.read(inputPathFn))
-                    .apply("Map OSGrid to KV", osGridTransform.toKv());
+        p.apply("Read OSGrid", osGridTransform.read(inputPathFn))
+            .apply("Map OSGrid to KV", osGridTransform.toKv());
 
     KeyedPCollectionTuple<String> inputTuples =
         KeyedPCollectionTuple
             // Core
             .of(verbatimTransform.getTag(), inputVerbatimCollection)
             .and(locationTransform.getTag(), inputLocationCollection)
-            .and(osGridTransform.getTag(),inputOSGridCollection);
+            .and(osGridTransform.getTag(), inputOSGridCollection);
 
     log.info("Creating access controlled records");
     inputTuples

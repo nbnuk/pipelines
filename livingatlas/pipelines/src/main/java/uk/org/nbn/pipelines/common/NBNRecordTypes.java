@@ -6,8 +6,7 @@ import org.gbif.api.model.pipelines.InterpretationType;
 public enum NBNRecordTypes implements InterpretationType {
   ALL,
   NBN_ACCESS_CONTROLLED_DATA,
-  OS_GRID
-  ;
+  OS_GRID;
 
   NBNRecordTypes() {}
 

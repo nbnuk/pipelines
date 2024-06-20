@@ -1,15 +1,13 @@
 package uk.org.nbn.vocabulary;
 
-import au.org.ala.pipelines.vocabulary.ALAOccurrenceIssue;
 import com.google.common.collect.ImmutableSet;
+import java.util.Set;
 import org.gbif.api.vocabulary.InterpretationRemark;
 import org.gbif.api.vocabulary.InterpretationRemarkSeverity;
 import org.gbif.dwc.terms.DwcTerm;
 import org.gbif.dwc.terms.Term;
 import org.gbif.utils.AnnotationUtils;
 import uk.org.nbn.term.OSGridTerm;
-
-import java.util.Set;
 
 /**
  * Living Atlas issue extension. We should look to merge this with {@link
@@ -19,25 +17,27 @@ public enum NBNOccurrenceIssue implements InterpretationRemark {
 
   // Location related
   DECIMAL_LAT_LONG_CALCULATED_FROM_GRID_REF(
-          InterpretationRemarkSeverity.INFO, new Term[]{ DwcTerm.decimalLatitude, DwcTerm.decimalLongitude, OSGridTerm.gridReference }),
+      InterpretationRemarkSeverity.INFO,
+      new Term[] {DwcTerm.decimalLatitude, DwcTerm.decimalLongitude, OSGridTerm.gridReference}),
   DECIMAL_LAT_LONG_CALCULATION_FROM_EASTING_NORTHING_FAILED(
-      InterpretationRemarkSeverity.WARNING, new Term[]{ OSGridTerm.easting, OSGridTerm.northing, OSGridTerm.zone }),
+      InterpretationRemarkSeverity.WARNING,
+      new Term[] {OSGridTerm.easting, OSGridTerm.northing, OSGridTerm.zone}),
   DECIMAL_LAT_LONG_CALCULATED_FROM_EASTING_NORTHING(
-          InterpretationRemarkSeverity.INFO, new Term[]{ OSGridTerm.easting, OSGridTerm.northing, OSGridTerm.zone }),
+      InterpretationRemarkSeverity.INFO,
+      new Term[] {OSGridTerm.easting, OSGridTerm.northing, OSGridTerm.zone}),
 
   DECIMAL_LAT_LONG_CALCULATION_FROM_EASTING_NORTHING_UNRECOGNISED_GDA94_ZONE(
-          InterpretationRemarkSeverity.WARNING, new Term[]{ DwcTerm.verbatimSRS, OSGridTerm.zone }),
+      InterpretationRemarkSeverity.WARNING, new Term[] {DwcTerm.verbatimSRS, OSGridTerm.zone}),
 
   DECIMAL_LAT_LONG_CALCULATION_FROM_EASTING_NORTHING_UNRECOGNISED_VERBATIMSRS_ZONE(
-          InterpretationRemarkSeverity.WARNING, new Term[]{ DwcTerm.verbatimSRS, OSGridTerm.zone }),
+      InterpretationRemarkSeverity.WARNING, new Term[] {DwcTerm.verbatimSRS, OSGridTerm.zone}),
 
   COORDINATES_NOT_CENTRE_OF_GRID(
-          InterpretationRemarkSeverity.INFO, new Term[]{ DwcTerm.decimalLatitude, DwcTerm.decimalLongitude, OSGridTerm.gridReference }),
+      InterpretationRemarkSeverity.INFO,
+      new Term[] {DwcTerm.decimalLatitude, DwcTerm.decimalLongitude, OSGridTerm.gridReference}),
 
   GRID_REF_CALCULATED_FROM_LAT_LONG(
-          InterpretationRemarkSeverity.INFO, new Term[]{ OSGridTerm.gridReference });
-
-
+      InterpretationRemarkSeverity.INFO, new Term[] {OSGridTerm.gridReference});
 
   private final Set<Term> relatedTerms;
   private final InterpretationRemarkSeverity severity;
@@ -80,10 +80,7 @@ public enum NBNOccurrenceIssue implements InterpretationRemark {
     static {
       OSGRID_TERMS =
           new Term[] {
-                  OSGridTerm.gridReference,
-                  OSGridTerm.easting,
-                  OSGridTerm.northing,
-                  OSGridTerm.zone
+            OSGridTerm.gridReference, OSGridTerm.easting, OSGridTerm.northing, OSGridTerm.zone
           };
     }
   }

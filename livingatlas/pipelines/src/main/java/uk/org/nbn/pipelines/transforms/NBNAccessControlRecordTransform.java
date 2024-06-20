@@ -129,11 +129,7 @@ public class NBNAccessControlRecordTransform
         NBNAccessControlledRecord.newBuilder().setId(id).build();
 
     NBNAccessControlledDataInterpreter.accessControlledDataInterpreter(
-        datasetId,
-        er,
-        lr,
-        osgr,
-        accessControlledRecord);
+        datasetId, er, lr, osgr, accessControlledRecord);
 
     return Optional.of(accessControlledRecord);
   }

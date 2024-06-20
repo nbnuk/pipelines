@@ -360,12 +360,12 @@ public class MultimediaCsvConverterTest {
             .build();
 
     OSGridRecord osgr =
-            OSGridRecord.newBuilder()
-                    .setId(DwcTerm.occurrenceID.simpleName())
-                    .setCreated(8L)
-                    .setGridReference("osgr_Grid_Reference")
-                    .setGridSizeInMeters(333)
-                    .build();
+        OSGridRecord.newBuilder()
+            .setId(DwcTerm.occurrenceID.simpleName())
+            .setCreated(8L)
+            .setGridReference("osgr_Grid_Reference")
+            .setGridSizeInMeters(333)
+            .build();
 
     Long lastLoadDate = 9L;
     Long lastProcessedDate = 10L;

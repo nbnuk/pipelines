@@ -42,7 +42,6 @@ import org.gbif.pipelines.transforms.extension.MultimediaTransform;
 import org.slf4j.MDC;
 import uk.org.nbn.pipelines.io.avro.NBNAccessControlledRecord;
 import uk.org.nbn.pipelines.transforms.NBNAccessControlRecordTransform;
-import uk.org.nbn.pipelines.transforms.OSGridExtensionTransform;
 import uk.org.nbn.pipelines.transforms.OSGridTransform;
 
 /**
@@ -243,8 +242,8 @@ public class IndexRecordPipeline {
             .apply("Map access controlled data to KV", nbnAccessControlRecordTransform.toKv());
 
     PCollection<KV<String, OSGridRecord>> osGridDataCollection =
-            p.apply("Read access controlled data", osGridTransform.read(pathFn))
-                    .apply("Map access controlled data to KV", osGridTransform.toKv());
+        p.apply("Read access controlled data", osGridTransform.read(pathFn))
+            .apply("Map access controlled data to KV", osGridTransform.toKv());
 
     final TupleTag<ImageRecord> imageRecordTupleTag = new TupleTag<ImageRecord>() {};
     final TupleTag<TaxonProfile> speciesListsRecordTupleTag = new TupleTag<TaxonProfile>() {};

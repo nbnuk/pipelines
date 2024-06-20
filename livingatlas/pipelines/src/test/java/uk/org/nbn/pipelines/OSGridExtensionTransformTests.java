@@ -4,8 +4,6 @@ import static au.org.ala.pipelines.transforms.IndexValues.PIPELINES_GEODETIC_DAT
 import static uk.org.nbn.util.NBNModelUtils.extractNullAwareExtensionTermValue;
 import static uk.org.nbn.util.NBNModelUtils.getListFromString;
 
-import au.org.ala.pipelines.vocabulary.CentrePoints;
-import au.org.ala.pipelines.vocabulary.StateProvinceParser;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.gbif.dwc.terms.DwcTerm;
@@ -34,12 +32,12 @@ public class OSGridExtensionTransformTests extends OSGridTestBase {
     Assert.assertEquals(
         "-6.361995", result.getCoreTerms().get(DwcTerm.decimalLongitude.qualifiedName()));
 
-
     String osGridIssuesTerm = extractNullAwareExtensionTermValue(result, OSGridTerm.issues);
     Assert.assertNotNull(osGridIssuesTerm);
 
     List<String> osGridIssues = getListFromString(osGridIssuesTerm);
-    Assert.assertTrue(osGridIssues.contains(NBNOccurrenceIssue.DECIMAL_LAT_LONG_CALCULATED_FROM_GRID_REF.name()));
+    Assert.assertTrue(
+        osGridIssues.contains(NBNOccurrenceIssue.DECIMAL_LAT_LONG_CALCULATED_FROM_GRID_REF.name()));
   }
 
   @Test
@@ -107,7 +105,8 @@ public class OSGridExtensionTransformTests extends OSGridTestBase {
     ExtendedRecord result = transform.process(er);
 
     Assert.assertEquals(
-            falseCooridinateUncertainty, result.getCoreTerms().get(DwcTerm.coordinateUncertaintyInMeters.qualifiedName()));
+        falseCooridinateUncertainty,
+        result.getCoreTerms().get(DwcTerm.coordinateUncertaintyInMeters.qualifiedName()));
   }
 
   @Test

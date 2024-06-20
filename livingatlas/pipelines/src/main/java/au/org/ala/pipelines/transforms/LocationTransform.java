@@ -156,7 +156,7 @@ public class LocationTransform extends Transform<ExtendedRecord, LocationRecord>
         Interpretation.from(source)
             .to(lr)
             .when(er -> !er.getCoreTerms().isEmpty())
-            //todo - this need making grid ref aware to prevent it adding issue and to set country
+            // todo - this need making grid ref aware to prevent it adding issue and to set country
             .via(LocationInterpreter.interpretCountryAndCoordinates(countryKvStore, null))
             .via(ALALocationInterpreter.interpretStateProvince(stateProvinceKvStore))
             .via(LocationInterpreter.interpretContinent(countryKvStore))

@@ -292,37 +292,40 @@ public class ALAVerbatimToInterpretedPipeline {
         .apply("Interpret ALA taxonomy", alaTaxonomyTransform.interpret())
         .apply("Write ALA taxon to avro", alaTaxonomyTransform.write(pathFn));
 
-
-//    uniqueRecords
-//            .apply("Check location transform condition", locationTransform.check(types))
-//            .apply("Interpret location", locationTransform.interpret())
-//            .apply("Write location to avro", locationTransform.write(pathFn));
+    //    uniqueRecords
+    //            .apply("Check location transform condition", locationTransform.check(types))
+    //            .apply("Interpret location", locationTransform.interpret())
+    //            .apply("Write location to avro", locationTransform.write(pathFn));
 
     PCollection<LocationRecord> locationRecords =
-    uniqueRecords
-        .apply("Check location transform condition", locationTransform.check(types))
-        .apply("Interpret location", locationTransform.interpret());
-       // .apply("Write location to avro", locationTransform.write(pathFn));
+        uniqueRecords
+            .apply("Check location transform condition", locationTransform.check(types))
+            .apply("Interpret location", locationTransform.interpret());
+    // .apply("Write location to avro", locationTransform.write(pathFn));
 
     locationRecords.apply("Write location to avro", locationTransform.write(pathFn));
 
     KeyedPCollectionTuple<String> inputTuples =
-            KeyedPCollectionTuple
-                    // Core
-                    .of(verbatimTransform.getTag(), uniqueRecords.apply("Map Verbatim to KV", verbatimTransform.toKv()))
-                    .and(locationTransform.getTag(), locationRecords.apply("Map Location to KV",locationTransform.toKv()));
+        KeyedPCollectionTuple
+            // Core
+            .of(
+                verbatimTransform.getTag(),
+                uniqueRecords.apply("Map Verbatim to KV", verbatimTransform.toKv()))
+            .and(
+                locationTransform.getTag(),
+                locationRecords.apply("Map Location to KV", locationTransform.toKv()));
 
-    uk.org.nbn.pipelines.transforms.OSGridTransform osGridTransform = uk.org.nbn.pipelines.transforms.OSGridTransform
-            .builder()
+    uk.org.nbn.pipelines.transforms.OSGridTransform osGridTransform =
+        uk.org.nbn.pipelines.transforms.OSGridTransform.builder()
             .erTag(verbatimTransform.getTag())
             .lrTag(locationTransform.getTag())
             .create();
 
     inputTuples
-            .apply("Grouping objects", CoGroupByKey.create())
-            //.apply("Check grid reference transform condition", osGridExtensionTransform.check(types))
-            .apply("Interpret OSGrids", osGridTransform.interpret())
-            .apply("Write OSGrids to avro", osGridTransform.write(pathFn));
+        .apply("Grouping objects", CoGroupByKey.create())
+        // .apply("Check grid reference transform condition", osGridExtensionTransform.check(types))
+        .apply("Interpret OSGrids", osGridTransform.interpret())
+        .apply("Write OSGrids to avro", osGridTransform.write(pathFn));
 
     uniqueRecords
         .apply("Check location transform condition", measurementOrFactTransform.check(types))

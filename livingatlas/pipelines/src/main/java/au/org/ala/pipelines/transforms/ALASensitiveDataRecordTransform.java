@@ -194,7 +194,7 @@ public class ALASensitiveDataRecordTransform
     TaxonRecord itxr = txrTag == null ? null : v.getOnly(txrTag, null);
     ALATaxonRecord iatxr = atxrTag == null ? null : v.getOnly(atxrTag, null);
     LocationRecord ilr = lrTag == null ? null : v.getOnly(lrTag, null);
-    //todo - osgridrecord
+    // todo - osgridrecord
 
     ALASensitivityRecord sr = ALASensitivityRecord.newBuilder().setId(id).build();
 

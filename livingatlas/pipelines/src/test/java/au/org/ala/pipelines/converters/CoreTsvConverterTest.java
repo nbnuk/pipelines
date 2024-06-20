@@ -717,12 +717,12 @@ public class CoreTsvConverterTest {
             .build();
 
     OSGridRecord osgr =
-            OSGridRecord.newBuilder()
-                    .setId(DwcTerm.occurrenceID.simpleName())
-                    .setCreated(8L)
-                    .setGridReference("osgr_Grid_Reference")
-                    .setGridSizeInMeters(333)
-                    .build();
+        OSGridRecord.newBuilder()
+            .setId(DwcTerm.occurrenceID.simpleName())
+            .setCreated(8L)
+            .setGridReference("osgr_Grid_Reference")
+            .setGridSizeInMeters(333)
+            .build();
 
     Long lastLoadDate = 9L;
     Long lastProcessedDate = 10L;
@@ -1056,8 +1056,7 @@ public class CoreTsvConverterTest {
     NBNAccessControlledRecord acr =
         NBNAccessControlledRecord.newBuilder().setId(DwcTerm.occurrenceID.simpleName()).build();
 
-    OSGridRecord osgr =
-            OSGridRecord.newBuilder().setId(DwcTerm.occurrenceID.simpleName()).build();
+    OSGridRecord osgr = OSGridRecord.newBuilder().setId(DwcTerm.occurrenceID.simpleName()).build();
 
     Long lastLoadDate = 9L;
     Long lastProcessedDate = 10L;

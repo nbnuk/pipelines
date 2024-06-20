@@ -292,10 +292,11 @@ public class IndexRecordTransform implements Serializable, IndexFields {
         NBNAccessControlledDataInterpreter.applyAccessControls(accessControlledRecord, er);
       }
 
-     //TODO HMJ - need to implement this
+      // TODO HMJ - need to implement this
       if (osGridRecord != null) {
         osGridRecord = OSGridRecord.newBuilder(osGridRecord).build();
-        NBNAccessControlledDataInterpreter.applyAccessControls(accessControlledRecord, osGridRecord);
+        NBNAccessControlledDataInterpreter.applyAccessControls(
+            accessControlledRecord, osGridRecord);
       }
     }
 
