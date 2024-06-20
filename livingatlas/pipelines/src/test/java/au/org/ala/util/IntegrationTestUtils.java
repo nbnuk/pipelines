@@ -33,6 +33,7 @@ public class IntegrationTestUtils extends ExternalResource {
   private static final Object MUTEX = new Object();
   private static final AtomicInteger COUNTER = new AtomicInteger(0);
 
+  private  static  final  boolean STARTSTOPDOCKER = Boolean.valueOf(System.getProperty("DOCKER_STARTSTOP","true"));
   GenericContainer nameService;
   GenericContainer sdsService;
   GenericContainer solrService;
@@ -58,50 +59,49 @@ public class IntegrationTestUtils extends ExternalResource {
 
   @Override
   protected void before() throws Throwable {
-    propertiesFilePath = TestUtils.getPipelinesConfigFile();
-    if (true) return;
     if (COUNTER.get() == 0) {
 
-      // setup containers
-      int[] solrPorts = TestUtils.getFreePortsForSolr();
-      int zkPort = solrPorts[1];
-      int solrPort = solrPorts[0];
+      if(STARTSTOPDOCKER) {
+        // setup containers
+        int[] solrPorts = TestUtils.getFreePortsForSolr();
+        int zkPort = solrPorts[1];
+        int solrPort = solrPorts[0];
 
-      solrService =
-          new FixedHostPortGenericContainer(SOLR_IMG)
-              .withFixedExposedPort(zkPort, zkPort)
-              .withFixedExposedPort(solrPort, solrPort)
-              .withEnv("SOLR_PORT", solrPort + "")
-              .withEnv("ZOO_PORT", zkPort + "")
-              .withEnv("ZOO_HOST", "localhost")
-              .withEnv("SOLR_HOST", "localhost")
-              .withEnv("SOLR_MODE", "solrcloud");
-      solrService.start();
+        solrService =
+                new FixedHostPortGenericContainer(SOLR_IMG)
+                        .withFixedExposedPort(zkPort, zkPort)
+                        .withFixedExposedPort(solrPort, solrPort)
+                        .withEnv("SOLR_PORT", solrPort + "")
+                        .withEnv("ZOO_PORT", zkPort + "")
+                        .withEnv("ZOO_HOST", "localhost")
+                        .withEnv("SOLR_HOST", "localhost")
+                        .withEnv("SOLR_MODE", "solrcloud");
+        solrService.start();
 
-      nameService =
-          new GenericContainer(DockerImageName.parse(NAME_SERVICE_IMG))
-              .withExposedPorts(NAME_SERVICE_INTERNAL_PORT)
-              .withStartupTimeout(Duration.ofMinutes(3));
-      nameService.start();
+        nameService =
+                new GenericContainer(DockerImageName.parse(NAME_SERVICE_IMG))
+                        .withExposedPorts(NAME_SERVICE_INTERNAL_PORT)
+                        .withStartupTimeout(Duration.ofMinutes(3));
+        nameService.start();
 
-      sdsService =
-          new GenericContainer(DockerImageName.parse(SENSTIVE_SERVICE_IMG))
-              .withExposedPorts(SENSITIVE_SERVICE_INTERNAL_PORT)
-              .withStartupTimeout(Duration.ofMinutes(3));
-      sdsService.start();
+        sdsService =
+                new GenericContainer(DockerImageName.parse(SENSTIVE_SERVICE_IMG))
+                        .withExposedPorts(SENSITIVE_SERVICE_INTERNAL_PORT)
+                        .withStartupTimeout(Duration.ofMinutes(3));
+        sdsService.start();
 
-      elasticsearchContainer =
-          new ElasticsearchContainer(
-                  DockerImageName.parse("docker.elastic.co/elasticsearch/elasticsearch-oss")
-                      .withTag("7.10.2"))
-              .withReuse(true);
-      elasticsearchContainer.start();
+        elasticsearchContainer =
+                new ElasticsearchContainer(
+                        DockerImageName.parse("docker.elastic.co/elasticsearch/elasticsearch-oss")
+                                .withTag("7.10.2"))
+                        .withReuse(true);
+        elasticsearchContainer.start();
 
-      TestUtils.setSolrPorts(solrPort, zkPort);
-      TestUtils.setNameServicePort(nameService.getMappedPort(NAME_SERVICE_INTERNAL_PORT));
-      TestUtils.setSDSPort(sdsService.getMappedPort(SENSITIVE_SERVICE_INTERNAL_PORT));
-      TestUtils.setESPort(elasticsearchContainer.getMappedPort(ES_INTERNAL_PORT));
-
+        TestUtils.setSolrPorts(solrPort, zkPort);
+        TestUtils.setNameServicePort(nameService.getMappedPort(NAME_SERVICE_INTERNAL_PORT));
+        TestUtils.setSDSPort(sdsService.getMappedPort(SENSITIVE_SERVICE_INTERNAL_PORT));
+        TestUtils.setESPort(elasticsearchContainer.getMappedPort(ES_INTERNAL_PORT));
+      }
       server = TestUtils.startMockCollectoryServer();
       speciesListServer = TestUtils.startSpeciesListServer();
       samplingServer = TestUtils.startMockSpatialServer();
@@ -110,23 +110,26 @@ public class IntegrationTestUtils extends ExternalResource {
 
       config = ALAFsUtils.readConfigFile(HdfsConfigs.nullConfig(), propertiesFilePath);
 
-      // Fix for https://github.com/gbif/pipelines/issues/568
-      try (EsClient esClient =
-          EsClient.from(
-              EsConfig.from(
-                  "http://localhost:" + elasticsearchContainer.getMappedPort(ES_INTERNAL_PORT)))) {
-        esClient.performPutRequest(
-            "/_cluster/settings",
-            Collections.emptyMap(),
-            new NStringEntity(
-                "{\"persistent\":{\"cluster.routing.allocation.disk.threshold_enabled\":false}}"));
+      if(STARTSTOPDOCKER) {
+        // Fix for https://github.com/gbif/pipelines/issues/568
+        try (EsClient esClient =
+            EsClient.from(
+                EsConfig.from(
+                    "http://localhost:" + elasticsearchContainer.getMappedPort(ES_INTERNAL_PORT)))) {
+          esClient.performPutRequest(
+              "/_cluster/settings",
+              Collections.emptyMap(),
+              new NStringEntity(
+                  "{\"persistent\":{\"cluster.routing.allocation.disk.threshold_enabled\":false}}"));
+
+        }
       }
     }
   }
 
   @Override
   protected void after() {
-    if (true) return;
+    if (!STARTSTOPDOCKER) return;
     if (COUNTER.addAndGet(-1) == 0) {
       elasticsearchContainer.stop();
       solrService.close();
