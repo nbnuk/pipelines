@@ -581,7 +581,11 @@ public class SensitiveDataInterpreter {
     }
   }
 
-  private static void nbnProcess(Map<String, String> supplied, Map<String, Object> original, Map<String, Object> updated, SensitivityReport report) {
+  private static void nbnProcess(
+      Map<String, String> supplied,
+      Map<String, Object> original,
+      Map<String, Object> updated,
+      SensitivityReport report) {
     original.put("occurrenceRemarks", supplied.get("occurrenceRemarks"));
     updated.put("occurrenceRemarks", "");
   }

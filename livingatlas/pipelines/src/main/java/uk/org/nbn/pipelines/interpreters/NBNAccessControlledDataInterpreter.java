@@ -209,7 +209,7 @@ public class NBNAccessControlledDataInterpreter {
       // OSGridRecord osGridRecord,
       NBNAccessControlledRecord accessControlledRecord) {
 
-    //TODO HMJ implement this using the ALA ws framework (which includes caching)
+    // TODO HMJ implement this using the ALA ws framework (which includes caching)
     DataResourceNbn dataResourceNbn =
         DataResourceNbnCache.getInstance().getDataResourceNbn(dataResourceUid);
 
