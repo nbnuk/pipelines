@@ -1,5 +1,7 @@
 package uk.org.nbn.pipelines;
 
+import au.org.ala.kvs.GeocodeShpConfig;
+import au.org.ala.kvs.ShapeFile;
 import au.org.ala.pipelines.beam.*;
 import au.org.ala.pipelines.options.IndexingPipelineOptions;
 import au.org.ala.pipelines.options.SamplingPipelineOptions;
@@ -67,6 +69,8 @@ public class NBNCompleteIngestPipelineTestIT {
   @TestFactory
   public Collection<DynamicTest> testIngestPipeline() throws Exception,Throwable {
 
+    //need to copy /data/pipelines-shp to /tmp/pipelines-shp
+
     Collection<DynamicTest> tests = new ArrayList<>();
 
     // clear up previous test runs
@@ -77,7 +81,7 @@ public class NBNCompleteIngestPipelineTestIT {
     int expectedRecords = 165;
 
     //set to false in order to just running tests without reprocessing data
-    if(false) {
+    if(true) {
       // clear SOLR index
       SolrUtils.setupIndex(INDEX_NAME);
 
