@@ -56,8 +56,9 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
 
   public ExtendedRecord process(ExtendedRecord er) {
     String gridReferenceValue = extractNullAwareExtensionTermValue(er, OSGridTerm.gridReference);
+    String gridSizeInMetersValue = extractNullAwareExtensionTermValue(er, OSGridTerm.gridSizeInMeters);
 
-    if (Strings.isNullOrEmpty(gridReferenceValue)) {
+    if (Strings.isNullOrEmpty(gridReferenceValue) && Strings.isNullOrEmpty(gridSizeInMetersValue)) {
       return er;
     }
 
@@ -73,7 +74,7 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
         !Strings.isNullOrEmpty(decimalLatitudeValue)
             && !Strings.isNullOrEmpty(decimalLongitudeValue);
 
-    if (!hasSuppliedLatLon) {
+    if (!hasSuppliedLatLon && !Strings.isNullOrEmpty(gridReferenceValue)) {
       setLatLonFromOSGrid(er, alteredEr, issues);
     }
 
@@ -85,10 +86,11 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
 
     if (!hasSuppliedLatLon
         || Strings.isNullOrEmpty(coordinateUncertaintyValue)
-        || GridUtil.isCentroid(
+        || (!Strings.isNullOrEmpty(gridReferenceValue) &&
+                GridUtil.isCentroid(
             Double.valueOf(decimalLongitudeValue),
             Double.valueOf(decimalLatitudeValue),
-            gridReferenceValue)) {
+            gridReferenceValue))) {
 
       setCoordinateUncertaintyFromOSGrid(er, alteredEr);
     }
@@ -126,15 +128,17 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
 
     // todo - should we flag if these fail?  Internally this logs and error but this is not going to
     // be very helpful
-    Integer gridSizeInMetersFromGridReference =
-        GridUtil.getGridSizeInMeters(gridReferenceValue).getOrElse(null);
 
-    Integer gridSizeInMeters =
-        Optional.ofNullable(gridSizeInMetersFromGridReference)
-            .orElseGet(() -> Ints.tryParse(gridSizeInMetersValue));
+    Integer gridSizeInMeters = null;
+
+    if(!Strings.isNullOrEmpty(gridReferenceValue)) {
+      gridSizeInMeters = GridUtil.getGridSizeInMeters(gridReferenceValue).getOrElse(null);
+    } else {
+      gridSizeInMeters = Ints.tryParse(gridSizeInMetersValue);
+    }
 
     if (gridSizeInMeters != null) {
-      double cornerDistFromCentre = gridSizeInMetersFromGridReference / Math.sqrt(2.0);
+      double cornerDistFromCentre = gridSizeInMeters / Math.sqrt(2.0);
       alteredEr
           .getCoreTerms()
           .put(
