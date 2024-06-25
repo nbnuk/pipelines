@@ -942,6 +942,10 @@ public class IndexRecordTransform implements Serializable, IndexFields {
             NBNAccessControlledRecord.getClassSchema().getFields().stream()
                 .map(Field::name)
                 .collect(Collectors.toList()))
+        .addAll(
+                OSGridRecord.getClassSchema().getFields().stream()
+                        .map(Field::name)
+                        .collect(Collectors.toList()))
         .add(DwcTerm.class_.simpleName())
         .add(DwcTerm.geodeticDatum.simpleName())
         .add(DwcTerm.associatedOccurrences.simpleName())
