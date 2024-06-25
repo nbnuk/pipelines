@@ -11,10 +11,11 @@ import uk.org.nbn.term.OSGridTerm;
 public class NBNModelUtils {
 
   public static String extractNullAwareExtensionTermValue(ExtendedRecord er, Term term) {
-    if (ModelUtils.hasExtension(er, term.namespace().toString())) {
+    String extensionName = getExtensionNameForTerm(term);
+    if (ModelUtils.hasExtension(er, extensionName)) {
       String value =
           er.getExtensions()
-              .get(term.namespace().toString())
+              .get(extensionName)
               .get(0)
               .getOrDefault(term.qualifiedName(), null);
 
@@ -24,14 +25,26 @@ public class NBNModelUtils {
   }
 
   public static void setExtensionTermValue(ExtendedRecord er, Term term, String value) {
-    if (!ModelUtils.hasExtension(er, term.namespace().toString())) {
+    if (!ModelUtils.hasExtension(er, getExtensionNameForTerm(term))) {
       throw new ParameterException("Records does not contain extension");
     }
 
-    er.getExtensions().get(OSGridTerm.gridReference.namespace().toString()).stream()
+    er.getExtensions().get(getExtensionNameForTerm(OSGridTerm.gridReference)).stream()
         .findFirst()
         .get()
         .put(term.qualifiedName(), value);
+  }
+
+  private static String getExtensionNameForTerm(Term input) {
+    return removeTrailingSlash(input.namespace().toString());
+  }
+
+  private static String removeTrailingSlash(String input) {
+    if(input.endsWith("/")) {
+      return  input.substring(0, input.length() - 1);
+    } else {
+      return  input;
+    }
   }
 
   private static String listSeperator = "[,|]";
