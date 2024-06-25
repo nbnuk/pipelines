@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import org.gbif.pipelines.io.avro.ExtendedRecord;
 import uk.org.nbn.term.OSGridTerm;
+import uk.org.nbn.util.NBNModelUtils;
 
 public abstract class OSGridTestBase {
 
@@ -17,7 +18,7 @@ public abstract class OSGridTestBase {
     Map<String, List<Map<String, String>>> extensionsMap = new HashMap<>();
     Map<String, String> osGridMap = new HashMap<>();
 
-    extensionsMap.put(OSGridTerm.gridReference.namespace().toString(), Arrays.asList(osGridMap));
+    extensionsMap.put(NBNModelUtils.getExtensionNameForTerm(OSGridTerm.gridReference), Arrays.asList(osGridMap));
 
     ExtendedRecord er =
         ExtendedRecord.newBuilder()
@@ -30,6 +31,6 @@ public abstract class OSGridTestBase {
   }
 
   protected Map<String, String> getOSGridTerms(ExtendedRecord er) {
-    return er.getExtensions().get(OSGridTerm.gridReference.namespace().toString()).get(0);
+    return er.getExtensions().get(NBNModelUtils.getExtensionNameForTerm(OSGridTerm.gridReference)).get(0);
   }
 }

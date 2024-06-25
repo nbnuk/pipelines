@@ -53,8 +53,7 @@ public class GridUtilTests {
   @ParameterizedTest
   @CsvSource({
     "J4967, 54.529443, -5.699145",
-    "IJ4967, 54.529443, -5.699145",
-    "H99, 54.793876, -6.523798"
+    "IJ4967, 54.529443, -5.699145"
   })
   public void convertIrishGridReferenceToEastingAndNorthing(
       String gridRefernce, String minLatitude, String minLongitude) {

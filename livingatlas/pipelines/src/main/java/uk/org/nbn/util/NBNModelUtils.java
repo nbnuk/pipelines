@@ -35,7 +35,7 @@ public class NBNModelUtils {
         .put(term.qualifiedName(), value);
   }
 
-  private static String getExtensionNameForTerm(Term input) {
+  public static String getExtensionNameForTerm(Term input) {
     return removeTrailingSlash(input.namespace().toString());
   }
 
