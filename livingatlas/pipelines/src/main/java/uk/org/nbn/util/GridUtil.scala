@@ -658,7 +658,8 @@ object GridUtil {
 
   private def gridSizeRoundedUp(gridSize: Double): Int = {
     val limits = Array(1, 10, 100, 1000, 2000, 10000, 100000)
-    val gridSizeWhole = Math.round(gridSize)
+    val remainder = gridSize - Math.floor(gridSize)
+    val gridSizeWhole = if (remainder<0.1)Math.floor(gridSize) else Math.ceil(gridSize)
 
     for (limit <- limits) {
       if (gridSizeWhole <= limit) {
