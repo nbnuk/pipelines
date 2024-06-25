@@ -689,6 +689,12 @@
   <field name="raw_waterBody"					         type="string"  docValues="true" indexed="true" />
   <field name="raw_year"					             type="string"  docValues="true" indexed="true" />
 
+
+  <!-- NBN OSGrid -->
+  <field name="gridReference" type="string" docValues="true" indexed="true" />
+  <field name="gridSizeInMeters" type="int" docValues="true" indexed="true" />
+  <field name="gridReferenceWKT" type="string" docValues="true" indexed="true" />
+
   <!-- Raw / Verbatim fields -->
   <dynamicField name="raw_*" type="string" docValues="true" indexed="true"/>
 
