@@ -58,7 +58,7 @@ public class IntegrationTestUtils extends ExternalResource {
   }
 
   @Override
-  protected void before() throws Throwable {
+  public void before() throws Throwable {
     if (COUNTER.get() == 0) {
 
       if(STARTSTOPDOCKER) {
@@ -128,7 +128,7 @@ public class IntegrationTestUtils extends ExternalResource {
   }
 
   @Override
-  protected void after() {
+  public void after() {
     if (!STARTSTOPDOCKER) return;
     if (COUNTER.addAndGet(-1) == 0) {
       elasticsearchContainer.stop();

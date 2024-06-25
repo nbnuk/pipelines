@@ -20,6 +20,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.TestFactory;
 import uk.org.nbn.pipelines.beam.NBNInterpretedToAccessControlledPipeline;
 
 import java.io.File;
@@ -47,65 +51,70 @@ public class NBNCompleteIngestPipelineTestIT {
   public static final String INDEX_NAME = "nbn_complete_occ_it";
 
 
+  @BeforeAll
+  public static void beforeAll() throws Throwable
+  {
+    itUtils.before();
+  }
+
+  @AfterAll
+  public static void afterAll()
+  {
+    itUtils.after();
+  }
+
   /** Tests for SOLR index creation. */
-  @Test
-  public void testIngestPipeline() throws Exception {
+  @TestFactory
+  public Collection<DynamicTest> testIngestPipeline() throws Exception,Throwable {
+
+    Collection<DynamicTest> tests = new ArrayList<>();
 
     // clear up previous test runs
     FileUtils.deleteQuietly(new File("/tmp/la-pipelines-test/complete-pipeline"));
 
-
-
     String absolutePath = new File("src/test/resources").getAbsolutePath();
-    String datasetId = "dr2440";
+    String datasetId = "dr2816";
+    int expectedRecords = 165;
 
-    if(true) {
+    //set to false in order to just running tests without reprocessing data
+    if(false) {
       // clear SOLR index
       SolrUtils.setupIndex(INDEX_NAME);
 
       // Step 1: load a dataset and verify all records have a UUID associated
-      loadTestDataset("dr2440", absolutePath + "/nbn-complete-pipeline/" + datasetId);
+      loadTestDataset(datasetId, absolutePath + "/nbn-complete-pipeline/" + datasetId);
 
       // reload
       SolrUtils.reloadSolrIndex(INDEX_NAME);
     }
 
     // validate SOLR index
-    assertEquals(Long.valueOf(5), SolrUtils.getRecordCount(INDEX_NAME, "*:*"));
+    tests.add(DynamicTest.dynamicTest("Test index", () -> {
 
-    // 1. includes UUIDs
-    String documentId = (String) SolrUtils.getRecords(INDEX_NAME, "*:*").get(0).get("id");
-    assertNotNull(documentId);
-    UUID uuid = null;
-    try {
-      uuid = UUID.fromString(documentId);
-      // do something
-    } catch (IllegalArgumentException exception) {
-      // handle the case where string is not valid UUID
-    }
+      assertEquals(Long.valueOf(expectedRecords), SolrUtils.getRecordCount(INDEX_NAME, "*:*"));
 
-    assertNotNull(uuid);
+      // 1. includes UUIDs
+      String documentId = (String) SolrUtils.getRecords(INDEX_NAME, "*:*").get(0).get("id");
+      assertNotNull(documentId);
+      UUID uuid = null;
+      try {
+        uuid = UUID.fromString(documentId);
+        // do something
+      } catch (IllegalArgumentException exception) {
+        // handle the case where string is not valid UUID
+      }
 
-    // 2. includes samples
-    //assertEquals(Long.valueOf(5), SolrUtils.getRecordCount(INDEX_NAME, "cl620:*"));
-    //assertEquals(Long.valueOf(5), SolrUtils.getRecordCount(INDEX_NAME, "cl927:*"));
+      assertNotNull(uuid);
+    }));
 
-    // dynamic properties indexing
-//    assertEquals(
-//        Long.valueOf(5),
-//        SolrUtils.getRecordCount(INDEX_NAME, "dynamicProperties_nonDwcFieldSalinity:*"));
-
-//    // 3. has a sensitive record
-//    assertEquals(Long.valueOf(1), SolrUtils.getRecordCount(INDEX_NAME, "sensitive:generalised"));
-//    SolrDocument sensitive = SolrUtils.getRecords(INDEX_NAME, "sensitive:generalised").get(0);
-//    assertEquals(-35.3, (double) sensitive.get("decimalLatitude"), 0.00001);
-//    assertEquals("-35.260319", sensitive.get("sensitive_decimalLatitude"));
-//
     //4. check content of records
-    checkExpectedValuesForRecords(INDEX_NAME, datasetId);
+    Collection<DynamicTest> occurrenceTests = checkExpectedValuesForRecords(INDEX_NAME, datasetId);
+    tests.addAll(occurrenceTests);
+    return tests;
   }
 
-  public static void checkExpectedValuesForRecords(String currentIndexName, String datasetId) throws Exception {
+  public static Collection<DynamicTest> checkExpectedValuesForRecords(String currentIndexName, String datasetId) throws Exception {
+    Collection<DynamicTest> tests = new ArrayList<>();
 
     try (InputStream inputStream = FileUtils.openInputStream(
             new File("src/test/resources/nbn-complete-pipeline/expected/" + datasetId + ".csv"));
@@ -127,31 +136,38 @@ public class NBNCompleteIngestPipelineTestIT {
         String[] nextLine;
         while ((nextLine = csvReader.readNext()) != null) {
 
-          Optional<SolrDocument> record = SolrUtils.getRecord(currentIndexName, "occurrenceID:" + nextLine[occurrenceIdHeaderIndex]);
-          assertTrue(record.isPresent());
+          final String[] expectedValues = nextLine;
+          final String occurrenceId = expectedValues[occurrenceIdHeaderIndex];
+          tests.add(DynamicTest.dynamicTest("Validate occurrence " + occurrenceId, () -> {
 
-          for (int i = 0; i < header.length; i++) {
-            String headerName = header[i];
-            System.out.println(headerName + ": " + nextLine[i]);
+            Optional<SolrDocument> record = SolrUtils.getRecord(currentIndexName, "occurrenceID:" + expectedValues[occurrenceIdHeaderIndex].replace(":", "\\:"));
+            assertTrue("The record is not present in solr", record.isPresent());
 
-            assertEqualWithTypeConversion(nextLine[i], record.get().get(headerName));
-          }
-          System.out.println("-----------");
+            for (int i = 0; i < header.length; i++) {
+              String headerName = header[i];
+              System.out.println(headerName + ": " + expectedValues[i]);
+
+              assertEqualWithTypeConversion(headerName, expectedValues[i], record.get().get(headerName));
+            }
+          }));
         }
       }
 
     } catch (IOException e) {
       e.printStackTrace();
     }
+
+    return tests;
   }
 
-  private static void assertEqualWithTypeConversion(String expected, Object actual) {
+  private static void assertEqualWithTypeConversion(String name, String expected, Object actual) {
 
-    if (expected == null) {
-      Assert.assertNull(actual);
-    } else {
-      Assert.assertNotNull(actual);
+    if (Strings.isNullOrEmpty(expected)) {
+      Assert.assertNull("The property was not null: " + name, actual);
+      return;
     }
+
+    Assert.assertNotNull("The property was null: " + name, actual);
 
     if (actual.getClass() == expected.getClass()) {
       Assert.assertEquals(expected, actual); // Direct comparison if types match
@@ -160,16 +176,16 @@ public class NBNCompleteIngestPipelineTestIT {
       if (actual instanceof Integer) {
         try {
           int expectedInt = Integer.parseInt(expected);
-          Assert.assertEquals(expectedInt, actual);
+          Assert.assertEquals("The property did not match: " + name, expectedInt, actual);
         } catch (NumberFormatException e) {
-          Assert.fail("Failed to convert expected String to Integer: " + expected);
+          Assert.fail("Failed to convert expected String to Integer: " + name + " " + expected);
         }
       } else if (actual instanceof Double) {
         try {
           double expectedInt = Double.parseDouble(expected);
-          Assert.assertEquals(expectedInt, actual);
+          Assert.assertEquals("The property did not match: " + name,expectedInt, actual);
         } catch (NumberFormatException e) {
-          Assert.fail("Failed to convert expected String to Double: " + expected);
+          Assert.fail("Failed to convert expected String to Double: " + name + " " + expected);
         }
       } else {
         Assert.fail("Unsupported type conversion: actual=" + actual.getClass() + ", expected=" + expected.getClass());
