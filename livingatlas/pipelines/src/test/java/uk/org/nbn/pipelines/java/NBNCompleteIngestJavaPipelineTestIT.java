@@ -38,6 +38,8 @@ import static org.junit.Assert.assertNotNull;
  * is for Interpretation and SOLR indexing only.
  *
  * <p>This needs to be ran with -Xmx128m
+ * You will likely need to set the following vm options -DZK_PORT=9983 -DSOLR_PORT=8983 -DDOCKER_STARTSTOP=false
+ * And also copy or link /data/pipelines-shp to /tmp/pipelines-shp
  */
 public class NBNCompleteIngestJavaPipelineTestIT extends NBNPipelineIngestTestBase {
 

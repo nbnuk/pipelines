@@ -46,6 +46,8 @@ import static org.junit.Assert.*;
 /**
  * Complete pipeline tests that start with DwCAs and finish with the SOLR index. Includes all
  * current steps in processing.
+ * You will likely need to set the following vm options -DZK_PORT=9983 -DSOLR_PORT=8983 -DDOCKER_STARTSTOP=false
+ * And also copy or link /data/pipelines-shp to /tmp/pipelines-shp
  */
 public class NBNCompleteIngestPipelineTestIT extends NBNPipelineIngestTestBase {
 
