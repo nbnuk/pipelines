@@ -690,10 +690,25 @@
   <field name="raw_year"					             type="string"  docValues="true" indexed="true" />
 
 
-  <!-- NBN OSGrid -->
+  <!-- NBN OSGrid fields -->
   <field name="gridReference" type="string" docValues="true" indexed="true" />
   <field name="gridSizeInMeters" type="int" docValues="true" indexed="true" />
   <field name="gridReferenceWKT" type="string" docValues="true" indexed="true" />
+
+  <field name="grid_ref_100000" type="string" indexed="true" docValues="true"/>
+  <field name="grid_ref_50000" type="string" indexed="true" docValues="true"/>
+  <field name="grid_ref_10000" type="string" indexed="true" docValues="true"/>
+  <field name="grid_ref_2000" type="string" indexed="true" docValues="true" />
+  <field name="grid_ref_1000" type="string" indexed="true" docValues="true" />
+  <field name="grid_ref_100" type="string" indexed="true" docValues="true"/>
+
+  <copyField source="gridReference" dest="text"/>
+  <copyField source="grid_ref_100000" dest="text"/>
+  <copyField source="grid_ref_50000" dest="text"/>
+  <copyField source="grid_ref_10000" dest="text"/>
+  <copyField source="grid_ref_2000" dest="text"/>
+  <copyField source="grid_ref_1000" dest="text"/>
+  <copyField source="grid_ref_100" dest="text"/>
 
   <!-- Raw / Verbatim fields -->
   <dynamicField name="raw_*" type="string" docValues="true" indexed="true"/>

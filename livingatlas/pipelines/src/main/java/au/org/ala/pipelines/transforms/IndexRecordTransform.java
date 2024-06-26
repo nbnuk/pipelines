@@ -8,6 +8,7 @@ import static org.gbif.pipelines.common.PipelinesVariables.Metrics.AVRO_TO_JSON_
 import au.org.ala.pipelines.common.SolrFieldSchema;
 import au.org.ala.pipelines.interpreters.SensitiveDataInterpreter;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import java.io.Serializable;
 import java.text.DecimalFormat;
@@ -1230,6 +1231,16 @@ public class IndexRecordTransform implements Serializable, IndexFields {
   static void addToIndexRecord(
       SpecificRecordBase record, IndexRecord.Builder builder, Set<String> skipKeys) {
     addToIndexRecord(record, builder, skipKeys, true);
+
+    if (record.getClass() == OSGridRecord.class) {
+      OSGridRecord osg = (OSGridRecord) record;
+
+      if(!Strings.isNullOrEmpty(osg.getGridReference())) {
+        Map<String,String> gridAtResolutions =  uk.org.nbn.util.GridUtil.getGridRefAsResolutions(osg.getGridReference());
+        gridAtResolutions.entrySet().forEach(r -> builder.getStrings().put(r.getKey(), r.getValue()));
+
+      }
+    }
   }
 
   static void addToIndexRecord(
