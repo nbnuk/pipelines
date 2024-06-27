@@ -117,6 +117,7 @@ public class OSGridTransform extends Transform<KV<String, CoGbkResult>, OSGridRe
                     // gridreference computed
                     .via(OSGridInterpreter::addGridSize)
                     .via(OSGridInterpreter::processGridWKT)
+                    .via(OSGridInterpreter::addEastingAndNorthing)
                     .get();
 
     result.ifPresent(r -> this.incCounter());

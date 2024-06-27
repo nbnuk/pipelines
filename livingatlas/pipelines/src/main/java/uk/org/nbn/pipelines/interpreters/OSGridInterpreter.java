@@ -20,6 +20,7 @@ import org.gbif.pipelines.io.avro.ExtendedRecord;
 import org.gbif.pipelines.io.avro.LocationRecord;
 import org.gbif.pipelines.io.avro.OSGridRecord;
 import uk.org.nbn.term.OSGridTerm;
+import uk.org.nbn.util.GISPoint;
 import uk.org.nbn.util.GridUtil;
 import uk.org.nbn.vocabulary.NBNOccurrenceIssue;
 
@@ -383,6 +384,18 @@ public class OSGridInterpreter {
       // prefer that untouched
       //            }
     }
+  }
+
+  public static void addEastingAndNorthing(Tuple<ExtendedRecord, LocationRecord> source, OSGridRecord osGridRecord) {
+      //In biocache-store only records grid reference produces easting and northing.  Bbox also set but not used?
+      ExtendedRecord extendedRecord = source.v1();
+      if(suppliedWithGridReference(extendedRecord)) {
+         GISPoint gisPoint = GridUtil.processGridReference(osGridRecord.getGridReference()).getOrElse(null);
+        if(gisPoint != null) {
+          osGridRecord.setEasting(Ints.tryParse(gisPoint.easting()));
+          osGridRecord.setNorthing(Ints.tryParse(gisPoint.northing()));
+        }
+      }
   }
 
   public static void setCoreId(ExtendedRecord er, OSGridRecord e) {

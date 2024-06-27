@@ -12,6 +12,8 @@
     {"name": "gridReference", "type":["null","string"], "default":null, "doc":"Grid reference location"},
     {"name": "gridSizeInMeters", "type": ["null","int"], "default":null, "doc":"Grid size"},
     {"name": "gridReferenceWKT", "type":["null","string"], "default":null, "doc":"Grid reference WKT"},
+    {"name": "easting", "type":["null","int"], "default":null, "doc":"Easting"},
+    {"name": "northing", "type":["null","int"], "default":null, "doc":"Northing"},
     {"name": "created", "type": ["null", "long"], "default" : null, "doc":"The timestamp the record was created"},
     {"name": "issues", "type": "IssueRecord", "default":{}}
   ]

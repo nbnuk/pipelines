@@ -451,8 +451,8 @@
   <!-- TODO recent additions to be validated... -->
   <field name="decade"  type="int" docValues="true" indexed="true" />
   <field name="photographer"  type="string" docValues="true" indexed="true" />
-  <field name="northing"  type="string" docValues="true" indexed="true" />
-  <field name="easting"  type="string" docValues="true" indexed="true" />
+  <!-- <field name="northing"  type="string" docValues="true" indexed="true" /> -->
+  <!-- <field name="easting"  type="string" docValues="true" indexed="true" /> -->
   <field name="zone"  type="string" docValues="true" indexed="true" />
   <field name="identifierRole"  type="string" docValues="true" indexed="true" />
 
@@ -694,6 +694,8 @@
   <field name="gridReference" type="string" docValues="true" indexed="true" />
   <field name="gridSizeInMeters" type="int" docValues="true" indexed="true" />
   <field name="gridReferenceWKT" type="string" docValues="true" indexed="true" />
+  <field name="easting" type="int" docValues="true" indexed="true"/>
+  <field name="northing" type="int" docValues="true" indexed="true"/>
 
   <field name="grid_ref_100000" type="string" indexed="true" docValues="true"/>
   <field name="grid_ref_50000" type="string" indexed="true" docValues="true"/>
