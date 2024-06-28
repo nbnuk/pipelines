@@ -110,24 +110,55 @@ public class NBNAccessControlledDataInterpreter {
     if (altered == null || altered.isEmpty()) {
       return;
     }
-//    if null, delete from extendedrecord
-    replaceOrRemove(extendedRecord.getCoreTerms(), DwcTerm.decimalLatitude.qualifiedName(), altered.get("decimalLatitude"));
-    replaceOrRemove(extendedRecord.getCoreTerms(), DwcTerm.decimalLongitude.qualifiedName(), altered.get("decimalLongitude"));
-    replaceOrRemove(extendedRecord.getCoreTerms(), DwcTerm.coordinateUncertaintyInMeters.qualifiedName(), altered.get("coordinateUncertaintyInMeters"));
+    //    if null, delete from extendedrecord
+    replaceOrRemove(
+        extendedRecord.getCoreTerms(),
+        DwcTerm.decimalLatitude.qualifiedName(),
+        altered.get("decimalLatitude"));
+    replaceOrRemove(
+        extendedRecord.getCoreTerms(),
+        DwcTerm.decimalLongitude.qualifiedName(),
+        altered.get("decimalLongitude"));
+    replaceOrRemove(
+        extendedRecord.getCoreTerms(),
+        DwcTerm.coordinateUncertaintyInMeters.qualifiedName(),
+        altered.get("coordinateUncertaintyInMeters"));
 
     //    extendedRecord.getCoreTerms().put(DwcTerm.gridReference.qualifiedName(),
     // altered.get("gridReference"));
     //    extendedRecord.getCoreTerms().put(DwcTerm.gridSizeInMeters.qualifiedName(),
     // altered.get("gridSizeInMeters"));
-    replaceOrRemove(extendedRecord.getCoreTerms(), DwcTerm.locality.qualifiedName(), altered.get("locality"));
-    replaceOrRemove(extendedRecord.getCoreTerms(), DwcTerm.verbatimLatitude.qualifiedName(), altered.get("verbatimLatitude"));
-    replaceOrRemove(extendedRecord.getCoreTerms(), DwcTerm.verbatimLongitude.qualifiedName(), altered.get("verbatimLongitude"));
-    replaceOrRemove(extendedRecord.getCoreTerms(), DwcTerm.verbatimLocality.qualifiedName(), altered.get("verbatimLocality"));
-    replaceOrRemove(extendedRecord.getCoreTerms(), DwcTerm.verbatimCoordinates.qualifiedName(), altered.get("verbatimCoordinates"));
-    replaceOrRemove(extendedRecord.getCoreTerms(), DwcTerm.footprintWKT.qualifiedName(), altered.get("footprintWKT"));
-    replaceOrRemove(extendedRecord.getCoreTerms(), DwcTerm.locationRemarks.qualifiedName(), altered.get("locationRemarks"));
-    replaceOrRemove(extendedRecord.getCoreTerms(), DwcTerm.occurrenceRemarks.qualifiedName(), altered.get("occurrenceRemarks"));
-    }
+    replaceOrRemove(
+        extendedRecord.getCoreTerms(), DwcTerm.locality.qualifiedName(), altered.get("locality"));
+    replaceOrRemove(
+        extendedRecord.getCoreTerms(),
+        DwcTerm.verbatimLatitude.qualifiedName(),
+        altered.get("verbatimLatitude"));
+    replaceOrRemove(
+        extendedRecord.getCoreTerms(),
+        DwcTerm.verbatimLongitude.qualifiedName(),
+        altered.get("verbatimLongitude"));
+    replaceOrRemove(
+        extendedRecord.getCoreTerms(),
+        DwcTerm.verbatimLocality.qualifiedName(),
+        altered.get("verbatimLocality"));
+    replaceOrRemove(
+        extendedRecord.getCoreTerms(),
+        DwcTerm.verbatimCoordinates.qualifiedName(),
+        altered.get("verbatimCoordinates"));
+    replaceOrRemove(
+        extendedRecord.getCoreTerms(),
+        DwcTerm.footprintWKT.qualifiedName(),
+        altered.get("footprintWKT"));
+    replaceOrRemove(
+        extendedRecord.getCoreTerms(),
+        DwcTerm.locationRemarks.qualifiedName(),
+        altered.get("locationRemarks"));
+    replaceOrRemove(
+        extendedRecord.getCoreTerms(),
+        DwcTerm.occurrenceRemarks.qualifiedName(),
+        altered.get("occurrenceRemarks"));
+  }
 
   private static Map<String, String> blur(
       Map<String, String> original, int publicResolutionToBeApplied) {
