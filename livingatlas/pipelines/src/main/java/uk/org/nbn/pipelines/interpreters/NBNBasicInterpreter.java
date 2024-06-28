@@ -10,6 +10,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.gbif.api.vocabulary.BasisOfRecord;
 import org.gbif.api.vocabulary.License;
+import org.gbif.dwc.terms.DcTerm;
 import org.gbif.dwc.terms.DwcTerm;
 import org.gbif.pipelines.io.avro.BasicRecord;
 import org.gbif.pipelines.io.avro.ExtendedRecord;
@@ -44,6 +45,8 @@ public class NBNBasicInterpreter {
           addIssue(br, NBNOccurrenceIssue.UNRECOGNISED_IDENTIFICATIONVERIFICATIONSTATUS.name());
         }
       } else {
+        br.setIdentificationVerificationStatus(
+            identificationVerificationStatusVocab.matchTerm("Unconfirmed").orElse("Unconfirmed"));
         addIssue(br, NBNOccurrenceIssue.MISSING_IDENTIFICATIONVERIFICATIONSTATUS.name());
       }
     };
@@ -52,13 +55,13 @@ public class NBNBasicInterpreter {
   public static BiConsumer<ExtendedRecord, BasicRecord> interpretLicense(Vocab licenseVocab) {
     return (er, br) -> {
       // there is no DwcTerm.license, there is only DcTerm.license http://purl.org/dc/terms/license
-      String value = er.getCoreTerms().get("http://rs.tdwg.org/dwc/terms/license");
+      String value = er.getCoreTerms().get(DcTerm.license.qualifiedName());
       String license;
       if (!Strings.isNullOrEmpty(value)) {
         license =
             licenseVocab
-                .matchTerm(er.getCoreTerms().get("http://rs.tdwg.org/dwc/terms/license"))
-                .orElse(License.UNSPECIFIED.name());
+                .matchTerm(er.getCoreTerms().get(DcTerm.license.qualifiedName()))
+                .orElse(License.UNSUPPORTED.name());
       } else {
         license = License.UNSPECIFIED.name();
       }

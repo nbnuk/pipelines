@@ -128,7 +128,7 @@ public class NBNBasicInterpreterTest {
   }
 
   @Test
-  public void givenLivingSpecimenBasisOfRecord_whenInterpretBasisOfRecord_shouldNotChange(){
+  public void givenLivingSpecimenBasisOfRecord_whenInterpretBasisOfRecord_shouldNotChange() {
     // State
     Map<String, String> coreMap = new HashMap<>();
     ExtendedRecord er = ExtendedRecord.newBuilder().setId(ID).setCoreTerms(coreMap).build();
@@ -146,7 +146,7 @@ public class NBNBasicInterpreterTest {
   }
 
   @Test
-  public void givenNullBasisOfRecord_whenInterpretBasisOfRecord_shouldNotThrowException(){
+  public void givenNullBasisOfRecord_whenInterpretBasisOfRecord_shouldNotThrowException() {
     // State
     ExtendedRecord er = ExtendedRecord.newBuilder().setId(ID).build();
     BasicRecord br = BasicRecord.newBuilder().setId(ID).build();
@@ -175,6 +175,7 @@ public class NBNBasicInterpreterTest {
     consumer.accept(er, br);
 
     // Should
+    assertEquals("Unconfirmed", br.getIdentificationVerificationStatus());
     assertTrue(
         br.getIssues()
             .getIssueList()
@@ -197,6 +198,7 @@ public class NBNBasicInterpreterTest {
     consumer.accept(er, br);
 
     // Should
+    assertEquals("Unconfirmed", br.getIdentificationVerificationStatus());
     assertTrue(
         br.getIssues()
             .getIssueList()
@@ -220,8 +222,10 @@ public class NBNBasicInterpreterTest {
     consumer.accept(er, br);
 
     // Should
-    //
-    // assertTrue(br.getIssues().getIssueList().contains(NBNOccurrenceIssue.UNRECOGNISED_IDENTIFICATIONVERIFICATIONSTATUS.name()));
+    assertTrue(
+        br.getIssues()
+            .getIssueList()
+            .contains(NBNOccurrenceIssue.UNRECOGNISED_IDENTIFICATIONVERIFICATIONSTATUS.name()));
   }
 
   @Test
