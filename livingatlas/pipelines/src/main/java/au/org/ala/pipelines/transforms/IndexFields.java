@@ -81,4 +81,6 @@ public interface IndexFields {
 
   // NBN
   String NBN_PUBLIC_RESOLUTION_IN_METERS = "publicResolutionInMeters";
+  String HABITATS_TAXON = "habitatsTaxon";
+  String ESTABLISHMENT_MEANS_TAXON = "establishmentMeansTaxon";
 }
