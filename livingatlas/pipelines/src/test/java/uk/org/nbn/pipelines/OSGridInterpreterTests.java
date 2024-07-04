@@ -16,7 +16,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import uk.org.nbn.pipelines.interpreters.OSGridInterpreter;
 import uk.org.nbn.term.OSGridTerm;
-import uk.org.nbn.vocabulary.NBNOccurrenceIssue;
+import uk.org.nbn.pipelines.vocabulary.NBNOccurrenceIssue;
 
 public class OSGridInterpreterTests extends OSGridTestBase {
 

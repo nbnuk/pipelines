@@ -21,8 +21,9 @@ import org.gbif.pipelines.io.avro.LocationRecord;
 import org.gbif.pipelines.io.avro.OSGridRecord;
 import uk.org.nbn.term.OSGridTerm;
 import uk.org.nbn.util.GISPoint;
+import uk.org.nbn.util.GridRef;
 import uk.org.nbn.util.GridUtil;
-import uk.org.nbn.vocabulary.NBNOccurrenceIssue;
+import uk.org.nbn.pipelines.vocabulary.NBNOccurrenceIssue;
 
 public class OSGridInterpreter {
 
@@ -326,12 +327,7 @@ public class OSGridInterpreter {
         osGridRecord
                 .getIssues()
                 .getIssueList()
-                .contains(NBNOccurrenceIssue.DECIMAL_LAT_LONG_CALCULATED_FROM_GRID_REF.name())
-            || osGridRecord
-                .getIssues()
-                .getIssueList()
-                .contains(
-                    NBNOccurrenceIssue.DECIMAL_LAT_LONG_CALCULATED_FROM_EASTING_NORTHING.name());
+                .contains(NBNOccurrenceIssue.DECIMAL_LAT_LONG_CALCULATED_FROM_GRID_REF.name());
 
     return !rawLatLonWasComputedFromOSGrid
         && !Strings.isNullOrEmpty(extractNullAwareValue(extendedRecord, DwcTerm.decimalLatitude))

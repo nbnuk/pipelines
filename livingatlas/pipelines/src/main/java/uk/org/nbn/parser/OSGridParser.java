@@ -19,26 +19,17 @@ import scala.collection.mutable.ListBuffer;
 import uk.org.nbn.term.OSGridTerm;
 import uk.org.nbn.util.GISPoint;
 import uk.org.nbn.util.GridUtil;
-import uk.org.nbn.vocabulary.NBNOccurrenceIssue;
+import uk.org.nbn.pipelines.vocabulary.NBNOccurrenceIssue;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OSGridParser {
-
-  // NBN parses OSGrid extension easting and northing fields
-  private static final Function<ExtendedRecord, ParsedField<LatLng>> EASTING_NORTHING_FN =
-      (er ->
-          parseEastingAndNorthing(
-              extractNullAwareExtensionTermValue(er, DwcTerm.verbatimSRS),
-              extractNullAwareExtensionTermValue(er, OSGridTerm.easting),
-              extractNullAwareExtensionTermValue(er, OSGridTerm.northing),
-              extractNullAwareExtensionTermValue(er, OSGridTerm.zone)));
 
   // parses OSGrid extension gridRefernce field
   private static final Function<ExtendedRecord, ParsedField<LatLng>> GRID_REFERENCE_FN =
       (er -> parseGridReference(extractNullAwareExtensionTermValue(er, OSGridTerm.gridReference)));
 
   private static final List<Function<ExtendedRecord, ParsedField<LatLng>>> PARSING_FUNCTIONS =
-      Arrays.asList(OSGridParser.EASTING_NORTHING_FN, OSGridParser.GRID_REFERENCE_FN);
+      Arrays.asList(OSGridParser.GRID_REFERENCE_FN);
 
   public static ParsedField<LatLng> parseCoords(ExtendedRecord extendedRecord) {
     Set<String> issues = new TreeSet<>();
@@ -71,34 +62,6 @@ public class OSGridParser {
     ParsedField<LatLng> ret =
         CoordinateParseUtils.parseLatLng(gisPoint.latitude(), gisPoint.longitude());
     ret.getIssues().add(NBNOccurrenceIssue.DECIMAL_LAT_LONG_CALCULATED_FROM_GRID_REF.name());
-    return ret;
-  }
-
-  private static ParsedField<LatLng> parseEastingAndNorthing(
-      final String verbatimSRS, final String easting, final String northing, final String zone) {
-    if (Strings.isNullOrEmpty(easting)
-        || Strings.isNullOrEmpty(northing)
-        || Strings.isNullOrEmpty(zone)) {
-      return ParsedField.fail();
-    }
-
-    ListBuffer<String> scalaIssues = new ListBuffer<>();
-    Option<GISPoint> gisPointResult =
-        GridUtil.processNorthingEastingZone(verbatimSRS, easting, northing, zone, scalaIssues);
-
-    List<String> issues = JavaConverters.seqAsJavaListConverter(scalaIssues).asJava();
-
-    if (gisPointResult.isEmpty()) {
-      return ParsedField.fail(new HashSet<>(issues));
-    }
-
-    GISPoint gisPoint = gisPointResult.get();
-
-    // Use the core CoordinateParseUtils to parse the lat lon string and standardised them in the
-    // same way as if lat lon supplied
-    ParsedField<LatLng> ret =
-        CoordinateParseUtils.parseLatLng(gisPoint.latitude(), gisPoint.longitude());
-    ret.getIssues().addAll(issues);
     return ret;
   }
 }
