@@ -2,7 +2,6 @@ package uk.org.nbn.pipelines.interpreters;
 
 import static org.gbif.api.vocabulary.OccurrenceIssue.COORDINATE_UNCERTAINTY_METERS_INVALID;
 import static org.gbif.pipelines.core.utils.ModelUtils.*;
-import static uk.org.nbn.util.NBNModelUtils.extractNullAwareExtensionTermValue;
 import static uk.org.nbn.util.NBNModelUtils.getListFromString;
 import static uk.org.nbn.util.ScalaToJavaUtil.scalaOptionToString;
 
@@ -69,9 +68,9 @@ public class OSGridInterpreter {
     ExtendedRecord extendedRecord = source.v1();
 
     String gridReference =
-        extractNullAwareExtensionTermValue(extendedRecord, OSGridTerm.gridReference);
+            extractNullAwareValue(extendedRecord, OSGridTerm.gridReference);
     String gridSizeInMeters =
-        extractNullAwareExtensionTermValue(extendedRecord, OSGridTerm.gridSizeInMeters);
+            extractNullAwareValue(extendedRecord, OSGridTerm.gridSizeInMeters);
 
     if (osGridRecord.getGridSizeInMeters() == null) {
       if (!Strings.isNullOrEmpty(osGridRecord.getGridReference())) {
@@ -106,7 +105,7 @@ public class OSGridInterpreter {
 
     ExtendedRecord extendedRecord = source.v1();
     String gridReferenceIssues =
-        extractNullAwareExtensionTermValue(extendedRecord, OSGridTerm.issues);
+            extractNullAwareValue(extendedRecord, OSGridTerm.issues);
 
     if (!Strings.isNullOrEmpty(gridReferenceIssues)) {
       getListFromString(gridReferenceIssues).stream()
@@ -133,7 +132,7 @@ public class OSGridInterpreter {
     ExtendedRecord extendedRecord = source.v1();
 
     String rawGridReference =
-        extractNullAwareExtensionTermValue(extendedRecord, OSGridTerm.gridReference);
+            extractNullAwareValue(extendedRecord, OSGridTerm.gridReference);
 
     if (Strings.isNullOrEmpty(rawGridReference)) {
       return;
@@ -174,9 +173,9 @@ public class OSGridInterpreter {
     ExtendedRecord extendedRecord = source.v1();
 
     String rawGridReference =
-        extractNullAwareExtensionTermValue(extendedRecord, OSGridTerm.gridReference);
+            extractNullAwareValue(extendedRecord, OSGridTerm.gridReference);
     String rawGridSizeInMeters =
-        extractNullAwareExtensionTermValue(extendedRecord, OSGridTerm.gridSizeInMeters);
+            extractNullAwareValue(extendedRecord, OSGridTerm.gridSizeInMeters);
 
     if (Strings.isNullOrEmpty(rawGridReference)) {
       return;
@@ -317,7 +316,7 @@ public class OSGridInterpreter {
 
   private static boolean suppliedWithGridReference(ExtendedRecord extendedRecord) {
     return !Strings.isNullOrEmpty(
-        extractNullAwareExtensionTermValue(extendedRecord, OSGridTerm.gridReference));
+            extractNullAwareValue(extendedRecord, OSGridTerm.gridReference));
   }
 
   private static boolean suppliedWithLatLon(
@@ -350,7 +349,7 @@ public class OSGridInterpreter {
       boolean computed = false;
 
       String gridReference =
-          extractNullAwareExtensionTermValue(extendedRecord, OSGridTerm.gridReference);
+              extractNullAwareValue(extendedRecord, OSGridTerm.gridReference);
 
       // should this not be empty checked as well?
       if (osGridRecord.getGridReference() != null) {
@@ -383,10 +382,14 @@ public class OSGridInterpreter {
   }
 
   public static void addEastingAndNorthing(Tuple<ExtendedRecord, LocationRecord> source, OSGridRecord osGridRecord) {
-      //In biocache-store only records grid reference produces easting and northing.  Bbox also set but not used?
+      //In biocache-store only records grid reference produces easting and northing.
+      //todo -should we be using the processed value
       ExtendedRecord extendedRecord = source.v1();
       if(suppliedWithGridReference(extendedRecord)) {
-         GISPoint gisPoint = GridUtil.processGridReference(osGridRecord.getGridReference()).getOrElse(null);
+        String rawGridReference =
+                extractNullAwareValue(extendedRecord, OSGridTerm.gridReference);
+        GISPoint gisPoint = GridUtil.processGridReference(rawGridReference).getOrElse(null);
+
         if(gisPoint != null) {
           osGridRecord.setEasting(Ints.tryParse(gisPoint.easting()));
           osGridRecord.setNorthing(Ints.tryParse(gisPoint.northing()));

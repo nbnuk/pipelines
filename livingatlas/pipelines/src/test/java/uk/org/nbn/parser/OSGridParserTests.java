@@ -18,9 +18,9 @@ public class OSGridParserTests extends OSGridTestBase {
   public void parseFromGridReference(
       String gridReference, Double expectedLatitude, Double expectedLongitude) {
     ExtendedRecord er = createTestRecord();
-    Map<String, String> osGridMap = getOSGridTerms(er);
+    Map<String, String> coreTerms = er.getCoreTerms();
 
-    osGridMap.put(OSGridTerm.gridReference.qualifiedName(), gridReference);
+    coreTerms.put(OSGridTerm.gridReference.qualifiedName(), gridReference);
 
     ParsedField<LatLng> result = OSGridParser.parseCoords(er);
 

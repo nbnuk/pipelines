@@ -55,8 +55,8 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
   }
 
   public ExtendedRecord process(ExtendedRecord er) {
-    String gridReferenceValue = extractNullAwareExtensionTermValue(er, OSGridTerm.gridReference);
-    String gridSizeInMetersValue = extractNullAwareExtensionTermValue(er, OSGridTerm.gridSizeInMeters);
+    String gridReferenceValue = extractNullAwareValue(er, OSGridTerm.gridReference);
+    String gridSizeInMetersValue = extractNullAwareValue(er, OSGridTerm.gridSizeInMeters);
 
     if (Strings.isNullOrEmpty(gridReferenceValue) && Strings.isNullOrEmpty(gridSizeInMetersValue)) {
       return er;
@@ -96,7 +96,7 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
     }
 
     // put the issues in the extension so that we can retrieve and apply them in OSGridTransform
-    setExtensionTermValue(alteredEr, OSGridTerm.issues, getStringFromList(issues));
+    setTermValue(alteredEr, OSGridTerm.issues, getStringFromList(issues));
 
     counter.inc();
     return alteredEr;
@@ -122,9 +122,9 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
   }
 
   private void setCoordinateUncertaintyFromOSGrid(ExtendedRecord er, ExtendedRecord alteredEr) {
-    String gridReferenceValue = extractNullAwareExtensionTermValue(er, OSGridTerm.gridReference);
+    String gridReferenceValue = extractNullAwareValue(er, OSGridTerm.gridReference);
     String gridSizeInMetersValue =
-        extractNullAwareExtensionTermValue(er, OSGridTerm.gridSizeInMeters);
+            extractNullAwareValue(er, OSGridTerm.gridSizeInMeters);
 
     // todo - should we flag if these fail?  Internally this logs and error but this is not going to
     // be very helpful

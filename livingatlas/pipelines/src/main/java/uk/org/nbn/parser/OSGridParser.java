@@ -1,6 +1,5 @@
 package uk.org.nbn.parser;
 
-import static uk.org.nbn.util.NBNModelUtils.extractNullAwareExtensionTermValue;
 
 import au.org.ala.pipelines.vocabulary.ALAOccurrenceIssue;
 import com.google.common.base.Strings;
@@ -21,12 +20,14 @@ import uk.org.nbn.util.GISPoint;
 import uk.org.nbn.util.GridUtil;
 import uk.org.nbn.pipelines.vocabulary.NBNOccurrenceIssue;
 
+import static org.gbif.pipelines.core.utils.ModelUtils.extractNullAwareValue;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OSGridParser {
 
   // parses OSGrid extension gridRefernce field
   private static final Function<ExtendedRecord, ParsedField<LatLng>> GRID_REFERENCE_FN =
-      (er -> parseGridReference(extractNullAwareExtensionTermValue(er, OSGridTerm.gridReference)));
+      (er -> parseGridReference(extractNullAwareValue(er, OSGridTerm.gridReference)));
 
   private static final List<Function<ExtendedRecord, ParsedField<LatLng>>> PARSING_FUNCTIONS =
       Arrays.asList(OSGridParser.GRID_REFERENCE_FN);

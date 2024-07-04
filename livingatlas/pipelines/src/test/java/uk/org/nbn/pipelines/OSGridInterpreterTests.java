@@ -37,9 +37,9 @@ public class OSGridInterpreterTests extends OSGridTestBase {
             NBNOccurrenceIssue.COORDINATES_NOT_CENTRE_OF_GRID.name());
 
     ExtendedRecord er = createTestRecord();
-    Map<String, String> osGridTerms = getOSGridTerms(er);
+    Map<String, String> coreTerms = er.getCoreTerms();
 
-    osGridTerms.put(OSGridTerm.issues.qualifiedName(), getStringFromList(expectedIssues));
+    coreTerms.put(OSGridTerm.issues.qualifiedName(), getStringFromList(expectedIssues));
 
     Tuple<ExtendedRecord, LocationRecord> input = createInput(er);
 
@@ -58,9 +58,9 @@ public class OSGridInterpreterTests extends OSGridTestBase {
     final List<String> expectedIssues = Arrays.asList(validIssue, invalidIssue);
 
     ExtendedRecord er = createTestRecord();
-    Map<String, String> osGridTerms = getOSGridTerms(er);
+    Map<String, String> coreTerms = er.getCoreTerms();
 
-    osGridTerms.put(OSGridTerm.issues.qualifiedName(), getStringFromList(expectedIssues));
+    coreTerms.put(OSGridTerm.issues.qualifiedName(), getStringFromList(expectedIssues));
 
     Tuple<ExtendedRecord, LocationRecord> input = createInput(er);
 
@@ -81,10 +81,10 @@ public class OSGridInterpreterTests extends OSGridTestBase {
     final Integer unexpectedGridSize = 100;
 
     ExtendedRecord er = createTestRecord();
-    Map<String, String> osGridMap = getOSGridTerms(er);
+    Map<String, String> coreTerms = er.getCoreTerms();
 
-    osGridMap.put(OSGridTerm.gridSizeInMeters.qualifiedName(), String.valueOf(unexpectedGridSize));
-    osGridMap.put(OSGridTerm.gridReference.qualifiedName(), unexpectedGridReference);
+    coreTerms.put(OSGridTerm.gridSizeInMeters.qualifiedName(), String.valueOf(unexpectedGridSize));
+    coreTerms.put(OSGridTerm.gridReference.qualifiedName(), unexpectedGridReference);
 
     OSGridRecord osgr =
         OSGridRecord.newBuilder()
@@ -111,10 +111,10 @@ public class OSGridInterpreterTests extends OSGridTestBase {
     final Integer unexpectedGridSize = 100;
 
     ExtendedRecord er = createTestRecord();
-    Map<String, String> osGridMap = getOSGridTerms(er);
+    Map<String, String> coreTerms = er.getCoreTerms();
 
-    osGridMap.put(OSGridTerm.gridSizeInMeters.qualifiedName(), String.valueOf(unexpectedGridSize));
-    osGridMap.put(OSGridTerm.gridReference.qualifiedName(), unexpectedGridReference);
+    coreTerms.put(OSGridTerm.gridSizeInMeters.qualifiedName(), String.valueOf(unexpectedGridSize));
+    coreTerms.put(OSGridTerm.gridReference.qualifiedName(), unexpectedGridReference);
 
     OSGridRecord osgr =
         OSGridRecord.newBuilder().setId(ID).setGridReference(expectedGridReference).build();
@@ -135,10 +135,10 @@ public class OSGridInterpreterTests extends OSGridTestBase {
     final Integer unexpectedGridSize = 100;
 
     ExtendedRecord er = createTestRecord();
-    Map<String, String> osGridMap = getOSGridTerms(er);
+    Map<String, String> coreTerms = er.getCoreTerms();
 
-    osGridMap.put(OSGridTerm.gridSizeInMeters.qualifiedName(), String.valueOf(unexpectedGridSize));
-    osGridMap.put(OSGridTerm.gridReference.qualifiedName(), expectedGridReference);
+    coreTerms.put(OSGridTerm.gridSizeInMeters.qualifiedName(), String.valueOf(unexpectedGridSize));
+    coreTerms.put(OSGridTerm.gridReference.qualifiedName(), expectedGridReference);
 
     OSGridRecord osgr = OSGridRecord.newBuilder().setId(ID).build();
 
@@ -155,9 +155,9 @@ public class OSGridInterpreterTests extends OSGridTestBase {
     final Integer expectedGridSize = 10000;
 
     ExtendedRecord er = createTestRecord();
-    Map<String, String> osGridMap = getOSGridTerms(er);
+    Map<String, String> coreTerms = er.getCoreTerms();
 
-    osGridMap.put(OSGridTerm.gridSizeInMeters.qualifiedName(), String.valueOf(expectedGridSize));
+    coreTerms.put(OSGridTerm.gridSizeInMeters.qualifiedName(), String.valueOf(expectedGridSize));
 
     OSGridRecord osgr = OSGridRecord.newBuilder().setId(ID).build();
 
@@ -171,18 +171,17 @@ public class OSGridInterpreterTests extends OSGridTestBase {
   @Test
   public void validateSuppliedGridReferenceAndLatLon_issueNotAddedForCentroidLatLon() {
     ExtendedRecord er = createTestRecord();
-    Map<String, String> osGridMap = getOSGridTerms(er);
-    Map<String, String> coreMap = er.getCoreTerms();
+    Map<String, String> coreTerms = er.getCoreTerms();
 
     String gridReference = "NM39";
     String centroidLatitude = "56.970009";
     String centroidLongitude = "-6.361995";
     String nonCentroidLongitude = "-6.777777";
 
-    osGridMap.put(OSGridTerm.gridReference.qualifiedName(), gridReference);
+    coreTerms.put(OSGridTerm.gridReference.qualifiedName(), gridReference);
 
-    coreMap.put(DwcTerm.decimalLongitude.qualifiedName(), centroidLongitude);
-    coreMap.put(DwcTerm.decimalLatitude.qualifiedName(), centroidLatitude);
+    coreTerms.put(DwcTerm.decimalLongitude.qualifiedName(), centroidLongitude);
+    coreTerms.put(DwcTerm.decimalLatitude.qualifiedName(), centroidLatitude);
 
     Tuple<ExtendedRecord, LocationRecord> input = createInput(er);
 
@@ -196,18 +195,17 @@ public class OSGridInterpreterTests extends OSGridTestBase {
   @Test
   public void validateSuppliedGridReferenceAndLatLon_issueAddedForNonCentroidLatLon() {
     ExtendedRecord er = createTestRecord();
-    Map<String, String> osGridMap = getOSGridTerms(er);
-    Map<String, String> coreMap = er.getCoreTerms();
+    Map<String, String> coreTerms = er.getCoreTerms();
 
     String gridReference = "NM39";
     String centroidLatitude = "56.970009";
     String centroidLongitude = "-6.361995";
     String nonCentroidLongitude = "-6.777777";
 
-    osGridMap.put(OSGridTerm.gridReference.qualifiedName(), gridReference);
+    coreTerms.put(OSGridTerm.gridReference.qualifiedName(), gridReference);
 
-    coreMap.put(DwcTerm.decimalLongitude.qualifiedName(), nonCentroidLongitude);
-    coreMap.put(DwcTerm.decimalLatitude.qualifiedName(), centroidLatitude);
+    coreTerms.put(DwcTerm.decimalLongitude.qualifiedName(), nonCentroidLongitude);
+    coreTerms.put(DwcTerm.decimalLatitude.qualifiedName(), centroidLatitude);
 
     Tuple<ExtendedRecord, LocationRecord> input = createInput(er);
 
@@ -228,19 +226,18 @@ public class OSGridInterpreterTests extends OSGridTestBase {
       double centroidLatitude,
       double centroidLongitude) {
     ExtendedRecord er = createTestRecord();
-    Map<String, String> osGridMap = getOSGridTerms(er);
-    Map<String, String> coreMap = er.getCoreTerms();
+    Map<String, String> coreTerms = er.getCoreTerms();
 
     // Set all possible raw terms
     if (!Strings.isNullOrEmpty(gridReference)) {
-      osGridMap.put(OSGridTerm.gridReference.qualifiedName(), gridReference);
+      coreTerms.put(OSGridTerm.gridReference.qualifiedName(), gridReference);
     }
 
-    osGridMap.put(OSGridTerm.gridSizeInMeters.qualifiedName(), gridSize.toString());
+    coreTerms.put(OSGridTerm.gridSizeInMeters.qualifiedName(), gridSize.toString());
 
-    coreMap.put(DwcTerm.decimalLongitude.qualifiedName(), String.valueOf(centroidLongitude));
-    coreMap.put(DwcTerm.decimalLatitude.qualifiedName(), String.valueOf(centroidLatitude));
-    coreMap.put(
+    coreTerms.put(DwcTerm.decimalLongitude.qualifiedName(), String.valueOf(centroidLongitude));
+    coreTerms.put(DwcTerm.decimalLatitude.qualifiedName(), String.valueOf(centroidLatitude));
+    coreTerms.put(
         DwcTerm.coordinateUncertaintyInMeters.qualifiedName(),
         String.valueOf(coordinateUncertainty));
 
@@ -476,8 +473,8 @@ public class OSGridInterpreterTests extends OSGridTestBase {
         "POLYGON((-4.60801 54.20547,-4.60801 54.22409,-4.5785 54.22409,-4.5785 54.20547,-4.60801 54.20547))";
 
     ExtendedRecord er = createTestRecord();
-    Map<String, String> osGridMap = getOSGridTerms(er);
-    osGridMap.put(OSGridTerm.gridReference.qualifiedName(), suppliedGridReference);
+    Map<String, String> coreTerms = er.getCoreTerms();
+    coreTerms.put(OSGridTerm.gridReference.qualifiedName(), suppliedGridReference);
 
     OSGridRecord osgr =
         OSGridRecord.newBuilder().setId(ID).setGridReference(computedGridReference).build();
@@ -500,8 +497,8 @@ public class OSGridInterpreterTests extends OSGridTestBase {
         "POLYGON((-4.60801 54.20547,-4.60801 54.22409,-4.5785 54.22409,-4.5785 54.20547,-4.60801 54.20547))";
 
     ExtendedRecord er = createTestRecord();
-    Map<String, String> osGridMap = getOSGridTerms(er);
-    osGridMap.put(OSGridTerm.gridReference.qualifiedName(), suppliedGridReference);
+    Map<String, String> coreTerms = er.getCoreTerms();
+    coreTerms.put(OSGridTerm.gridReference.qualifiedName(), suppliedGridReference);
 
     OSGridRecord osgr = OSGridRecord.newBuilder().setId(ID).build();
 

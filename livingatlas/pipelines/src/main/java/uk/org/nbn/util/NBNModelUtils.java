@@ -10,41 +10,8 @@ import uk.org.nbn.term.OSGridTerm;
 
 public class NBNModelUtils {
 
-  public static String extractNullAwareExtensionTermValue(ExtendedRecord er, Term term) {
-    String extensionName = getExtensionNameForTerm(term);
-    if (ModelUtils.hasExtension(er, extensionName)) {
-      String value =
-          er.getExtensions()
-              .get(extensionName)
-              .get(0)
-              .getOrDefault(term.qualifiedName(), null);
-
-      return ModelUtils.hasValue(value) ? value : null;
-    }
-    return null;
-  }
-
-  public static void setExtensionTermValue(ExtendedRecord er, Term term, String value) {
-    if (!ModelUtils.hasExtension(er, getExtensionNameForTerm(term))) {
-      throw new ParameterException("Records does not contain extension");
-    }
-
-    er.getExtensions().get(getExtensionNameForTerm(OSGridTerm.gridReference)).stream()
-        .findFirst()
-        .get()
-        .put(term.qualifiedName(), value);
-  }
-
-  public static String getExtensionNameForTerm(Term input) {
-    return removeTrailingSlash(input.namespace().toString());
-  }
-
-  private static String removeTrailingSlash(String input) {
-    if(input.endsWith("/")) {
-      return  input.substring(0, input.length() - 1);
-    } else {
-      return  input;
-    }
+  public static void setTermValue(ExtendedRecord er, Term term, String value) {
+    er.getCoreTerms().put(term.qualifiedName(), value);
   }
 
   private static String listSeperator = "[,|]";

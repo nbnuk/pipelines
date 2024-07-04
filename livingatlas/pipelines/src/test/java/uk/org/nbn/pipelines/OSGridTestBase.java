@@ -15,22 +15,13 @@ public abstract class OSGridTestBase {
   protected ExtendedRecord createTestRecord() {
 
     Map<String, String> coreMap = new HashMap<>();
-    Map<String, List<Map<String, String>>> extensionsMap = new HashMap<>();
-    Map<String, String> osGridMap = new HashMap<>();
-
-    extensionsMap.put(NBNModelUtils.getExtensionNameForTerm(OSGridTerm.gridReference), Arrays.asList(osGridMap));
 
     ExtendedRecord er =
         ExtendedRecord.newBuilder()
             .setId(ID)
             .setCoreTerms(coreMap)
-            .setExtensions(extensionsMap)
             .build();
 
     return er;
-  }
-
-  protected Map<String, String> getOSGridTerms(ExtendedRecord er) {
-    return er.getExtensions().get(NBNModelUtils.getExtensionNameForTerm(OSGridTerm.gridReference)).get(0);
   }
 }
