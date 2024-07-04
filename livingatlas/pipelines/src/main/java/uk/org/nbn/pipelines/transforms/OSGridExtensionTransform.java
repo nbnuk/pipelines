@@ -78,11 +78,11 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
       setLatLonFromOSGrid(er, alteredEr, issues);
     }
 
-    // if grid and:
-    //    - no lat/long supplied
-    //    - lat/long supplied is centroid of grid
-    //    - lat/long supplied but no coordinate uncertainty
-    // then amend coordinate uncertainty to radius of circle through corners of grid
+    // this was combined from checkUncertainty and possiblyRecalculateUncertainty
+    // we know we have either a grid ref or grid size so we can compute uncertainty so...
+    // set uncertainty if:
+    // supplied without either lat/lon or uncertainty
+    // or we have a grid ref and the lat lon is centroid of the grid
 
     if (!hasSuppliedLatLon
         || Strings.isNullOrEmpty(coordinateUncertaintyValue)
