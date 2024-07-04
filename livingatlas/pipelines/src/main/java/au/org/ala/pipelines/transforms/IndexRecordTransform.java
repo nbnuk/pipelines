@@ -393,6 +393,7 @@ public class IndexRecordTransform implements Serializable, IndexFields {
     List<String> temporalIssues = tr.getIssues().getIssueList();
     List<String> taxonomicIssues = atxr.getIssues().getIssueList();
     List<String> geospatialIssues = lr.getIssues().getIssueList();
+    geospatialIssues.addAll(osGridRecord.getIssues().getIssueList());
 
     if (taxonomicIssues != null && !taxonomicIssues.isEmpty()) {
       indexRecord.getMultiValues().put(TAXONOMIC_ISSUES, temporalIssues);
