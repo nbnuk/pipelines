@@ -41,4 +41,10 @@ public interface IndexingPipelineOptions
   Integer getTimeBufferInMillis();
 
   void setTimeBufferInMillis(Integer timeBufferInMillis);
+
+  @Description("Apply access control")
+  @Default.Boolean(true)
+  Boolean getApplyAccessControl();
+
+  void setApplyAccessControl(Boolean applyAccessControl);
 }

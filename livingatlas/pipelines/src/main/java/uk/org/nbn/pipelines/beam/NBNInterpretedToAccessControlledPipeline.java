@@ -32,6 +32,7 @@ import org.gbif.pipelines.io.avro.LocationRecord;
 import org.gbif.pipelines.transforms.core.LocationTransform;
 import org.gbif.pipelines.transforms.core.VerbatimTransform;
 import org.slf4j.MDC;
+import uk.org.nbn.pipelines.options.NBNInterpretedToAccessControlledPipelineOptions;
 import uk.org.nbn.pipelines.transforms.NBNAccessControlRecordTransform;
 
 /** ALA Beam pipeline to process sensitive data. */
@@ -41,14 +42,15 @@ public class NBNInterpretedToAccessControlledPipeline {
 
   public static void main(String[] args) throws IOException {
     VersionInfo.print();
-    String[] combinedArgs = new CombinedYamlConfiguration(args).toArgs("general", "sensitive");
-    InterpretationPipelineOptions options =
-        PipelinesOptionsFactory.createInterpretation(combinedArgs);
+    String[] combinedArgs = new CombinedYamlConfiguration(args).toArgs("general", "accessControl");
+    NBNInterpretedToAccessControlledPipelineOptions options =
+        PipelinesOptionsFactory.create(
+            NBNInterpretedToAccessControlledPipelineOptions.class, combinedArgs);
     options.setMetaFileName("access-control-metrics.yml");
     run(options);
   }
 
-  public static void run(InterpretationPipelineOptions options) {
+  public static void run(NBNInterpretedToAccessControlledPipelineOptions options) {
 
     ALAPipelinesConfig config =
         ALAPipelinesConfigFactory.getInstance(
@@ -89,10 +91,15 @@ public class NBNInterpretedToAccessControlledPipeline {
     VerbatimTransform verbatimTransform = VerbatimTransform.create();
     LocationTransform locationTransform = LocationTransform.builder().create();
     // TODO HMJ osgrid eventCoreTransform = EventCoreTransform.builder().create();
-
+    log.info(
+        "defaultPublicResolutionInMeters: "
+            + options.getDefaultPublicResolutionInMeters()
+            + " datasetId:"
+            + options.getDatasetId());
     NBNAccessControlRecordTransform nbnAccessControlRecordTransform =
         NBNAccessControlRecordTransform.builder()
             .config(config)
+            .defaultPublicResolutionInMeters(options.getDefaultPublicResolutionInMeters())
             .datasetId(options.getDatasetId())
             .erTag(verbatimTransform.getTag())
             .lrTag(locationTransform.getTag())

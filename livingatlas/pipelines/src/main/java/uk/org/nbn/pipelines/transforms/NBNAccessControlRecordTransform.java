@@ -47,6 +47,7 @@ public class NBNAccessControlRecordTransform
 
   private final ALAPipelinesConfig config;
   private final String datasetId;
+  private final Integer defaultPublicResolutionInMeters;
 
   @NonNull private final TupleTag<ExtendedRecord> erTag;
   @NonNull private final TupleTag<LocationRecord> lrTag;
@@ -55,6 +56,7 @@ public class NBNAccessControlRecordTransform
   private NBNAccessControlRecordTransform(
       ALAPipelinesConfig config,
       String datasetId,
+      Integer defaultPublicResolutionInMeters,
       TupleTag<ExtendedRecord> erTag,
       TupleTag<LocationRecord> lrTag) {
     super(
@@ -65,6 +67,7 @@ public class NBNAccessControlRecordTransform
 
     this.config = config;
     this.datasetId = datasetId;
+    this.defaultPublicResolutionInMeters = defaultPublicResolutionInMeters;
     this.erTag = erTag;
     this.lrTag = lrTag;
   }
@@ -126,6 +129,7 @@ public class NBNAccessControlRecordTransform
 
     NBNAccessControlledDataInterpreter.accessControlledDataInterpreter(
         datasetId,
+        defaultPublicResolutionInMeters,
         er,
         lr,
         // TODO HMJ     osgr,

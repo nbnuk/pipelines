@@ -221,6 +221,7 @@ public class NBNAccessControlledDataInterpreter {
    */
   public static void accessControlledDataInterpreter(
       String dataResourceUid,
+      Integer defaultPublicResolutionInMeters,
       // NBNDataResourceService
       ExtendedRecord extendedRecord,
       LocationRecord locationRecord,
@@ -232,7 +233,9 @@ public class NBNAccessControlledDataInterpreter {
         DataResourceNbnCache.getInstance().getDataResourceNbn(dataResourceUid);
 
     Integer publicResolutionToBeApplied =
-        dataResourceNbn == null ? 10000 : dataResourceNbn.getPublicResolutionToBeApplied();
+        dataResourceNbn == null
+            ? defaultPublicResolutionInMeters
+            : dataResourceNbn.getPublicResolutionToBeApplied();
 
     accessControlledRecord.setAccessControlled(publicResolutionToBeApplied > 0);
 
