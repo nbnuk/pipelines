@@ -88,10 +88,14 @@ public class NBNInterpretedToAccessControlledPipeline {
 
     Pipeline p = Pipeline.create(options);
 
-    //curl -H "Authorization: api-key" https://registry.legacy.nbnatlas.org/ws/accessControl/dataResourceNbn/dr2818
+    // curl -H "Authorization: api-key"
+    // https://registry.legacy.nbnatlas.org/ws/accessControl/dataResourceNbn/dr2818
     DataResourceNBN dataResourceNBN =
-            DataResourceNBNKVStoreFactory.create(config).get(options.getDatasetId());
-    Integer publicResolutionToApplyInMeters = dataResourceNBN !=null ? dataResourceNBN.getPublicResolutionToBeApplied() : options.getDefaultPublicResolutionInMeters();
+        DataResourceNBNKVStoreFactory.create(config).get(options.getDatasetId());
+    Integer publicResolutionToApplyInMeters =
+        dataResourceNBN != null
+            ? dataResourceNBN.getPublicResolutionToBeApplied()
+            : options.getDefaultPublicResolutionInMeters();
 
     log.info("Adding step 2: Creating transformations");
     // Core
@@ -99,8 +103,9 @@ public class NBNInterpretedToAccessControlledPipeline {
     LocationTransform locationTransform = LocationTransform.builder().create();
     // TODO HMJ osgrid eventCoreTransform = EventCoreTransform.builder().create();
     log.info(
-            "dataResourceNBN found:"+(dataResourceNBN !=null)
-        + " publicResolution being applied: "
+        "dataResourceNBN found:"
+            + (dataResourceNBN != null)
+            + " publicResolution being applied: "
             + publicResolutionToApplyInMeters
             + " datasetId:"
             + options.getDatasetId());

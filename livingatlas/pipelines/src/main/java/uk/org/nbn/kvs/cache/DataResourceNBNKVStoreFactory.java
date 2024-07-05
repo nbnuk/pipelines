@@ -1,6 +1,7 @@
 package uk.org.nbn.kvs.cache;
 
 import au.org.ala.kvs.ALAPipelinesConfig;
+import java.util.concurrent.TimeUnit;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.gbif.kvs.KeyValueStore;
@@ -11,8 +12,6 @@ import org.gbif.pipelines.core.functions.SerializableSupplier;
 import uk.org.nbn.kvs.client.DataResourceNBN;
 import uk.org.nbn.kvs.client.NBNCollectoryService;
 import uk.org.nbn.kvs.client.retrofit.NBNCollectoryServiceClient;
-
-import java.util.concurrent.TimeUnit;
 
 /** Key value store factory for Attribution */
 @Slf4j
@@ -27,8 +26,7 @@ public class DataResourceNBNKVStoreFactory {
     this.kvStore = create(config);
   }
 
-  public static KeyValueStore<String, DataResourceNBN> getInstance(
-      ALAPipelinesConfig config) {
+  public static KeyValueStore<String, DataResourceNBN> getInstance(ALAPipelinesConfig config) {
     if (instance == null) {
       synchronized (MUTEX) {
         if (instance == null) {
@@ -41,7 +39,7 @@ public class DataResourceNBNKVStoreFactory {
 
   /** Retrieve KV Store for Collectory Metadata. */
   public static KeyValueStore<String, DataResourceNBN> create(ALAPipelinesConfig config) {
-      NBNCollectoryServiceClient wsClient = new NBNCollectoryServiceClient(config.getCollectory());
+    NBNCollectoryServiceClient wsClient = new NBNCollectoryServiceClient(config.getCollectory());
     Command closeHandler =
         () -> {
           try {
@@ -56,7 +54,7 @@ public class DataResourceNBNKVStoreFactory {
 
   /** Builds a KV Store backed by the rest client. */
   private static KeyValueStore<String, DataResourceNBN> cache2kBackedKVStore(
-          NBNCollectoryService service, Command closeHandler, ALAPipelinesConfig config) {
+      NBNCollectoryService service, Command closeHandler, ALAPipelinesConfig config) {
 
     KeyValueStore<String, DataResourceNBN> kvs =
         new KeyValueStore<String, DataResourceNBN>() {
@@ -90,8 +88,8 @@ public class DataResourceNBNKVStoreFactory {
         kvs, config.getCollectory().getCacheSizeMb(), String.class, DataResourceNBN.class);
   }
 
-  public static SerializableSupplier<KeyValueStore<String, DataResourceNBN>>
-      getInstanceSupplier(ALAPipelinesConfig config) {
+  public static SerializableSupplier<KeyValueStore<String, DataResourceNBN>> getInstanceSupplier(
+      ALAPipelinesConfig config) {
     return () -> getInstance(config);
   }
 }

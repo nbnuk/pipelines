@@ -10,5 +10,4 @@ public interface NBNCollectoryRetrofitService {
 
   @GET("accessControl/dataResourceNbn/{dataResourceUid}")
   Call<DataResourceNBN> lookupDataResourceNBN(@Path("dataResourceUid") String dataResourceUid);
-
 }

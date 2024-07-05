@@ -129,7 +129,7 @@ public class NBNAccessControlRecordTransform
 
     NBNAccessControlledDataInterpreter.accessControlledDataInterpreter(
         datasetId,
-            publicResolutionToApplyInMeters,
+        publicResolutionToApplyInMeters,
         er,
         lr,
         // TODO HMJ     osgr,

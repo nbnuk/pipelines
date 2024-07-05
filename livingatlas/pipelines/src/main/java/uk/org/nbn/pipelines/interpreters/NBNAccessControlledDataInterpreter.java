@@ -226,7 +226,6 @@ public class NBNAccessControlledDataInterpreter {
       // OSGridRecord osGridRecord,
       NBNAccessControlledRecord accessControlledRecord) {
 
-
     accessControlledRecord.setAccessControlled(publicResolutionToApplyInMeters > 0);
 
     if (publicResolutionToApplyInMeters > 0) {
@@ -281,7 +280,8 @@ public class NBNAccessControlledDataInterpreter {
       //
       // INFORMATION_WITHHELD.get(result).getValue().map(Object::toString).orElse(null));
 
-      accessControlledRecord.setPublicResolutionInMetres(publicResolutionToApplyInMeters.toString());
+      accessControlledRecord.setPublicResolutionInMetres(
+          publicResolutionToApplyInMeters.toString());
       accessControlledRecord.setOriginal(toStringMap(original));
       accessControlledRecord.setAltered(toStringMap(blurred));
     }

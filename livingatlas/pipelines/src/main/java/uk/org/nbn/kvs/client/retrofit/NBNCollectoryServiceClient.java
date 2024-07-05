@@ -1,13 +1,8 @@
 package uk.org.nbn.kvs.client.retrofit;
 
-import au.org.ala.utils.WsUtils;
-import lombok.extern.slf4j.Slf4j;
-import okhttp3.OkHttpClient;
-import org.gbif.pipelines.core.config.model.WsConfig;
-import retrofit2.HttpException;
-import uk.org.nbn.kvs.client.NBNCollectoryService;
-import uk.org.nbn.kvs.client.DataResourceNBN;
+import static org.gbif.rest.client.retrofit.SyncCall.syncCall;
 
+import au.org.ala.utils.WsUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,8 +10,12 @@ import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.stream.Stream;
-
-import static org.gbif.rest.client.retrofit.SyncCall.syncCall;
+import lombok.extern.slf4j.Slf4j;
+import okhttp3.OkHttpClient;
+import org.gbif.pipelines.core.config.model.WsConfig;
+import retrofit2.HttpException;
+import uk.org.nbn.kvs.client.DataResourceNBN;
+import uk.org.nbn.kvs.client.NBNCollectoryService;
 
 @Slf4j
 /** Collectory service client implementation. */
@@ -42,22 +41,19 @@ public class NBNCollectoryServiceClient implements NBNCollectoryService {
   public DataResourceNBN lookupDataResourceNBN(String dataResourceUid) {
     try {
       return syncCall(nbnCollectoryService.lookupDataResourceNBN(dataResourceUid));
-    }
-    catch (HttpException e){
+    } catch (HttpException e) {
       if (e.code() == 404) {
         return DataResourceNBN.EMPTY;
       }
       log.error("Exception thrown when calling the collectory. " + e.getMessage(), e);
       return DataResourceNBN.EMPTY;
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       // this necessary due to collectory returning 500s
       // instead of 404s
       log.error("Exception thrown when calling the collectory. " + e.getMessage(), e);
       return DataResourceNBN.EMPTY;
     }
   }
-
 
   @Override
   public void close() throws IOException {

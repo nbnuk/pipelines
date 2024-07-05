@@ -23,12 +23,9 @@ public class DataResourceNBN {
   Integer publicResolution;
   Integer publicResolutionToBeApplied;
   Boolean needToReload;
-//
-//  Date dateCreated
-//  Date lastUpdated
-
-
-
+  //
+  //  Date dateCreated
+  //  Date lastUpdated
 
   @JsonPOJOBuilder(withPrefix = "")
   @JsonIgnoreProperties(ignoreUnknown = true)
