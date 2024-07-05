@@ -11,8 +11,6 @@ import org.gbif.dwc.terms.Term;
 import org.gbif.dwc.terms.TermFactory;
 import org.gbif.pipelines.core.utils.ModelUtils;
 import org.gbif.pipelines.io.avro.*;
-import uk.org.nbn.accesscontrol.DataResourceNbnCache;
-import uk.org.nbn.dto.DataResourceNbn;
 import uk.org.nbn.pipelines.io.avro.NBNAccessControlledRecord;
 import uk.org.nbn.util.GeneralisedLocation;
 import uk.org.nbn.util.GridUtil;
@@ -221,25 +219,17 @@ public class NBNAccessControlledDataInterpreter {
    */
   public static void accessControlledDataInterpreter(
       String dataResourceUid,
-      Integer defaultPublicResolutionInMeters,
+      Integer publicResolutionToApplyInMeters,
       // NBNDataResourceService
       ExtendedRecord extendedRecord,
       LocationRecord locationRecord,
       // OSGridRecord osGridRecord,
       NBNAccessControlledRecord accessControlledRecord) {
 
-    // TODO HMJ implement this using the ALA ws framework (which includes caching)
-    DataResourceNbn dataResourceNbn =
-        DataResourceNbnCache.getInstance().getDataResourceNbn(dataResourceUid);
 
-    Integer publicResolutionToBeApplied =
-        dataResourceNbn == null
-            ? defaultPublicResolutionInMeters
-            : dataResourceNbn.getPublicResolutionToBeApplied();
+    accessControlledRecord.setAccessControlled(publicResolutionToApplyInMeters > 0);
 
-    accessControlledRecord.setAccessControlled(publicResolutionToBeApplied > 0);
-
-    if (publicResolutionToBeApplied > 0) {
+    if (publicResolutionToApplyInMeters > 0) {
 
       Map<String, String> original = new HashMap<>();
 
@@ -281,7 +271,7 @@ public class NBNAccessControlledDataInterpreter {
           "occurrenceRemarks",
           extendedRecord.getCoreTerms().get(DwcTerm.occurrenceRemarks.qualifiedName()));
 
-      Map<String, String> blurred = blur(original, publicResolutionToBeApplied);
+      Map<String, String> blurred = blur(original, publicResolutionToApplyInMeters);
 
       // TODO this is not in phase1 so dont implement it yet
       //      accessControlledRecord.setDataGeneralizations(
@@ -291,7 +281,7 @@ public class NBNAccessControlledDataInterpreter {
       //
       // INFORMATION_WITHHELD.get(result).getValue().map(Object::toString).orElse(null));
 
-      accessControlledRecord.setPublicResolutionInMetres(publicResolutionToBeApplied.toString());
+      accessControlledRecord.setPublicResolutionInMetres(publicResolutionToApplyInMeters.toString());
       accessControlledRecord.setOriginal(toStringMap(original));
       accessControlledRecord.setAltered(toStringMap(blurred));
     }

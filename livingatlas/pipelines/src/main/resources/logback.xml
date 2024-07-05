@@ -17,6 +17,10 @@
         <appender-ref ref="CONSOLE"/>
     </logger>
 
+    <logger name="uk.org.nbn" level="info" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
     <logger name="au.org.ala" level="info" additivity="false">
         <appender-ref ref="CONSOLE"/>
     </logger>
