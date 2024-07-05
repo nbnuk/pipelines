@@ -235,9 +235,12 @@ public class IndexRecordPipeline {
               .apply("Map sensitive data to KV", alaSensitiveDataRecordTransform.toKv());
     }
 
-    PCollection<KV<String, NBNAccessControlledRecord>> nbnAccessControlledDataCollection =
-        p.apply("Read access controlled data", nbnAccessControlRecordTransform.read(pathFn))
-            .apply("Map access controlled data to KV", nbnAccessControlRecordTransform.toKv());
+    PCollection<KV<String, NBNAccessControlledRecord>> nbnAccessControlledDataCollection = null;
+    if (options.getApplyAccessControl()) {
+      nbnAccessControlledDataCollection =
+          p.apply("Read access controlled data", nbnAccessControlRecordTransform.read(pathFn))
+              .apply("Map access controlled data to KV", nbnAccessControlRecordTransform.toKv());
+    }
 
     final TupleTag<ImageRecord> imageRecordTupleTag = new TupleTag<ImageRecord>() {};
     final TupleTag<TaxonProfile> speciesListsRecordTupleTag = new TupleTag<TaxonProfile>() {};
@@ -258,7 +261,7 @@ public class IndexRecordPipeline {
             options.getIncludeSensitiveDataChecks()
                 ? alaSensitiveDataRecordTransform.getTag()
                 : null,
-            nbnAccessControlRecordTransform.getTag(),
+            options.getApplyAccessControl() ? nbnAccessControlRecordTransform.getTag() : null,
             EVENT_CORE_TAG,
             EVENT_LOCATION_TAG,
             EVENT_TEMPORAL_TAG,
@@ -304,7 +307,9 @@ public class IndexRecordPipeline {
       kpct = kpct.and(alaSensitiveDataRecordTransform.getTag(), alaSensitiveDataCollection);
     }
 
-    kpct = kpct.and(nbnAccessControlRecordTransform.getTag(), nbnAccessControlledDataCollection);
+    if (options.getApplyAccessControl()) {
+      kpct = kpct.and(nbnAccessControlRecordTransform.getTag(), nbnAccessControlledDataCollection);
+    }
 
     PCollection<IndexRecord> indexRecordCollection =
         kpct.apply("Grouping objects", CoGroupByKey.create())
