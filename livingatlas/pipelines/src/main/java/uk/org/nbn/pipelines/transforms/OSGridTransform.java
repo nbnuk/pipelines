@@ -116,7 +116,7 @@ public class OSGridTransform extends Transform<KV<String, CoGbkResult>, OSGridRe
                     // This populates grids sizes for those supplied with a lat lot and have had
                     // gridreference computed
                     .via(OSGridInterpreter::addGridSize)
-                    .via(OSGridInterpreter::processGridWKT)
+                    //.via(OSGridInterpreter::processGridWKT)
                     .via(OSGridInterpreter::addEastingAndNorthing)
                     .get();
 

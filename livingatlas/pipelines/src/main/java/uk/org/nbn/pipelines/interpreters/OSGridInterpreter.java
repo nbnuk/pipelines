@@ -149,7 +149,7 @@ public class OSGridInterpreter {
       addIssue(osGridRecord, NBNOccurrenceIssue.COORDINATES_NOT_CENTRE_OF_GRID.name());
     }
   }
-  
+
   /**
    * This sets the grid reference from lat lon for all records OSGrid records - OSGrid > lat lon >
    * OSGrid Non OSGrid records - lat lon > OSGrid
@@ -244,54 +244,6 @@ public class OSGridInterpreter {
     return !rawLatLonWasComputedFromOSGrid
         && !Strings.isNullOrEmpty(extractNullAwareValue(extendedRecord, DwcTerm.decimalLatitude))
         && !Strings.isNullOrEmpty(extractNullAwareValue(extendedRecord, DwcTerm.decimalLongitude));
-  }
-
-  public static void processGridWKT(
-      Tuple<ExtendedRecord, LocationRecord> source, OSGridRecord osGridRecord) {
-
-    ExtendedRecord extendedRecord = source.v1();
-
-    if (suppliedWithLatLon(extendedRecord, osGridRecord)) {
-      return;
-    }
-
-    // surely this will alway be empty in pipelines land
-    if (Strings.isNullOrEmpty(osGridRecord.getGridReferenceWKT())
-        && suppliedWithGridReference(extendedRecord)) {
-
-      boolean computed = false;
-
-      String gridReference =
-              extractNullAwareValue(extendedRecord, OSGridTerm.gridReference);
-
-      // should this not be empty checked as well?
-      if (osGridRecord.getGridReference() != null) {
-        osGridRecord.setGridReferenceWKT(GridUtil.getGridWKT(osGridRecord.getGridReference()));
-        computed = true;
-      }
-      // should this not be empty checked as well? and if so surely this is always true as it was
-      // previously empty checked
-      // and if so what's the point of computed?
-      else if (gridReference != null) {
-        osGridRecord.setGridReferenceWKT(GridUtil.getGridWKT(gridReference));
-        computed = true;
-      }
-
-      // todo - agreed to remove however this should be handled in sds or access controls
-      //            if (computed) {
-      //                if (processed.occurrence.informationWithheld == null)
-      //                    processed.occurrence.informationWithheld = ""
-      //                else
-      //                    processed.occurrence.informationWithheld =
-      // processed.occurrence.informationWithheld + " "
-      //
-      //                processed.occurrence.informationWithheld =
-      // processed.occurrence.informationWithheld +
-      // GridUtil.getGridAsTextWithAnnotation(raw.location.gridReference)
-      //                // note, we don't overwrite raw.occurrence.informationWithheld, as we might
-      // prefer that untouched
-      //            }
-    }
   }
 
   public static void addEastingAndNorthing(Tuple<ExtendedRecord, LocationRecord> source, OSGridRecord osGridRecord) {

@@ -693,7 +693,6 @@
   <!-- NBN OSGrid fields -->
   <field name="gridReference" type="string" docValues="true" indexed="true" />
   <field name="gridSizeInMeters" type="int" docValues="true" indexed="true" />
-  <field name="gridReferenceWKT" type="string" docValues="true" indexed="true" />
   <field name="easting" type="int" docValues="true" indexed="true"/>
   <field name="northing" type="int" docValues="true" indexed="true"/>
 

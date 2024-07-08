@@ -447,69 +447,6 @@ public class OSGridInterpreterTests extends OSGridTestBase {
   }
 
   @Test
-  public void processGridWKT_notSetIfNotSuppliedWithGridReference() {
-
-    final String computedGridReference = "NM39";
-
-    ExtendedRecord er = createTestRecord();
-    OSGridRecord osgr =
-        OSGridRecord.newBuilder().setId(ID).setGridReference(computedGridReference).build();
-
-    Tuple<ExtendedRecord, LocationRecord> input = createInput(er);
-
-    OSGridInterpreter.processGridWKT(input, osgr);
-
-    Assert.assertNull(osgr.getGridReferenceWKT());
-  }
-
-  @Test
-  public void processGridWKT_setFromComputedGridReferenceWhenSuppliedWithGridReference() {
-
-    // supply different grid ref to test which one is used
-    final String suppliedGridReference = "H99";
-    final String computedGridReference = "SC38B";
-    // expect result taken from biocache processed value
-    final String expectedGridReferenceWKT =
-        "POLYGON((-4.60801 54.20547,-4.60801 54.22409,-4.5785 54.22409,-4.5785 54.20547,-4.60801 54.20547))";
-
-    ExtendedRecord er = createTestRecord();
-    Map<String, String> coreTerms = er.getCoreTerms();
-    coreTerms.put(OSGridTerm.gridReference.qualifiedName(), suppliedGridReference);
-
-    OSGridRecord osgr =
-        OSGridRecord.newBuilder().setId(ID).setGridReference(computedGridReference).build();
-
-    Tuple<ExtendedRecord, LocationRecord> input = createInput(er);
-
-    OSGridInterpreter.processGridWKT(input, osgr);
-
-    Assert.assertEquals(expectedGridReferenceWKT, osgr.getGridReferenceWKT());
-  }
-
-  /** Not sure why this case should ever happen */
-  @Test
-  public void processGridWKT_setFromSuppliedGridReferenceWhenNoComputedGridReference() {
-
-    // supply different grid ref to test which one is used
-    final String suppliedGridReference = "SC38B";
-    // expect result taken from biocache processed value
-    final String expectedGridReferenceWKT =
-        "POLYGON((-4.60801 54.20547,-4.60801 54.22409,-4.5785 54.22409,-4.5785 54.20547,-4.60801 54.20547))";
-
-    ExtendedRecord er = createTestRecord();
-    Map<String, String> coreTerms = er.getCoreTerms();
-    coreTerms.put(OSGridTerm.gridReference.qualifiedName(), suppliedGridReference);
-
-    OSGridRecord osgr = OSGridRecord.newBuilder().setId(ID).build();
-
-    Tuple<ExtendedRecord, LocationRecord> input = createInput(er);
-
-    OSGridInterpreter.processGridWKT(input, osgr);
-
-    Assert.assertEquals(expectedGridReferenceWKT, osgr.getGridReferenceWKT());
-  }
-
-  @Test
   public void intTest() {
     Integer a = new Integer(100);
     Integer b = a;
