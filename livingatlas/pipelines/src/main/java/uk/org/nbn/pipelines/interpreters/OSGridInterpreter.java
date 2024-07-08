@@ -299,9 +299,7 @@ public class OSGridInterpreter {
       //todo -should we be using the processed value
       ExtendedRecord extendedRecord = source.v1();
       if(suppliedWithGridReference(extendedRecord)) {
-        String rawGridReference =
-                extractNullAwareValue(extendedRecord, OSGridTerm.gridReference);
-        GISPoint gisPoint = GridUtil.processGridReference(rawGridReference).getOrElse(null);
+        GISPoint gisPoint = GridUtil.processGridReference(osGridRecord.getGridReference()).getOrElse(null);
 
         if(gisPoint != null) {
           osGridRecord.setEasting(Ints.tryParse(gisPoint.easting()));
