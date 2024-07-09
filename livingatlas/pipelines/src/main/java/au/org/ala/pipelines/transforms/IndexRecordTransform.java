@@ -349,7 +349,9 @@ public class IndexRecordTransform implements Serializable, IndexFields {
       if (accessControlledRecord.getPublicResolutionInMetres() != null)
         indexRecord
             .getStrings()
-            .put("publicResolutionInMeters", accessControlledRecord.getPublicResolutionInMetres());
+            .put(
+                NBN_PUBLIC_RESOLUTION_IN_METERS,
+                accessControlledRecord.getPublicResolutionInMetres());
 
       // add original sensitive values - these will overwrite whatever the sensitive original values
       // were
