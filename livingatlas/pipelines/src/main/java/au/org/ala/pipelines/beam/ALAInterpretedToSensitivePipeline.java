@@ -30,6 +30,7 @@ import org.apache.beam.sdk.transforms.join.KeyedPCollectionTuple;
 import org.apache.beam.sdk.values.KV;
 import org.apache.beam.sdk.values.PCollection;
 import org.gbif.dwc.terms.DwcTerm;
+import org.gbif.dwc.terms.TermFactory;
 import org.gbif.pipelines.common.beam.metrics.MetricsHandler;
 import org.gbif.pipelines.common.beam.options.InterpretationPipelineOptions;
 import org.gbif.pipelines.common.beam.options.PipelinesOptionsFactory;
@@ -42,6 +43,8 @@ import org.gbif.pipelines.transforms.core.LocationTransform;
 import org.gbif.pipelines.transforms.core.TemporalTransform;
 import org.gbif.pipelines.transforms.core.VerbatimTransform;
 import org.slf4j.MDC;
+import uk.org.nbn.pipelines.transforms.OSGridTransform;
+import uk.org.nbn.term.OSGridTerm;
 
 /** ALA Beam pipeline to process sensitive data. */
 @Slf4j
@@ -50,6 +53,7 @@ public class ALAInterpretedToSensitivePipeline {
 
   public static void main(String[] args) throws IOException {
     VersionInfo.print();
+
     String[] combinedArgs = new CombinedYamlConfiguration(args).toArgs("general", "sensitive");
     InterpretationPipelineOptions options =
         PipelinesOptionsFactory.createInterpretation(combinedArgs);
@@ -58,6 +62,9 @@ public class ALAInterpretedToSensitivePipeline {
   }
 
   public static void run(InterpretationPipelineOptions options) {
+
+    TermFactory.instance().registerTerm(OSGridTerm.gridReference);
+    TermFactory.instance().registerTerm(OSGridTerm.gridSizeInMeters);
 
     ALAPipelinesConfig config =
         ALAPipelinesConfigFactory.getInstance(
@@ -99,6 +106,7 @@ public class ALAInterpretedToSensitivePipeline {
     TemporalTransform temporalTransform = TemporalTransform.builder().create();
     LocationTransform locationTransform = LocationTransform.builder().create();
     EventCoreTransform eventCoreTransform = EventCoreTransform.builder().create();
+    OSGridTransform osGridTransform = OSGridTransform.builder().create();
 
     // ALA specific
     ALATaxonomyTransform alaTaxonomyTransform = ALATaxonomyTransform.builder().create();
@@ -112,6 +120,7 @@ public class ALAInterpretedToSensitivePipeline {
             .erTag(verbatimTransform.getTag())
             .trTag(temporalTransform.getTag())
             .lrTag(locationTransform.getTag())
+            .osgrTag(osGridTransform.getTag())
             .txrTag(null)
             .atxrTag(alaTaxonomyTransform.getTag())
             .create();
@@ -133,6 +142,10 @@ public class ALAInterpretedToSensitivePipeline {
         p.apply("Read Taxon", alaTaxonomyTransform.read(inputPathFn))
             .apply("Map Taxon to KV", alaTaxonomyTransform.toKv());
 
+    PCollection<KV<String, OSGridRecord>> inputOSGridCollection =
+            p.apply("Read Taxon", osGridTransform.read(inputPathFn))
+                    .apply("Map Taxon to KV", osGridTransform.toKv());
+
     if (ArchiveUtils.isEventCore(options)) {
 
       inputLocationCollection =
@@ -149,7 +162,8 @@ public class ALAInterpretedToSensitivePipeline {
             .and(temporalTransform.getTag(), inputTemporalCollection)
             .and(locationTransform.getTag(), inputLocationCollection)
             // ALA Specific
-            .and(alaTaxonomyTransform.getTag(), inputAlaTaxonCollection);
+            .and(alaTaxonomyTransform.getTag(), inputAlaTaxonCollection)
+            .and(osGridTransform.getTag(), inputOSGridCollection);
 
     log.info("Creating sensitivity records");
     inputTuples
