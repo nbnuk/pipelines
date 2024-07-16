@@ -26,9 +26,7 @@ import uk.org.nbn.pipelines.NBNPipelineIngestTestBase;
 import uk.org.nbn.pipelines.beam.NBNInterpretedToAccessControlledPipeline;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -70,29 +68,38 @@ public class NBNCompleteIngestJavaPipelineTestIT extends NBNPipelineIngestTestBa
 
     String absolutePath = new File("src/test/resources").getAbsolutePath();
 
-    String datasetId = "dr2816";
-    int expectedRecords = 165;
+    //String datasetId = "dr2811";
+    Map<String,Integer> datasets = new HashMap<String,Integer>(){{
+      put("dr2816", 165);
+      put("dr2811", 155);
+    }};
+
+    int expectedRecords = datasets.values().stream().mapToInt(Integer::intValue).sum();
 
     //set to false in order to just running tests without reprocessing data
     if(true) {
       // clear SOLR index
       SolrUtils.setupIndex(INDEX_NAME);
 
-      // Step 1: load a dataset and verify all records have a UUID associated
-      loadTestDataset(datasetId, absolutePath + "/nbn-complete-pipeline/" + datasetId);
+        for (Map.Entry<String, Integer> entry : datasets.entrySet()) {
+            String datasetId = entry.getKey();
+            loadTestDataset(datasetId, absolutePath + "/nbn-complete-pipeline/" + datasetId);
+        }
 
       // reload
       SolrUtils.reloadSolrIndex(INDEX_NAME);
     }
 
+
+
     // validate SOLR index
     tests.add(DynamicTest.dynamicTest("Test index", () -> {
 
-      assertEquals(Long.valueOf(expectedRecords), SolrUtils.getRecordCount(INDEX_NAME, "*:*"));
+      assertEquals("Check number of records",Long.valueOf(expectedRecords), SolrUtils.getRecordCount(INDEX_NAME, "*:*"));
 
       // 1. includes UUIDs
       String documentId = (String) SolrUtils.getRecords(INDEX_NAME, "*:*").get(0).get("id");
-      assertNotNull(documentId);
+      assertNotNull("Check UUIDs present",documentId);
       UUID uuid = null;
       try {
         uuid = UUID.fromString(documentId);
@@ -101,12 +108,16 @@ public class NBNCompleteIngestJavaPipelineTestIT extends NBNPipelineIngestTestBa
         // handle the case where string is not valid UUID
       }
 
-      assertNotNull(uuid);
+      assertNotNull("Check UUIDs format",uuid);
     }));
 
     //4. check content of records
-    Collection<DynamicTest> occurrenceTests = checkExpectedValuesForRecords(INDEX_NAME, datasetId);
-    tests.addAll(occurrenceTests);
+    for (Map.Entry<String, Integer> entry : datasets.entrySet()) {
+      String datasetId = entry.getKey();
+      Collection<DynamicTest> occurrenceTests = checkExpectedValuesForRecords(INDEX_NAME, datasetId);
+      tests.addAll(occurrenceTests);
+    }
+
     return tests;
   }
 
