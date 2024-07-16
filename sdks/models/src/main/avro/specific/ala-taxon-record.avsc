@@ -52,7 +52,10 @@
       {"name": "vernacularName", "type": ["null", "string"], "default" : null },
       {"name": "speciesGroup", "type": {"type": "array", "items": "string"}, "default" : [] },
       {"name": "speciesSubgroup", "type": {"type": "array", "items": "string"}, "default" : [] },
-      {"name": "issues", "type": "IssueRecord", "default":{}}
+      {"name": "issues", "type": "IssueRecord", "default":{}},
+      {"name": "establishmentMeansTaxon", "type": ["null", "string"], "default" : null },
+      {"name": "habitatsTaxon", "type": {"type": "array", "items": "string"}, "default" : [] },
+      {"name": "nomenclaturalStatus", "type": ["null", "string"], "default" : null }
     ]
   }
 ]
