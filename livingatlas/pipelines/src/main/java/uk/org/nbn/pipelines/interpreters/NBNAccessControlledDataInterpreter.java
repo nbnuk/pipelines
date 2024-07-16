@@ -87,7 +87,6 @@ public class NBNAccessControlledDataInterpreter {
     }
     osGridRecord.setGridReference(altered.get("gridReference"));
     osGridRecord.setGridSizeInMeters(Integer.parseInt(altered.get("gridSizeInMeters")));
-    osGridRecord.setGridReferenceWKT(altered.get("gridReferenceWKT"));
   }
 
   /**
@@ -165,13 +164,6 @@ public class NBNAccessControlledDataInterpreter {
                   original.get("gridReference"), String.valueOf(publicResolutionToBeApplied))));
     }
 
-    if (Strings.isNullOrEmpty(original.get("gridReferenceWKT"))
-        && blurred.containsKey("gridReference")) {
-
-      String blurredGridReferenceWKT = GridUtil.getGridWKT(blurred.get("gridReference"));
-      blurred.put("gridReferenceWKT", blurredGridReferenceWKT);
-    }
-
     String blurredCoordinateUncertainty =
         GridUtil.gridToCoordinateUncertaintyString(publicResolutionToBeApplied);
 
@@ -247,7 +239,6 @@ public class NBNAccessControlledDataInterpreter {
               : null);
       original.put("gridReference", osGridRecord.getGridReference());
       original.put("gridSizeInMeters", osGridRecord.getGridSizeInMeters().toString());
-      original.put("gridReferenceWKT", osGridRecord.getGridReferenceWKT());
 
       original.put("locality", locationRecord.getLocality());
       original.put(

@@ -7,14 +7,13 @@
   "type": "record",
   "doc": "OS Grid details",
   "fields": [
-    {"name": "id","type":"string", "doc":"Pipelines identifier"},
-    {"name": "coreId","type":["null","string"],"default":null, "doc":"Id of the core record when this record belongs to an extension"},
-    {"name": "gridReference", "type":["null","string"], "default":null, "doc":"Grid reference location"},
-    {"name": "gridSizeInMeters", "type": ["null","int"], "default":null, "doc":"Grid size"},
-    {"name": "gridReferenceWKT", "type":["null","string"], "default":null, "doc":"Grid reference WKT"},
-    {"name": "easting", "type":["null","int"], "default":null, "doc":"Easting"},
-    {"name": "northing", "type":["null","int"], "default":null, "doc":"Northing"},
-    {"name": "created", "type": ["null", "long"], "default" : null, "doc":"The timestamp the record was created"},
-    {"name": "issues", "type": "IssueRecord", "default":{}}
+    {"name": "id","type":"string" },
+    {"name": "coreId","type":["null","string"],"default": null },
+    {"name": "gridReference", "type":["null","string"], "default":null, "doc":"http://nbn.org.uk/dwc/terms/osgrid/gridReference"},
+    {"name": "gridSizeInMeters", "type": ["null","int"], "default":null, "doc":"http://nbn.org.uk/dwc/terms/osgrid/gridSizeInMeters"},
+    {"name": "easting", "type":["null","int"], "default":null, "doc":"http://nbn.org.uk/easting"},
+    {"name": "northing", "type":["null","int"], "default":null, "doc":"http://nbn.org.uk/northing"},
+    {"name": "created", "type": ["null", "long"], "default": null },
+    {"name": "issues", "type": "IssueRecord", "default":{}, "doc":"http://nbn.org.uk/dwc/terms/osgrid/issues"}
   ]
 }
