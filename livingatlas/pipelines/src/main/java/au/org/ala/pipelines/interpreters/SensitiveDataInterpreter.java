@@ -666,34 +666,7 @@ public class SensitiveDataInterpreter {
               GridUtil.isCentroid(originalLong.get(), originalLat.get(), originalGridReference);
 
       return  originalLatLonAndGridReferenceAlreadyGeneralised;
-      //todo if true prevent lat lon generalisation - and coordinateuncertainty etc
-
-
-//      if(
-//              !originalLatLonAndGridReferenceAlreadyGeneralised &&
-//              generalisationToApplyInMetresGrid.isPresent() &&
-//              !generalisationToApplyInMetresGrid.get().isEmpty()
-//      ) {
-//          //todo - this again assumes original uncertainty was grid based
-//          if(originalUncertainty < Double.valueOf(generalisationToApplyInMetresGrid.get())) {
-//
-//            String generalisedGridReference = GridUtil.convertReferenceToResolution(originalGridReference, generalisationToApplyInMetres.get()).getOrElse(null);
-//            if(!Strings.isNullOrEmpty(generalisedGridReference)) {
-//
-//              GRID_REFERENCE.get(properties).set(Optional.of(generalisedGridReference), original, updated);
-//
-//              Optional<Integer> generalisedGridSizeInMeters = Optional.ofNullable(GridUtil.getGridSizeInMeters(generalisedGridReference).getOrElse(null));
-//              if(generalisedGridSizeInMeters.isPresent()) {
-//                GRID_SIZE_IN_METERS.get(properties).set(Optional.of(generalisedGridSizeInMeters.toString()), original, updated);
-//              }
-//            }
-//          } else {
-//            return  false;
-//            //rawPropertiesToUpdate("dataGeneralizations") = rawPropertiesToUpdate("dataGeneralizations").replace(" generalised", " is already generalised")
-//          }
-//      }
     }
-
     return false;
   }
 
