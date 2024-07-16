@@ -717,7 +717,11 @@ public class SensitiveDataInterpreter {
   private static void generaliseOSGridReference(Map<String,String> properties, Map<String,Object> original, Map<String,Object> updated) {
 
     Optional<String> generalisationToApplyInMetres = GENERALISATION_TO_APPLY_IN_METRES.get(updated).getValue().map(Object::toString);
-    String originalGridReference = GRID_REFERENCE.get(properties).getValue().orElseGet(null);
+    String originalGridReference = GRID_REFERENCE.get(properties).getValue().orElse(null);
+
+    if(Strings.isNullOrEmpty(originalGridReference)) {
+      return;
+    }
 
     String generalisedGridReference = GridUtil.convertReferenceToResolution(originalGridReference, generalisationToApplyInMetres.get()).getOrElse(null);
     if(!Strings.isNullOrEmpty(generalisedGridReference)) {
