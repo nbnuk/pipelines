@@ -493,12 +493,10 @@ public class SensitiveDataInterpreter {
       }
 
 
-      //if already generalised according to grid we need to remove some of the items from original and result
-
       sr.setOriginal(toStringMap(original));
       sr.setAltered(toStringMap(result));
       // We already have notes about generalisations
-      boolean alreadyGeneralised = !existingGeneralisations.isEmpty();
+      boolean alreadyGeneralised = !existingGeneralisations.isEmpty() || latLonIsCentroidOfAlreadyGeneralisedGridReference || uncertaintyGridIsAlreadyGeneralised;
       // The message contains a note about already generalising things
       if (sr.getDataGeneralizations() != null) {
         alreadyGeneralised =
