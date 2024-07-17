@@ -80,8 +80,13 @@ public class NBNCompleteIngestPipelineTestIT extends NBNPipelineIngestTestBase {
     FileUtils.deleteQuietly(new File("/tmp/la-pipelines-test/nbn-complete-pipeline"));
 
     String absolutePath = new File("src/test/resources").getAbsolutePath();
-    String datasetId = "dr2816";
-    int expectedRecords = 165;
+
+    Map<String,Integer> datasets = new HashMap<String,Integer>(){{
+      put("dr2816", 165);
+      put("dr2811", 155);
+    }};
+
+    int expectedRecords = datasets.values().stream().mapToInt(Integer::intValue).sum();
 
     //set to false in order to just running tests without reprocessing data
     if(true) {
@@ -89,7 +94,10 @@ public class NBNCompleteIngestPipelineTestIT extends NBNPipelineIngestTestBase {
       SolrUtils.setupIndex(INDEX_NAME);
 
       // Step 1: load a dataset and verify all records have a UUID associated
-      loadTestDataset(datasetId, absolutePath + "/nbn-complete-pipeline/" + datasetId);
+      for (Map.Entry<String, Integer> entry : datasets.entrySet()) {
+        String datasetId = entry.getKey();
+        loadTestDataset(datasetId, absolutePath + "/nbn-complete-pipeline/" + datasetId);
+      }
 
       // reload
       SolrUtils.reloadSolrIndex(INDEX_NAME);
@@ -115,8 +123,12 @@ public class NBNCompleteIngestPipelineTestIT extends NBNPipelineIngestTestBase {
     }));
 
     //4. check content of records
-    Collection<DynamicTest> occurrenceTests = checkExpectedValuesForRecords(INDEX_NAME, datasetId);
-    tests.addAll(occurrenceTests);
+    for (Map.Entry<String, Integer> entry : datasets.entrySet()) {
+      String datasetId = entry.getKey();
+      Collection<DynamicTest> occurrenceTests = checkExpectedValuesForRecords(INDEX_NAME, datasetId);
+      tests.addAll(occurrenceTests);
+    }
+
     return tests;
   }
 

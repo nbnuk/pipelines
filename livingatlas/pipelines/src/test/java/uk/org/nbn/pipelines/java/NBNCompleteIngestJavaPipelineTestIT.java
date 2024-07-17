@@ -68,7 +68,6 @@ public class NBNCompleteIngestJavaPipelineTestIT extends NBNPipelineIngestTestBa
 
     String absolutePath = new File("src/test/resources").getAbsolutePath();
 
-    //String datasetId = "dr2811";
     Map<String,Integer> datasets = new HashMap<String,Integer>(){{
       put("dr2816", 165);
       put("dr2811", 155);
@@ -89,8 +88,6 @@ public class NBNCompleteIngestJavaPipelineTestIT extends NBNPipelineIngestTestBa
       // reload
       SolrUtils.reloadSolrIndex(INDEX_NAME);
     }
-
-
 
     // validate SOLR index
     tests.add(DynamicTest.dynamicTest("Test index", () -> {
