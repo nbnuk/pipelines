@@ -91,7 +91,8 @@ public class NBNPipelineIngestTestBase {
             } else if (actual instanceof Double) {
                 try {
                     double expectedInt = Double.parseDouble(expected);
-                    Assert.assertEquals("The property did not match: " + name,expectedInt, actual);
+                    //Cannot use Assert.assertEquals as fails when comparing -0 and 0
+                    Assert.assertTrue("The property did not match: " + name,expectedInt == (double) actual);
                 } catch (NumberFormatException e) {
                     Assert.fail("Failed to convert expected String to Double: " + name + " " + expected);
                 }
