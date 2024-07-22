@@ -13,9 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.IntStream;
 
 import static org.junit.Assert.assertTrue;
@@ -77,22 +75,32 @@ public class NBNPipelineIngestTestBase {
 
         Assert.assertNotNull("The property was null: " + name, actual);
 
-        if (actual.getClass() == expected.getClass()) {
+        Map<String, Class<?>> knownTypes = new HashMap<String, Class<?>>(){{
+            put("sensitive_coordinateUncertaintyInMeters", Double.class);
+            put("raw_decimalLatitude", Double.class);
+            put("raw_decimalLongitude", Double.class);
+
+        }};
+
+
+        if (actual.getClass() == expected.getClass() && !knownTypes.containsKey(name)) {
             Assert.assertEquals(expected, actual); // Direct comparison if types match
         } else {
             // Attempt type conversion based on the type of 'actual' to match 'expected'
-            if (actual instanceof Integer) {
+            if (actual instanceof Integer || (knownTypes.containsKey(name) && knownTypes.get(name) == Integer.class)) {
                 try {
                     int expectedInt = Integer.parseInt(expected);
-                    Assert.assertEquals("The property did not match: " + name, expectedInt, actual);
+                    int actualInt = actual.getClass() == String.class ? Integer.parseInt((String) actual) : (int) actual;
+                    Assert.assertEquals("The property did not match: " + name, expectedInt, actualInt);
                 } catch (NumberFormatException e) {
                     Assert.fail("Failed to convert expected String to Integer: " + name + " " + expected);
                 }
-            } else if (actual instanceof Double) {
+            } else if (actual instanceof Double || (knownTypes.containsKey(name) && knownTypes.get(name) == Double.class)) {
                 try {
-                    double expectedInt = Double.parseDouble(expected);
+                    double expectedDouble = Double.parseDouble(expected);
+                    double actualDouble = actual.getClass() == String.class ? Double.parseDouble((String) actual) : (double) actual;
                     //Cannot use Assert.assertEquals as fails when comparing -0 and 0
-                    Assert.assertTrue("The property did not match: " + name,expectedInt == (double) actual);
+                    Assert.assertTrue("The property did not match: " + name,expectedDouble == (double) actualDouble);
                 } catch (NumberFormatException e) {
                     Assert.fail("Failed to convert expected String to Double: " + name + " " + expected);
                 }
