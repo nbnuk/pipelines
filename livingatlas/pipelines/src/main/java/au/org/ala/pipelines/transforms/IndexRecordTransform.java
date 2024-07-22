@@ -45,6 +45,7 @@ import org.gbif.pipelines.io.avro.*;
 import org.jetbrains.annotations.NotNull;
 import uk.org.nbn.pipelines.interpreters.NBNAccessControlledDataInterpreter;
 import uk.org.nbn.pipelines.io.avro.NBNAccessControlledRecord;
+import uk.org.nbn.pipelines.vocabulary.NBNOccurrenceIssue;
 
 /**
  * A transform that creates IndexRecords which are used downstream to push data to a search index
@@ -269,7 +270,6 @@ public class IndexRecordTransform implements Serializable, IndexFields {
         SensitiveDataInterpreter.applySensitivity(sensitiveTerms, sr, aar);
       }
 
-      // TODO HMJ - need to implement this
       if (osGridRecord != null) {
         osGridRecord = OSGridRecord.newBuilder(osGridRecord).build();
         SensitiveDataInterpreter.applySensitivity(sensitiveTerms, sr, osGridRecord);
@@ -422,6 +422,22 @@ public class IndexRecordTransform implements Serializable, IndexFields {
 
     // Verbatim (Raw) data
     Map<String, String> raw = er.getCoreTerms();
+
+    if(geospatialIssues.contains(NBNOccurrenceIssue.DECIMAL_LAT_LONG_CALCULATED_FROM_GRID_REF.name())) {
+      if(raw.containsKey(DwcTerm.decimalLatitude.qualifiedName())) {
+        raw.remove(DwcTerm.decimalLatitude.qualifiedName());
+      }
+      if(raw.containsKey(DwcTerm.decimalLongitude.qualifiedName())) {
+        raw.remove(DwcTerm.decimalLongitude.qualifiedName());
+      }
+    }
+
+    if(geospatialIssues.contains(NBNOccurrenceIssue.COORDINATE_UNCERTAINTY_CALCULATED_FROM_OSGRID.name())) {
+      if(raw.containsKey(DwcTerm.coordinateUncertaintyInMeters.qualifiedName())) {
+        raw.remove(DwcTerm.coordinateUncertaintyInMeters.qualifiedName());
+      }
+    }
+
     for (Map.Entry<String, String> entry : raw.entrySet()) {
 
       String key = entry.getKey();

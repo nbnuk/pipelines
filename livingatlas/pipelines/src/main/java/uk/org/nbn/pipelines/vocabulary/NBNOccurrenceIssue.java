@@ -14,7 +14,9 @@ import uk.org.nbn.term.OSGridTerm;
  * org.gbif.api.vocabulary.OccurrenceIssue} enum See: https://github.com/gbif/pipelines/issues/530
  */
 public enum NBNOccurrenceIssue implements InterpretationRemark {
-
+  COORDINATE_UNCERTAINTY_CALCULATED_FROM_OSGRID(
+          InterpretationRemarkSeverity.INFO,
+          new Term[] {DwcTerm.coordinateUncertaintyInMeters}),
   // Location related
   DECIMAL_LAT_LONG_CALCULATED_FROM_GRID_REF(
       InterpretationRemarkSeverity.INFO,

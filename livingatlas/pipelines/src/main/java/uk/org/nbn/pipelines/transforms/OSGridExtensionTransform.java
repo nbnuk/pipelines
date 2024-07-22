@@ -23,6 +23,7 @@ import org.gbif.pipelines.io.avro.ExtendedRecord;
 import org.gbif.pipelines.transforms.converters.OccurrenceJsonTransform;
 import org.spark_project.guava.primitives.Ints;
 import uk.org.nbn.parser.OSGridParser;
+import uk.org.nbn.pipelines.vocabulary.NBNOccurrenceIssue;
 import uk.org.nbn.term.OSGridTerm;
 import uk.org.nbn.util.GridUtil;
 
@@ -92,7 +93,7 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
             Double.valueOf(decimalLatitudeValue),
             gridReferenceValue))) {
 
-      setCoordinateUncertaintyFromOSGrid(er, alteredEr);
+      setCoordinateUncertaintyFromOSGrid(er, alteredEr, issues);
     }
 
     // put the issues in the extension so that we can retrieve and apply them in OSGridTransform
@@ -121,7 +122,7 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
     }
   }
 
-  private void setCoordinateUncertaintyFromOSGrid(ExtendedRecord er, ExtendedRecord alteredEr) {
+  private void setCoordinateUncertaintyFromOSGrid(ExtendedRecord er, ExtendedRecord alteredEr, List<String> issues) {
     String gridReferenceValue = extractNullAwareValue(er, OSGridTerm.gridReference);
     String gridSizeInMetersValue =
             extractNullAwareValue(er, OSGridTerm.gridSizeInMeters);
@@ -144,6 +145,8 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
           .put(
               DwcTerm.coordinateUncertaintyInMeters.qualifiedName(),
               String.format("%.1f", cornerDistFromCentre));
+
+      issues.add(NBNOccurrenceIssue.COORDINATE_UNCERTAINTY_CALCULATED_FROM_OSGRID.name());
     }
   }
 }
