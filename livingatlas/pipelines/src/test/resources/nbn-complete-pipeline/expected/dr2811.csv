@@ -1,156 +1,156 @@
-occurrenceID,dataResourceUid,identificationVerificationStatus,decimalLatitude,decimalLongitude,coordinateUncertaintyInMeters,gridReference,gridSizeInMeters,grid_ref_100000,grid_ref_50000,grid_ref_10000,grid_ref_2000,grid_ref_1000,grid_ref_100,easting,northing,sensitive,sensitive_decimalLatitude,sensitive_decimalLongitude,sensitive_coordinateUncertaintyInMeters,sensitive_gridReference
-ac:gr:sensitive:1km:8,dr2811,Accepted,51.867433,-1.289763,1414.2,SP41Z,2000,SP,SPSW,SP41,SP41Z,,,448000,218000,alreadyGeneralised,51.867433,-1.289763,1414.2,SP41Z
-ac:gr:sensitive:1km:4,dr2811,Accepted,51.399357,-0.053559,707.1,TQ3568,1000,TQ,TQNW,TQ36,TQ36P,TQ3568,,535000,168000,alreadyGeneralised,51.399357,-0.053559,707.1,TQ3568
-ac:gr:sensitive:2km:3,dr2811,Accepted,51.39,-0.05,1414.2,TQ36T,2000,TQ,TQNW,TQ36,TQ36T,,,,,generalised,51.394321,-0.045406,0.7,TQ3608267955
-ac:gr:sensitive:2km:6,dr2811,Accepted,51.39,-0.04,1414.2,TQ36T,2000,TQ,TQNW,TQ36,TQ36T,,,,,generalised,51.390131,-0.039577,707.1,TQ3667
-ac:gr:sensitive:1km:2,dr2811,Accepted,51.41,-0.0,707.1,TQ3869,1000,TQ,TQNW,TQ36,TQ36Z,TQ3869,,,,generalised,51.406733,-0.003409,0.7,TQ3896669414
-ac:gr:sensitive:1km:12,dr2811,Accepted,50.991359,0.777235,7071.1,TQ92,10000,TQ,TQSE,TQ92,,,,590000,120000,alreadyGeneralised,50.991359,0.777235,7071.1,TQ92
-ac:gr:sensitive:1km:1,dr2811,Accepted,51.4,-0.05,707.1,TQ3568,1000,TQ,TQNW,TQ36,TQ36P,TQ3568,,,,generalised,51.402582,-0.047901,0.7,TQ3588468869
-ac:gr:sensitive:1km:11,dr2811,Accepted,51.626601,0.526878,7071.1,TQ79,10000,TQ,TQNE,TQ79,,,,570000,190000,alreadyGeneralised,51.626601,0.526878,7071.1,TQ79
-ac:gr:sensitive:2km:5,dr2811,Accepted,51.41,-0.01,1414.2,TQ36Z,2000,TQ,TQNW,TQ36,TQ36Z,,,,,generalised,51.40762,-0.010071,707.1,TQ3869
-ac:gr:sensitive:1km:5,dr2811,Accepted,51.40762,-0.010071,707.1,TQ3869,1000,TQ,TQNW,TQ36,TQ36Z,TQ3869,,538000,169000,alreadyGeneralised,51.40762,-0.010071,707.1,TQ3869
-ac:gr:sensitive:2km:2,dr2811,Accepted,51.41,-0.0,1414.2,TQ36Z,2000,TQ,TQNW,TQ36,TQ36Z,,,,,generalised,51.406733,-0.003409,0.7,TQ3896669414
-ac:gr:sensitive:1km:10,dr2811,Accepted,51.368024,-0.062071,7071.1,TQ36,10000,TQ,TQNW,TQ36,,,,530000,160000,alreadyGeneralised,51.368024,-0.062071,7071.1,TQ36
-ac:gr:sensitive:2km:4,dr2811,Accepted,51.4,-0.05,1414.2,TQ36P,2000,TQ,TQNW,TQ36,TQ36P,,,,,generalised,51.399357,-0.053559,707.1,TQ3568
-ac:gr:sensitive:1km:6,dr2811,Accepted,51.390131,-0.039577,707.1,TQ3667,1000,TQ,TQNW,TQ36,TQ36T,TQ3667,,536000,167000,alreadyGeneralised,51.390131,-0.039577,707.1,TQ3667
-ac:gr:sensitive:2km:7,dr2811,Accepted,53.630602,-2.470246,1414.2,SD61X,2000,SD,SDSE,SD61,SD61X,,,368000,414000,alreadyGeneralised,53.630602,-2.470246,1414.2,SD61X
-ac:gr:sensitive:2km:8,dr2811,Accepted,53.664981,-2.773313,1414.2,SD41Z,2000,SD,SDSW,SD41,SD41Z,,,348000,418000,alreadyGeneralised,53.664981,-2.773313,1414.2,SD41Z
-ac:gr:sensitive:1km:7,dr2811,Accepted,53.630602,-2.470246,1414.2,SD61X,2000,SD,SDSE,SD61,SD61X,,,368000,414000,alreadyGeneralised,53.630602,-2.470246,1414.2,SD61X
-ac:gr:sensitive:1km:9,dr2811,Accepted,54.238028,-3.060175,1414.2,SD38B,2000,SD,SDNW,SD38,SD38B,,,330000,482000,alreadyGeneralised,54.238028,-3.060175,1414.2,SD38B
-ac:gr:sensitive:2km:1,dr2811,Accepted,51.4,-0.05,1414.2,TQ36P,2000,TQ,TQNW,TQ36,TQ36P,,,,,generalised,51.402582,-0.047901,0.7,TQ3588468869
-ac:gr:sensitive:1km:3,dr2811,Accepted,51.39,-0.05,707.1,TQ3667,1000,TQ,TQNW,TQ36,TQ36T,TQ3667,,,,generalised,51.394321,-0.045406,0.7,TQ3608267955
-ac:gr:sensitive:10km:11,dr2811,Accepted,51.626601,0.526878,7071.1,TQ79,10000,TQ,TQNE,TQ79,,,,570000,190000,alreadyGeneralised,51.626601,0.526878,7071.1,TQ79
-ac:gr:sensitive:10km:6,dr2811,Accepted,51.4,-0.0,7071.1,TQ36,10000,TQ,TQNW,TQ36,,,,,,generalised,51.390131,-0.039577,707.1,TQ3667
-ac:gr:sensitive:10km:3,dr2811,Accepted,51.4,-0.0,7071.1,TQ36,10000,TQ,TQNW,TQ36,,,,,,generalised,51.394321,-0.045406,0.7,TQ3608267955
-ac:gr:sensitive:2km:9,dr2811,Accepted,51.53072,-0.11284,1414.2,TQ38B,2000,TQ,TQNW,TQ38,TQ38B,,,530000,182000,alreadyGeneralised,51.53072,-0.11284,1414.2,TQ38B
-ac:gr:sensitive:10km:2,dr2811,Accepted,51.4,-0.0,7071.1,TQ36,10000,TQ,TQNW,TQ36,,,,,,generalised,51.406733,-0.003409,0.7,TQ3896669414
-ac:gr:sensitive:2km:10,dr2811,Accepted,51.368024,-0.062071,7071.1,TQ36,10000,TQ,TQNW,TQ36,,,,530000,160000,alreadyGeneralised,51.368024,-0.062071,7071.1,TQ36
-ac:gr:sensitive:10km:4,dr2811,Accepted,51.4,-0.1,7071.1,TQ36,10000,TQ,TQNW,TQ36,,,,,,generalised,51.399357,-0.053559,707.1,TQ3568
-ac:gr:sensitive:10km:10,dr2811,Accepted,51.651111,-1.206421,7071.1,SU59,10000,SU,SUNE,SU59,,,,450000,190000,alreadyGeneralised,51.651111,-1.206421,7071.1,SU59
-ac:gr:sensitive:10km:5,dr2811,Accepted,51.4,-0.0,7071.1,TQ36,10000,TQ,TQNW,TQ36,,,,,,generalised,51.40762,-0.010071,707.1,TQ3869
-ac:gr:sensitive:10km:8,dr2811,Accepted,51.9,-1.3,7071.1,SP41,10000,SP,SPSW,SP41,,,,,,generalised,51.867433,-1.289763,1414.2,SP41Z
-ac:gr:sensitive:2km:12,dr2811,Accepted,50.991359,0.777235,7071.1,TQ92,10000,TQ,TQSE,TQ92,,,,590000,120000,alreadyGeneralised,50.991359,0.777235,7071.1,TQ92
-ac:gr:sensitive:10km:12,dr2811,Accepted,50.991359,0.777235,7071.1,TQ92,10000,TQ,TQSE,TQ92,,,,590000,120000,alreadyGeneralised,50.991359,0.777235,7071.1,TQ92
-ac:gr:sensitive:50km:1,dr2811,Accepted,51.0,-3.0,35355.3,STSE,50000,ST,STSE,,,,,,,generalised,50.908808,-2.604595,0.7,ST5758812323
-ac:gr:sensitive:10km:9,dr2811,Accepted,50.6,-4.4,7071.1,SX38,10000,SX,SXNW,SX38,,,,,,generalised,50.622153,-4.390525,1414.2,SX38B
-ac:gr:sensitive:50km:3,dr2811,Accepted,54.0,-2.0,35355.3,NYSE,50000,NY,NYSE,,,,,,,generalised,54.45328,-2.167494,0.7,NY8923806445
-ac:gr:sensitive:10km:1,dr2811,Accepted,51.4,-0.0,7071.1,TQ36,10000,TQ,TQNW,TQ36,,,,,,generalised,51.402582,-0.047901,0.7,TQ3588468869
-ac:gr:sensitive:50km:2,dr2811,Accepted,55.0,-2.0,35355.3,NZSW,50000,NZ,NZSW,,,,,,,generalised,54.510795,-1.983348,0.7,NZ0117612832
-ac:gr:sensitive:50km:4,dr2811,Accepted,50.0,-4.0,35355.3,SXNW,50000,SX,SXNW,,,,,,,generalised,50.342038,-4.228849,707.1,SX4151
-ac:gr:sensitive:2km:11,dr2811,Accepted,51.626601,0.526878,7071.1,TQ79,10000,TQ,TQNE,TQ79,,,,570000,190000,alreadyGeneralised,51.626601,0.526878,7071.1,TQ79
-ac:gr:sensitive:10km:7,dr2811,Accepted,53.6,-2.5,7071.1,SD61,10000,SD,SDSE,SD61,,,,,,generalised,53.630602,-2.470246,1414.2,SD61X
-ac:ll:sensitive:1km:8,dr2811,Accepted,52.372468,-2.368633,1414.0,SO77M,2000,SO,SONE,SO77,SO77M,,,,,alreadyGeneralised,52.372468,-2.368633,1414.0,SO77M
-ac:ll:sensitive:1km:4,dr2811,Accepted,53.36,-2.38,707.1,SJ7585,1000,SJ,SJNE,SJ78,SJ78M,SJ7585,,,,alreadyGeneralised,53.361278,-2.377117,707.1,SJ7585
-ac:gr:sensitive:50km:12,dr2811,Accepted,51.0,-3.0,35355.3,STNE,50000,ST,STNE,,,,,,,generalised,51.472164,-2.649276,7071.1,ST57
-ac:gr:sensitive:50km:9,dr2811,Accepted,50.0,-6.0,35355.3,SWSW,50000,SW,SWSW,,,,,,,generalised,50.049754,-5.64727,1414.2,SW32W
-ac:ll:sensitive:1km:6,dr2811,Accepted,53.18,-2.38,707.1,SJ7565,1000,SJ,SJNE,SJ76,SJ76M,SJ7565,,,,alreadyGeneralised,53.181506,-2.375537,707.1,SJ7565
-ac:ll:sensitive:1km:1,dr2811,Accepted,53.27,-2.53,707.1,SJ6575,1000,SJ,SJNE,SJ67,SJ67M,SJ6575,,,,generalised,53.270825,-2.526265,0.7,SJ6500075000
-ac:ll:sensitive:1km:3,dr2811,Accepted,51.08,0.84,707.1,TQ9935,1000,TQ,TQSE,TQ93,TQ93X,TQ9935,,,,generalised,51.079802,0.839646,0.7,TQ9900035000
-ac:ll:sensitive:1km:12,dr2811,Accepted,53.090303,-2.673377,7071.0,SJ55,10000,SJ,SJNE,SJ55,,,,,,alreadyGeneralised,53.090303,-2.673377,7071.0,SJ55
-ac:gr:sensitive:50km:8,dr2811,Accepted,52.0,-3.0,35355.3,SOSW,50000,SO,SOSW,,,,,,,generalised,52.044568,-3.065809,1414.2,SO23U
-ac:ll:sensitive:1km:10,dr2811,Accepted,53.091619,-2.374754,7071.0,SJ75,10000,SJ,SJNE,SJ75,,,,,,alreadyGeneralised,53.091619,-2.374754,7071.0,SJ75
-ac:ll:sensitive:1km:5,dr2811,Accepted,53.18,-2.53,707.1,SJ6565,1000,SJ,SJNE,SJ66,SJ66M,SJ6565,,,,alreadyGeneralised,53.18094,-2.525164,707.1,SJ6565
-ac:gr:sensitive:50km:11,dr2811,Accepted,50.0,-4.0,35355.3,SXSW,50000,SX,SXSW,,,,,,,generalised,50.014943,-4.164816,7071.1,SX41
-ac:gr:sensitive:50km:7,dr2811,Accepted,52.0,-3.0,35355.3,SONW,50000,SO,SONW,,,,,,,generalised,52.225351,-2.953012,1414.2,SO35P
-ac:gr:sensitive:50km:5,dr2811,Accepted,50.0,-5.0,35355.3,SWSE,50000,SW,SWSE,,,,,,,generalised,50.19486,-5.14681,707.1,SW7537
-ac:gr:sensitive:50km:10,dr2811,Accepted,50.0,-6.0,35355.3,SWSW,50000,SW,SWSW,,,,,,,generalised,50.065936,-5.704407,7071.1,SW32
-ac:ll:sensitive:1km:11,dr2811,Accepted,51.95,-0.09,7071.0,TL32,10000,TL,TLSW,TL32,,,,,,alreadyGeneralised,51.948459,-0.088078,7071.0,TL32
-ac:ll:sensitive:1km:7,dr2811,Accepted,53.091055,-2.524068,1414.0,SJ65M,2000,SJ,SJNE,SJ65,SJ65M,,,,,alreadyGeneralised,53.091055,-2.524068,1414.0,SJ65M
-ac:ll:sensitive:1km:9,dr2811,Accepted,52.372842,-1.781098,1414.0,SP17M,2000,SP,SPNW,SP17,SP17M,,,,,alreadyGeneralised,52.372842,-1.781098,1414.0,SP17M
-ac:gr:sensitive:50km:6,dr2811,Accepted,50.0,-4.0,35355.3,SXNW,50000,SX,SXNW,,,,,,,generalised,50.368727,-4.244162,707.1,SX4054
-ac:ll:sensitive:1km:2,dr2811,Accepted,50.91,-1.4,707.1,SU4112,1000,SU,SUSW,SU41,SU41B,SU4112,,,,generalised,50.9097,-1.4044,0.7,SU4197212417
-ac:ll:sensitive:2km:4,dr2811,Accepted,53.36,-2.38,1414.2,SJ78M,2000,SJ,SJNE,SJ78,SJ78M,,,,,generalised,53.361278,-2.377117,707.1,SJ7585
-ac:ll:sensitive:2km:2,dr2811,Accepted,51.11,-0.79,1414.2,SU83M,2000,SU,SUSE,SU83,SU83M,,,,,generalised,51.108005,-0.787223,0.7,SU8500035000
-ac:ll:sensitive:2km:3,dr2811,Accepted,54.35,-2.85,1414.2,SD49M,2000,SD,SDNW,SD49,SD49M,,,,,generalised,54.347561,-2.847613,0.7,SD4500095000
-ac:ll:sensitive:2km:10,dr2811,Accepted,53.270825,-2.526265,7071.0,SJ67,10000,SJ,SJNE,SJ67,,,,,,alreadyGeneralised,53.270825,-2.526265,7071.0,SJ67
-ac:ll:sensitive:2km:9,dr2811,Accepted,53.36,-2.98,1414.2,SJ38M,2000,SJ,SJNW,SJ38,SJ38M,,,,,generalised,53.357864,-2.978096,1414.0,SJ38M
-ac:ll:sensitive:2km:8,dr2811,Accepted,53.36,-2.38,1414.2,SJ78M,2000,SJ,SJNE,SJ78,SJ78M,,,,,generalised,53.361278,-2.377117,1414.0,SJ78M
-ac:ll:sensitive:2km:6,dr2811,Accepted,53.18,-2.82,1414.2,SJ46M,2000,SJ,SJNW,SJ46,SJ46M,,,,,generalised,53.179245,-2.824397,707.1,SJ4565
-ac:ll:sensitive:10km:4,dr2811,Accepted,53.3,-2.5,7071.1,SJ67,10000,SJ,SJNE,SJ67,,,,,,generalised,53.270825,-2.526265,707.1,SJ6575
-ac:ll:sensitive:2km:11,dr2811,Accepted,51.29,-0.21,7071.0,TQ25,10000,TQ,TQNW,TQ25,,,,,,alreadyGeneralised,51.2947,-0.2126,7071.0,TQ25
-ac:ll:sensitive:2km:5,dr2811,Accepted,51.27,-0.37,1414.2,TQ15G,2000,TQ,TQNW,TQ15,TQ15G,,,,,generalised,51.268943,-0.371775,707.1,TQ1353
-ac:ll:sensitive:10km:3,dr2811,Accepted,51.3,0.2,7071.1,TQ56,10000,TQ,TQNE,TQ56,,,,,,generalised,51.3322,0.1889,0.7,TQ5258861508
-ac:ll:sensitive:10km:7,dr2811,Accepted,50.9,0.4,7071.1,TQ61,10000,TQ,TQSE,TQ61,,,,,,generalised,50.915237,0.352979,1414.0,TQ61M
-ac:ll:sensitive:10km:5,dr2811,Accepted,51.8,-1.4,7071.1,SP41,10000,SP,SPSW,SP41,,,,,,generalised,51.809527,-1.384954,707.1,SP4212
-ac:ll:sensitive:2km:7,dr2811,Accepted,53.27,-2.53,1414.2,SJ67M,2000,SJ,SJNE,SJ67,SJ67M,,,,,generalised,53.270825,-2.526265,1414.0,SJ67M
-ac:ll:sensitive:10km:2,dr2811,Accepted,53.3,-2.5,7071.1,SJ67,10000,SJ,SJNE,SJ67,,,,,,generalised,53.270825,-2.526265,0.7,SJ6500075000
-ac:ll:sensitive:10km:8,dr2811,Accepted,52.0,-1.0,7071.1,SP73,10000,SP,SPSE,SP73,,,,,,generalised,52.007612,-0.9529849,1414.0,SP73C
-ac:ll:sensitive:2km:12,dr2811,Accepted,53.719,-2.0728,7071.0,SD92,10000,SD,SDSE,SD92,,,,,,alreadyGeneralised,53.719,-2.0728,7071.0,SD92
-ac:ll:sensitive:10km:1,dr2811,Accepted,52.2,1.0,7071.1,TM05,10000,TM,TMNW,TM05,,,,,,generalised,52.155205,0.995344,0.7,TM0500055000
-ac:ll:sensitive:10km:6,dr2811,Accepted,52.7,1.2,7071.1,TG11,10000,TG,TGSW,TG11,,,,,,generalised,52.689987,1.179842,707.1,TG1515
-ac:ll:sensitive:2km:1,dr2811,Accepted,53.09,-2.23,1414.2,SJ85M,2000,SJ,SJNE,SJ85,SJ85M,,,,,generalised,53.091996,-2.225435,0.7,SJ8500055000
-ac:ll:sensitive:50km:5,dr2811,Accepted,52.0,-1.0,35355.3,SPSW,50000,SP,SPSW,,,,,,,generalised,51.809527,-1.384954,707.1,SP4212
-ac:ll:gs:sensitive:1km:4,dr2811,Accepted,52.37,-1.78,707.1,SP1575,1000,SP,SPNW,SP17,SP17M,SP1575,,,,alreadyGeneralised,52.372842,-1.781098,707.1,SP1575
-ac:ll:sensitive:50km:9,dr2811,Accepted,52.0,-1.0,35355.3,SPSE,50000,SP,SPSE,,,,,,,generalised,52.097449,-0.5532921,1414.0,SP94X
-ac:ll:sensitive:50km:12,dr2811,Accepted,53.0,-3.0,35355.3,SJNE,50000,SJ,SJNE,,,,,,,generalised,53.18094,-2.525164,7071.0,SJ66
-ac:ll:gs:sensitive:1km:2,dr2811,Accepted,53.09,-2.52,707.1,SJ6555,1000,SJ,SJNE,SJ65,SJ65M,SJ6555,,,,generalised,53.091055,-2.524068,0.7,SJ6500055000
-ac:ll:sensitive:50km:1,dr2811,Accepted,52.0,1.0,35355.3,TRNW,50000,TR,TRNW,,,,,,,generalised,51.555205,0.995344,0.7,TR0774588288
-ac:ll:sensitive:50km:11,dr2811,Accepted,52.0,-1.0,35355.3,SPSW,50000,SP,SPSW,,,,,,,generalised,51.831808,-1.348371,7071.0,SP41
-ac:ll:sensitive:50km:8,dr2811,Accepted,52.0,-1.0,35355.3,SPSE,50000,SP,SPSE,,,,,,,generalised,52.007612,-0.9529849,1414.0,SP73C
-ac:ll:sensitive:50km:3,dr2811,Accepted,51.0,0.0,35355.3,TQNE,50000,TQ,TQNE,,,,,,,generalised,51.3322,0.1889,0.7,TQ5258861508
-ac:ll:gs:sensitive:1km:1,dr2811,Accepted,53.18,-2.38,707.1,SJ7565,1000,SJ,SJNE,SJ76,SJ76M,SJ7565,,,,generalised,53.181506,-2.375537,0.7,SJ7500065000
-ac:ll:sensitive:10km:10,dr2811,Accepted,53.4,-2.7,7071.1,SJ58,10000,SJ,SJNE,SJ58,,,,,,generalised,53.359949,-2.677622,7071.0,SJ58
-ac:ll:sensitive:10km:11,dr2811,Accepted,51.8,-1.3,7071.1,SP41,10000,SP,SPSW,SP41,,,,,,generalised,51.831808,-1.348371,7071.0,SP41
-ac:ll:sensitive:50km:10,dr2811,Accepted,53.0,-2.0,35355.3,SJNE,50000,SJ,SJNE,,,,,,,generalised,53.359949,-2.377622,7071.0,SJ78
-ac:ll:gs:sensitive:1km:3,dr2811,Accepted,52.37,-2.37,707.1,SO7575,1000,SO,SONE,SO77,SO77M,SO7575,,,,generalised,52.372468,-2.368633,0.7,SO7500075000
-ac:ll:sensitive:50km:4,dr2811,Accepted,53.0,-3.0,35355.3,SJNE,50000,SJ,SJNE,,,,,,,generalised,53.270825,-2.526265,707.1,SJ6575
-ac:ll:sensitive:10km:12,dr2811,Accepted,53.2,-2.5,7071.1,SJ66,10000,SJ,SJNE,SJ66,,,,,,generalised,53.18094,-2.525164,7071.0,SJ66
-ac:ll:sensitive:50km:6,dr2811,Accepted,53.0,1.0,35355.3,TGSW,50000,TG,TGSW,,,,,,,generalised,52.689987,1.179842,707.1,TG1515
-ac:ll:sensitive:50km:7,dr2811,Accepted,51.0,0.0,35355.3,TQSE,50000,TQ,TQSE,,,,,,,generalised,50.915237,0.332979,1414.0,TQ61M
-ac:ll:sensitive:10km:9,dr2811,Accepted,52.1,-1.0,7071.1,SP74,10000,SP,SPSE,SP74,,,,,,generalised,52.097449,-0.9532921,1414.0,SP74C
-ac:ll:sensitive:50km:2,dr2811,Accepted,53.0,-3.0,35355.3,SJNE,50000,SJ,SJNE,,,,,,,generalised,53.270825,-2.526265,0.7,SJ6500075000
-ac:ll:gs:sensitive:2km:10,dr2811,Accepted,53.270825,-2.526265,7071.1,SJ67,10000,SJ,SJNE,SJ67,,,,,,alreadyGeneralised,53.270825,-2.526265,7071.1,SJ67
-ac:ll:gs:sensitive:2km:7,dr2811,Accepted,51.52,-0.04,1414.2,TQ38K,2000,TQ,TQNW,TQ38,TQ38K,,,,,alreadyGeneralised,51.516555,-0.041417,1414.2,TQ38K
-ac:ll:gs:sensitive:2km:8,dr2811,Accepted,52.155205,0.995344,1414.2,TM05M,2000,TM,TMNW,TM05,TM05M,,,,,alreadyGeneralised,52.155205,0.995344,1414.2,TM05M
-ac:ll:gs:sensitive:2km:3,dr2811,Accepted,51.51,-0.01,1414.2,TQ38V,2000,TQ,TQNW,TQ38,TQ38V,,,,,generalised,51.51056,-0.01167,0.7,TQ3807880944
-ac:ll:gs:sensitive:1km:9,dr2811,Accepted,51.108005,-0.787223,1414.2,SU83M,2000,SU,SUSE,SU83,SU83M,,,,,alreadyGeneralised,51.108005,-0.787223,1414.2,SU83M
-ac:ll:gs:sensitive:1km:5,dr2811,Accepted,53.09,-2.37,707.1,SJ7555,1000,SJ,SJNE,SJ75,SJ75M,SJ7555,,,,alreadyGeneralised,53.091619,-2.374754,707.1,SJ7555
-ac:ll:gs:sensitive:1km:8,dr2811,Accepted,53.091996,-2.225435,1414.2,SJ85M,2000,SJ,SJNE,SJ85,SJ85M,,,,,alreadyGeneralised,53.091996,-2.225435,1414.2,SJ85M
-ac:ll:gs:sensitive:2km:9,dr2811,Accepted,53.181506,-2.375537,1414.2,SJ76M,2000,SJ,SJNE,SJ76,SJ76M,,,,,alreadyGeneralised,53.181506,-2.375537,1414.2,SJ76M
-ac:ll:gs:sensitive:2km:5,dr2811,Accepted,51.42,-0.4,1414.2,TQ17A,2000,TQ,TQNW,TQ17,TQ17A,,,,,generalised,51.422554,-0.397773,707.1,TQ1170
-ac:ll:gs:sensitive:2km:6,dr2811,Accepted,51.6,-0.44,1414.2,TQ08Z,2000,TQ,TQNW,TQ08,TQ08Z,,,,,generalised,51.595306,-0.438624,707.1,TQ0889
-ac:ll:gs:sensitive:2km:2,dr2811,Accepted,51.52,-0.13,1414.2,TQ28V,2000,TQ,TQNW,TQ28,TQ28V,,,,,generalised,51.520651,-0.129833,0.7,TQ2985081850
-ac:ll:gs:sensitive:1km:7,dr2811,Accepted,53.090303,-2.673377,1414.2,SJ55M,2000,SJ,SJNE,SJ55,SJ55M,,,,,alreadyGeneralised,53.090303,-2.673377,1414.2,SJ55M
-ac:ll:gs:sensitive:1km:10,dr2811,Accepted,54.347561,-2.847613,7071.1,SD49,10000,SD,SDNW,SD49,,,,,,alreadyGeneralised,54.347561,-2.847613,7071.1,SD49
-ac:ll:gs:sensitive:2km:12,dr2811,Accepted,53.01,-1.35,7071.1,SK44,10000,SK,SKSW,SK44,,,,,,alreadyGeneralised,53.0138,-1.3538,7071.1,SK44
-ac:ll:gs:sensitive:1km:6,dr2811,Accepted,51.948459,-0.088078,707.1,TL3129,1000,TL,TLSW,TL32,TL32E,TL3129,,,,alreadyGeneralised,51.948459,-0.088078,707.1,TL3129
-ac:ll:gs:sensitive:1km:11,dr2811,Accepted,53.361278,-2.377117,7071.1,SJ78,10000,SJ,SJNE,SJ78,,,,,,alreadyGeneralised,53.361278,-2.377117,7071.1,SJ78
-ac:ll:gs:sensitive:2km:11,dr2811,Accepted,50.91,-1.4,7071.1,SU41,10000,SU,SUSW,SU41,,,,,,alreadyGeneralised,50.9097,-1.4044,7071.1,SU41
-ac:ll:gs:sensitive:2km:4,dr2811,Accepted,51.52,-0.04,1414.2,TQ38K,2000,TQ,TQNW,TQ38,TQ38K,,,,,generalised,51.516555,-0.041417,707.1,TQ3581
-ac:ll:gs:sensitive:2km:1,dr2811,Accepted,53.18,-2.82,1414.2,SJ46M,2000,SJ,SJNW,SJ46,SJ46M,,,,,generalised,53.179245,-2.824397,0.7,SJ4500065000
-ac:ll:gs:sensitive:1km:12,dr2811,Accepted,51.27,-0.37,7071.1,TQ15,10000,TQ,TQNW,TQ15,,,,,,alreadyGeneralised,51.268943,-0.371775,7071.1,TQ15
-ac:ll:gs:sensitive:50km:6,dr2811,Accepted,51.0,-0.0,35355.3,TQNW,50000,TQ,TQNW,,,,,,,generalised,51.484871,-0.352382,707.1,TQ1477
-ac:ll:gs:sensitive:50km:1,dr2811,Accepted,51.0,-0.0,35355.3,TQNW,50000,TQ,TQNW,,,,,,,generalised,51.484871,-0.352382,0.7,TQ1450077500
-ac:ll:gs:sensitive:10km:11,dr2811,Accepted,51.5,-0.1,7071.1,TQ38,10000,TQ,TQNW,TQ38,,,,,,alreadyGeneralised,51.537899,-0.086948,7071.1,TQ38
-ac:ll:gs:sensitive:10km:12,dr2811,Accepted,51.5,-0.1,7071.1,TQ38,10000,TQ,TQNW,TQ38,,,,,,alreadyGeneralised,51.514106,-0.114248,7071.1,TQ38
-ac:ll:gs:sensitive:10km:3,dr2811,Accepted,50.8,-0.8,7071.1,SZ89,10000,SZ,SZNE,SZ89,,,,,,generalised,50.761803,-0.789103,0.7,SZ8550096500
-ac:ll:gs:sensitive:10km:8,dr2811,Accepted,51.6,-0.2,7071.1,TQ28,10000,TQ,TQNW,TQ28,,,,,,generalised,51.550053,-0.198582,1414.2,TQ28M
-ac:ll:gs:sensitive:10km:10,dr2811,Accepted,51.5,-0.4,7071.1,TQ17,10000,TQ,TQNW,TQ17,,,,,,alreadyGeneralised,51.484871,-0.352382,7071.1,TQ17
-ac:ll:gs:sensitive:10km:4,dr2811,Accepted,53.4,-2.7,7071.1,SJ58,10000,SJ,SJNE,SJ58,,,,,,generalised,53.359949,-2.677622,707.1,SJ5585
-ac:ll:gs:sensitive:50km:8,dr2811,Accepted,51.0,-0.0,35355.3,TQNW,50000,TQ,TQNW,,,,,,,generalised,51.484871,-0.352382,1414.2,TQ17N
-ac:ll:gs:sensitive:50km:5,dr2811,Accepted,52.0,-0.0,35355.3,TQNW,50000,TQ,TQNW,,,,,,,generalised,51.626106,-0.1739,707.1,TQ2693
-ac:ll:gs:sensitive:50km:7,dr2811,Accepted,52.0,-0.0,35355.3,TQNW,50000,TQ,TQNW,,,,,,,generalised,51.6616,-0.143555,1414.2,TQ29Y
-ac:ll:gs:sensitive:10km:7,dr2811,Accepted,51.6,-0.2,7071.1,TQ29,10000,TQ,TQNW,TQ29,,,,,,generalised,51.61822,-0.246442,1414.2,TQ29B
-ac:ll:gs:sensitive:50km:4,dr2811,Accepted,52.0,-0.0,35355.3,TQNW,50000,TQ,TQNW,,,,,,,generalised,51.575545,-0.406831,707.1,TQ1087
-ac:ll:gs:sensitive:50km:2,dr2811,Accepted,52.0,-0.0,35355.3,TQNW,50000,TQ,TQNW,,,,,,,generalised,51.583119,-0.305529,0.7,TQ1750088500
-ac:ll:gs:sensitive:50km:3,dr2811,Accepted,51.0,-0.0,35355.3,TQNW,50000,TQ,TQNW,,,,,,,generalised,51.484871,-0.352382,0.7,TQ1450077500
-ac:ll:gs:sensitive:10km:2,dr2811,Accepted,53.4,-3.3,7071.1,SJ18,10000,SJ,SJNW,SJ18,,,,,,generalised,53.355023,-3.278526,0.7,SJ1500085000
-ac:ll:gs:sensitive:10km:1,dr2811,Accepted,50.9,0.8,7071.1,TQ91,10000,TQ,TQSE,TQ91,,,,,,generalised,50.931695,0.80855,0.7,TQ9745018450
-ac:ll:gs:sensitive:10km:5,dr2811,Accepted,51.5,-0.3,7071.1,TQ17,10000,TQ,TQNW,TQ17,,,,,,generalised,51.4623,-0.345997,707.1,TQ1575
-ac:ll:gs:sensitive:10km:6,dr2811,Accepted,51.5,-0.1,7071.1,TQ38,10000,TQ,TQNW,TQ38,,,,,,generalised,51.514106,-0.114248,707.1,TQ3081
-ac:ll:gs:sensitive:10km:9,dr2811,Accepted,51.5,-0.1,7071.1,TQ38,10000,TQ,TQNW,TQ38,,,,,,generalised,51.514106,-0.114248,1414.2,TQ38A
-ac:ll:gs:sensitive:50km:12,dr2811,Accepted,53.0,-0.0,35355.3,TLNW,50000,TL,TLNW,,,,,,,generalised,52.514106,-0.114248,7071.1,TL29
-ac:ll:sensitive:2,dr2811,Accepted,51.5,-0.4,7071.1,TQ17,10000,TQ,TQNW,TQ17,,,,,,generalised,51.484871,-0.352382,10.45,TQ145775
-ac:ll:gs:sensitive:50km:9,dr2811,Accepted,51.0,-0.0,35355.3,TQNW,50000,TQ,TQNW,,,,,,,generalised,51.4623,-0.345997,1414.2,TQ17M
-ac:ll:sensitive:1,dr2811,Accepted,51.6,-0.3,7071.1,TQ18,10000,TQ,TQNW,TQ18,,,,,,generalised,51.583119,-0.305529,1.45,TQ17508850
-ac:ll:sensitive:11,dr2811,Accepted,51.5,-0.3,7071.1,,,,,,,,,,,generalised,51.4623,-0.345997,,
-ac:ll:sensitive:10,dr2811,Accepted,51.0,-0.0,35355.3,,,,,,,,,,,generalised,51.4623,-0.345997,,
-ac:ll:sensitive:5,dr2811,Accepted,51.5,-0.4,7071.1,TQ17,10000,TQ,TQNW,TQ17,,,,,,generalised,51.484871,-0.352382,899.45,TQ17N
-ac:ll:sensitive:4,dr2811,Accepted,51.6,-0.2,7071.1,TQ29,10000,TQ,TQNW,TQ29,,,,,,generalised,51.626106,-0.1739,101.45,TQ2693
-ac:ll:sensitive:8,dr2811,Accepted,51.5,-0.1,7071.1,,,,,,,,,,,generalised,51.514106,-0.114248,0.0,
-ac:ll:sensitive:7,dr2811,Accepted,51.6,-0.2,7071.1,TQ28,10000,TQ,TQNW,TQ28,,,,,,generalised,51.550053,-0.198582,2201.45,TQ28
-ac:ll:sensitive:3,dr2811,Accepted,51.6,-0.4,7071.1,TQ18,10000,TQ,TQNW,TQ18,,,,,,generalised,51.575545,-0.406831,75.45,TQ1087
-ac:ll:sensitive:9,dr2811,Accepted,52.37,-2.22,1414.2,,,,,,,,,,,generalised,52.372835,-2.221751,,
-ac:ll:gs:sensitive:50km:10,dr2811,Accepted,52.0,-0.0,35355.3,TQNW,50000,TQ,TQNW,,,,,,,generalised,51.595306,-0.438624,7071.1,TQ08
-ac:ll:gs:sensitive:50km:11,dr2811,Accepted,52.0,-0.0,35355.3,TQNW,50000,TQ,TQNW,,,,,,,generalised,51.514106,-0.114248,7071.1,TQ38
-ac:ll:sensitive:6,dr2811,Accepted,51.6,-0.2,7071.1,TQ29,10000,TQ,TQNW,TQ29,,,,,,generalised,51.61822,-0.246442,1001.45,TQ29B
+occurrenceID,dataResourceUid,identificationVerificationStatus,decimalLatitude,decimalLongitude,coordinateUncertaintyInMeters,gridReference,gridSizeInMeters,grid_ref_100000,grid_ref_50000,grid_ref_10000,grid_ref_2000,grid_ref_1000,grid_ref_100,easting,northing,sensitive,sensitive_decimalLatitude,sensitive_decimalLongitude,sensitive_coordinateUncertaintyInMeters,sensitive_gridReference,sensitive_occurrenceRemarks,locality,raw_decimalLatitude,raw_decimalLongitude,raw_coordinateUncertaintyInMeters,raw_locality,locationRemarks,sensitive_locationRemarks,verbatimLocality,sensitive_verbatimLocality,occurrenceRemarks
+ac:gr:sensitive:1km:1,dr2811,Accepted,51.4,-0.05,707.1,TQ3568,1000,TQ,TQNW,TQ36,TQ36P,TQ3568,,,,generalised,51.402582,-0.047901,0.7,TQ3588468869,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:1km:2,dr2811,Accepted,51.41,0,707.1,TQ3869,1000,TQ,TQNW,TQ36,TQ36Z,TQ3869,,,,generalised,51.406733,-0.003409,0.7,TQ3896669414,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:1km:3,dr2811,Accepted,51.39,-0.05,707.1,TQ3667,1000,TQ,TQNW,TQ36,TQ36T,TQ3667,,,,generalised,51.394321,-0.045406,0.7,TQ3608267955,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:1km:4,dr2811,Accepted,51.399357,-0.053559,707.1,TQ3568,1000,TQ,TQNW,TQ36,TQ36P,TQ3568,,535000,168000,alreadyGeneralised,51.399357,-0.053559,707.1,TQ3568,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:1km:5,dr2811,Accepted,51.40762,-0.010071,707.1,TQ3869,1000,TQ,TQNW,TQ36,TQ36Z,TQ3869,,538000,169000,alreadyGeneralised,51.40762,-0.010071,707.1,TQ3869,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:1km:6,dr2811,Accepted,51.390131,-0.039577,707.1,TQ3667,1000,TQ,TQNW,TQ36,TQ36T,TQ3667,,536000,167000,alreadyGeneralised,51.390131,-0.039577,707.1,TQ3667,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:1km:7,dr2811,Accepted,53.630602,-2.470246,1414.2,SD61X,2000,SD,SDSE,SD61,SD61X,,,368000,414000,alreadyGeneralised,53.630602,-2.470246,1414.2,SD61X,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:1km:8,dr2811,Accepted,51.867433,-1.289763,1414.2,SP41Z,2000,SP,SPSW,SP41,SP41Z,,,448000,218000,alreadyGeneralised,51.867433,-1.289763,1414.2,SP41Z,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:1km:9,dr2811,Accepted,54.238028,-3.060175,1414.2,SD38B,2000,SD,SDNW,SD38,SD38B,,,330000,482000,alreadyGeneralised,54.238028,-3.060175,1414.2,SD38B,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:1km:10,dr2811,Accepted,51.368024,-0.062071,7071.1,TQ36,10000,TQ,TQNW,TQ36,,,,530000,160000,alreadyGeneralised,51.368024,-0.062071,7071.1,TQ36,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:1km:11,dr2811,Accepted,51.626601,0.526878,7071.1,TQ79,10000,TQ,TQNE,TQ79,,,,570000,190000,alreadyGeneralised,51.626601,0.526878,7071.1,TQ79,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:1km:12,dr2811,Accepted,50.991359,0.777235,7071.1,TQ92,10000,TQ,TQSE,TQ92,,,,590000,120000,alreadyGeneralised,50.991359,0.777235,7071.1,TQ92,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:2km:1,dr2811,Accepted,51.4,-0.05,1414.2,TQ36P,2000,TQ,TQNW,TQ36,TQ36P,,,,,generalised,51.402582,-0.047901,0.7,TQ3588468869,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:2km:2,dr2811,Accepted,51.41,0,1414.2,TQ36Z,2000,TQ,TQNW,TQ36,TQ36Z,,,,,generalised,51.406733,-0.003409,0.7,TQ3896669414,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:2km:3,dr2811,Accepted,51.39,-0.05,1414.2,TQ36T,2000,TQ,TQNW,TQ36,TQ36T,,,,,generalised,51.394321,-0.045406,0.7,TQ3608267955,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:2km:4,dr2811,Accepted,51.4,-0.05,1414.2,TQ36P,2000,TQ,TQNW,TQ36,TQ36P,,,,,generalised,51.399357,-0.053559,707.1,TQ3568,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:2km:5,dr2811,Accepted,51.41,-0.01,1414.2,TQ36Z,2000,TQ,TQNW,TQ36,TQ36Z,,,,,generalised,51.40762,-0.010071,707.1,TQ3869,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:2km:6,dr2811,Accepted,51.39,-0.04,1414.2,TQ36T,2000,TQ,TQNW,TQ36,TQ36T,,,,,generalised,51.390131,-0.039577,707.1,TQ3667,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:2km:7,dr2811,Accepted,53.630602,-2.470246,1414.2,SD61X,2000,SD,SDSE,SD61,SD61X,,,368000,414000,alreadyGeneralised,53.630602,-2.470246,1414.2,SD61X,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:2km:8,dr2811,Accepted,53.664981,-2.773313,1414.2,SD41Z,2000,SD,SDSW,SD41,SD41Z,,,348000,418000,alreadyGeneralised,53.664981,-2.773313,1414.2,SD41Z,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:2km:9,dr2811,Accepted,51.53072,-0.11284,1414.2,TQ38B,2000,TQ,TQNW,TQ38,TQ38B,,,530000,182000,alreadyGeneralised,51.53072,-0.11284,1414.2,TQ38B,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:2km:10,dr2811,Accepted,51.368024,-0.062071,7071.1,TQ36,10000,TQ,TQNW,TQ36,,,,530000,160000,alreadyGeneralised,51.368024,-0.062071,7071.1,TQ36,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:2km:11,dr2811,Accepted,51.626601,0.526878,7071.1,TQ79,10000,TQ,TQNE,TQ79,,,,570000,190000,alreadyGeneralised,51.626601,0.526878,7071.1,TQ79,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:2km:12,dr2811,Accepted,50.991359,0.777235,7071.1,TQ92,10000,TQ,TQSE,TQ92,,,,590000,120000,alreadyGeneralised,50.991359,0.777235,7071.1,TQ92,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:10km:1,dr2811,Accepted,51.4,0,7071.1,TQ36,10000,TQ,TQNW,TQ36,,,,,,generalised,51.402582,-0.047901,0.7,TQ3588468869,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:10km:2,dr2811,Accepted,51.4,0,7071.1,TQ36,10000,TQ,TQNW,TQ36,,,,,,generalised,51.406733,-0.003409,0.7,TQ3896669414,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:10km:3,dr2811,Accepted,51.4,0,7071.1,TQ36,10000,TQ,TQNW,TQ36,,,,,,generalised,51.394321,-0.045406,0.7,TQ3608267955,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:10km:4,dr2811,Accepted,51.4,-0.1,7071.1,TQ36,10000,TQ,TQNW,TQ36,,,,,,generalised,51.399357,-0.053559,707.1,TQ3568,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:10km:5,dr2811,Accepted,51.4,0,7071.1,TQ36,10000,TQ,TQNW,TQ36,,,,,,generalised,51.40762,-0.010071,707.1,TQ3869,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:10km:6,dr2811,Accepted,51.4,0,7071.1,TQ36,10000,TQ,TQNW,TQ36,,,,,,generalised,51.390131,-0.039577,707.1,TQ3667,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:10km:7,dr2811,Accepted,53.6,-2.5,7071.1,SD61,10000,SD,SDSE,SD61,,,,,,generalised,53.630602,-2.470246,1414.2,SD61X,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:10km:8,dr2811,Accepted,51.9,-1.3,7071.1,SP41,10000,SP,SPSW,SP41,,,,,,generalised,51.867433,-1.289763,1414.2,SP41Z,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:10km:9,dr2811,Accepted,50.6,-4.4,7071.1,SX38,10000,SX,SXNW,SX38,,,,,,generalised,50.622153,-4.390525,1414.2,SX38B,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:10km:10,dr2811,Accepted,51.651111,-1.206421,7071.1,SU59,10000,SU,SUNE,SU59,,,,450000,190000,alreadyGeneralised,51.651111,-1.206421,7071.1,SU59,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:10km:11,dr2811,Accepted,51.626601,0.526878,7071.1,TQ79,10000,TQ,TQNE,TQ79,,,,570000,190000,alreadyGeneralised,51.626601,0.526878,7071.1,TQ79,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:10km:12,dr2811,Accepted,50.991359,0.777235,7071.1,TQ92,10000,TQ,TQSE,TQ92,,,,590000,120000,alreadyGeneralised,50.991359,0.777235,7071.1,TQ92,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:50km:1,dr2811,Accepted,51,-3,35355.3,STSE,50000,ST,STSE,,,,,,,generalised,50.908808,-2.604595,0.7,ST5758812323,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:50km:2,dr2811,Accepted,55,-2,35355.3,NZSW,50000,NZ,NZSW,,,,,,,generalised,54.510795,-1.983348,0.7,NZ0117612832,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:50km:3,dr2811,Accepted,54,-2,35355.3,NYSE,50000,NY,NYSE,,,,,,,generalised,54.45328,-2.167494,0.7,NY8923806445,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:50km:4,dr2811,Accepted,50,-4,35355.3,SXNW,50000,SX,SXNW,,,,,,,generalised,50.342038,-4.228849,707.1,SX4151,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:50km:5,dr2811,Accepted,50,-5,35355.3,SWSE,50000,SW,SWSE,,,,,,,generalised,50.19486,-5.14681,707.1,SW7537,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:50km:6,dr2811,Accepted,50,-4,35355.3,SXNW,50000,SX,SXNW,,,,,,,generalised,50.368727,-4.244162,707.1,SX4054,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:50km:7,dr2811,Accepted,52,-3,35355.3,SONW,50000,SO,SONW,,,,,,,generalised,52.225351,-2.953012,1414.2,SO35P,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:50km:8,dr2811,Accepted,52,-3,35355.3,SOSW,50000,SO,SOSW,,,,,,,generalised,52.044568,-3.065809,1414.2,SO23U,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:50km:9,dr2811,Accepted,50,-6,35355.3,SWSW,50000,SW,SWSW,,,,,,,generalised,50.049754,-5.64727,1414.2,SW32W,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:50km:10,dr2811,Accepted,50,-6,35355.3,SWSW,50000,SW,SWSW,,,,,,,generalised,50.065936,-5.704407,7071.1,SW32,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:50km:11,dr2811,Accepted,50,-4,35355.3,SXSW,50000,SX,SXSW,,,,,,,generalised,50.014943,-4.164816,7071.1,SX41,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:gr:sensitive:50km:12,dr2811,Accepted,51,-3,35355.3,STNE,50000,ST,STNE,,,,,,,generalised,51.472164,-2.649276,7071.1,ST57,even more details about the hill,,,,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:1km:1,dr2811,Accepted,53.27,-2.53,707.1,SJ6575,1000,SJ,SJNE,SJ67,SJ67M,SJ6575,,,,generalised,53.270825,-2.526265,0.7,SJ6500075000,even more details about the hill,,53.27,-2.53,0.7,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:1km:2,dr2811,Accepted,50.91,-1.4,707.1,SU4112,1000,SU,SUSW,SU41,SU41B,SU4112,,,,generalised,50.9097,-1.4044,0.7,SU4197212417,even more details about the hill,,50.91,-1.4,0.7,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:1km:3,dr2811,Accepted,51.08,0.84,707.1,TQ9935,1000,TQ,TQSE,TQ93,TQ93X,TQ9935,,,,generalised,51.079802,0.839646,0.7,TQ9900035000,even more details about the hill,,51.08,0.84,0.7,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:1km:4,dr2811,Accepted,53.36,-2.38,707.1,SJ7585,1000,SJ,SJNE,SJ78,SJ78M,SJ7585,,,,alreadyGeneralised,53.361278,-2.377117,707.1,SJ7585,even more details about the hill,,53.36,-2.38,707.1,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:1km:5,dr2811,Accepted,53.18,-2.53,707.1,SJ6565,1000,SJ,SJNE,SJ66,SJ66M,SJ6565,,,,alreadyGeneralised,53.18094,-2.525164,707.1,SJ6565,even more details about the hill,,53.18,-2.53,707.1,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:1km:6,dr2811,Accepted,53.18,-2.38,707.1,SJ7565,1000,SJ,SJNE,SJ76,SJ76M,SJ7565,,,,alreadyGeneralised,53.181506,-2.375537,707.1,SJ7565,even more details about the hill,,53.18,-2.38,707.1,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:1km:7,dr2811,Accepted,53.091055,-2.524068,1414,SJ65M,2000,SJ,SJNE,SJ65,SJ65M,,,,,alreadyGeneralised,53.091055,-2.524068,1414.0,SJ65M,even more details about the hill,,53.091055,-2.524068,1414,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:1km:8,dr2811,Accepted,52.372468,-2.368633,1414,SO77M,2000,SO,SONE,SO77,SO77M,,,,,alreadyGeneralised,52.372468,-2.368633,1414.0,SO77M,even more details about the hill,,52.372468,-2.368633,1414,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:1km:9,dr2811,Accepted,52.372842,-1.781098,1414,SP17M,2000,SP,SPNW,SP17,SP17M,,,,,alreadyGeneralised,52.372842,-1.781098,1414.0,SP17M,even more details about the hill,,52.372842,-1.781098,1414,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:1km:10,dr2811,Accepted,53.091619,-2.374754,7071,SJ75,10000,SJ,SJNE,SJ75,,,,,,alreadyGeneralised,53.091619,-2.374754,7071.0,SJ75,even more details about the hill,,53.091619,-2.374754,7071,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:1km:11,dr2811,Accepted,51.95,-0.09,7071,TL32,10000,TL,TLSW,TL32,,,,,,alreadyGeneralised,51.948459,-0.088078,7071.0,TL32,even more details about the hill,,51.95,-0.09,7071,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:1km:12,dr2811,Accepted,53.090303,-2.673377,7071,SJ55,10000,SJ,SJNE,SJ55,,,,,,alreadyGeneralised,53.090303,-2.673377,7071.0,SJ55,even more details about the hill,,53.090303,-2.673377,7071,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:2km:1,dr2811,Accepted,53.09,-2.23,1414.2,SJ85M,2000,SJ,SJNE,SJ85,SJ85M,,,,,generalised,53.091996,-2.225435,0.7,SJ8500055000,even more details about the hill,,53.09,-2.23,0.7,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:2km:2,dr2811,Accepted,51.11,-0.79,1414.2,SU83M,2000,SU,SUSE,SU83,SU83M,,,,,generalised,51.108005,-0.787223,0.7,SU8500035000,even more details about the hill,,51.11,-0.79,0.7,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:2km:3,dr2811,Accepted,54.35,-2.85,1414.2,SD49M,2000,SD,SDNW,SD49,SD49M,,,,,generalised,54.347561,-2.847613,0.7,SD4500095000,even more details about the hill,,54.35,-2.85,0.7,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:2km:4,dr2811,Accepted,53.36,-2.38,1414.2,SJ78M,2000,SJ,SJNE,SJ78,SJ78M,,,,,generalised,53.361278,-2.377117,707.1,SJ7585,even more details about the hill,,53.36,-2.38,707.1,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:2km:5,dr2811,Accepted,51.27,-0.37,1414.2,TQ15G,2000,TQ,TQNW,TQ15,TQ15G,,,,,generalised,51.268943,-0.371775,707.1,TQ1353,even more details about the hill,,51.27,-0.37,707.1,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:2km:6,dr2811,Accepted,53.18,-2.82,1414.2,SJ46M,2000,SJ,SJNW,SJ46,SJ46M,,,,,generalised,53.179245,-2.824397,707.1,SJ4565,even more details about the hill,,53.18,-2.82,707.1,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:2km:7,dr2811,Accepted,53.27,-2.53,1414.2,SJ67M,2000,SJ,SJNE,SJ67,SJ67M,,,,,generalised,53.270825,-2.526265,1414.0,SJ67M,even more details about the hill,,53.27,-2.53,1414,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:2km:8,dr2811,Accepted,53.36,-2.38,1414.2,SJ78M,2000,SJ,SJNE,SJ78,SJ78M,,,,,generalised,53.361278,-2.377117,1414.0,SJ78M,even more details about the hill,,53.36,-2.38,1414,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:2km:9,dr2811,Accepted,53.36,-2.98,1414.2,SJ38M,2000,SJ,SJNW,SJ38,SJ38M,,,,,generalised,53.357864,-2.978096,1414.0,SJ38M,even more details about the hill,,53.36,-2.98,1414,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:2km:10,dr2811,Accepted,53.270825,-2.526265,7071,SJ67,10000,SJ,SJNE,SJ67,,,,,,alreadyGeneralised,53.270825,-2.526265,7071.0,SJ67,even more details about the hill,,53.270825,-2.526265,7071,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:2km:11,dr2811,Accepted,51.29,-0.21,7071,TQ25,10000,TQ,TQNW,TQ25,,,,,,alreadyGeneralised,51.2947,-0.2126,7071.0,TQ25,even more details about the hill,,51.29,-0.21,7071,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:2km:12,dr2811,Accepted,53.719,-2.0728,7071,SD92,10000,SD,SDSE,SD92,,,,,,alreadyGeneralised,53.719,-2.0728,7071.0,SD92,even more details about the hill,,53.719,-2.0728,7071,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:10km:1,dr2811,Accepted,52.2,1,7071.1,TM05,10000,TM,TMNW,TM05,,,,,,generalised,52.155205,0.995344,0.7,TM0500055000,even more details about the hill,,52.2,1,0.7,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:10km:2,dr2811,Accepted,53.3,-2.5,7071.1,SJ67,10000,SJ,SJNE,SJ67,,,,,,generalised,53.270825,-2.526265,0.7,SJ6500075000,even more details about the hill,,53.3,-2.5,0.7,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:10km:3,dr2811,Accepted,51.3,0.2,7071.1,TQ56,10000,TQ,TQNE,TQ56,,,,,,generalised,51.3322,0.1889,0.7,TQ5258861508,even more details about the hill,,51.3,0.2,0.7,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:10km:4,dr2811,Accepted,53.3,-2.5,7071.1,SJ67,10000,SJ,SJNE,SJ67,,,,,,generalised,53.270825,-2.526265,707.1,SJ6575,even more details about the hill,,53.3,-2.5,707.1,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:10km:5,dr2811,Accepted,51.8,-1.4,7071.1,SP41,10000,SP,SPSW,SP41,,,,,,generalised,51.809527,-1.384954,707.1,SP4212,even more details about the hill,,51.8,-1.4,707.1,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:10km:6,dr2811,Accepted,52.7,1.2,7071.1,TG11,10000,TG,TGSW,TG11,,,,,,generalised,52.689987,1.179842,707.1,TG1515,even more details about the hill,,52.7,1.2,707.1,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:10km:7,dr2811,Accepted,50.9,0.4,7071.1,TQ61,10000,TQ,TQSE,TQ61,,,,,,generalised,50.915237,0.352979,1414.0,TQ61M,even more details about the hill,,50.9,0.4,1414,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:10km:8,dr2811,Accepted,52,-1,7071.1,SP73,10000,SP,SPSE,SP73,,,,,,generalised,52.007612,-0.9529849,1414.0,SP73C,even more details about the hill,,52,-1,1414,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:10km:9,dr2811,Accepted,52.1,-1,7071.1,SP74,10000,SP,SPSE,SP74,,,,,,generalised,52.097449,-0.9532921,1414.0,SP74C,even more details about the hill,,52.1,-1,1414,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:10km:10,dr2811,Accepted,53.4,-2.7,7071.1,SJ58,10000,SJ,SJNE,SJ58,,,,,,generalised,53.359949,-2.677622,7071.0,SJ58,even more details about the hill,,53.4,-2.7,7071,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:10km:11,dr2811,Accepted,51.8,-1.3,7071.1,SP41,10000,SP,SPSW,SP41,,,,,,generalised,51.831808,-1.348371,7071.0,SP41,even more details about the hill,,51.8,-1.3,7071,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:10km:12,dr2811,Accepted,53.2,-2.5,7071.1,SJ66,10000,SJ,SJNE,SJ66,,,,,,generalised,53.18094,-2.525164,7071.0,SJ66,even more details about the hill,,53.2,-2.5,7071,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:50km:1,dr2811,Accepted,52,1,35355.3,TRNW,50000,TR,TRNW,,,,,,,generalised,51.555205,0.995344,0.7,TR0774588288,even more details about the hill,,52,1,0.7,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:50km:2,dr2811,Accepted,53,-3,35355.3,SJNE,50000,SJ,SJNE,,,,,,,generalised,53.270825,-2.526265,0.7,SJ6500075000,even more details about the hill,,53,-3,0.7,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:50km:3,dr2811,Accepted,51,0,35355.3,TQNE,50000,TQ,TQNE,,,,,,,generalised,51.3322,0.1889,0.7,TQ5258861508,even more details about the hill,,51,0,0.7,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:50km:4,dr2811,Accepted,53,-3,35355.3,SJNE,50000,SJ,SJNE,,,,,,,generalised,53.270825,-2.526265,707.1,SJ6575,even more details about the hill,,53,-3,707.1,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:50km:5,dr2811,Accepted,52,-1,35355.3,SPSW,50000,SP,SPSW,,,,,,,generalised,51.809527,-1.384954,707.1,SP4212,even more details about the hill,,52,-1,707.1,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:50km:6,dr2811,Accepted,53,1,35355.3,TGSW,50000,TG,TGSW,,,,,,,generalised,52.689987,1.179842,707.1,TG1515,even more details about the hill,,53,1,707.1,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:50km:7,dr2811,Accepted,51,0,35355.3,TQSE,50000,TQ,TQSE,,,,,,,generalised,50.915237,0.332979,1414.0,TQ61M,even more details about the hill,,51,0,1414,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:50km:8,dr2811,Accepted,52,-1,35355.3,SPSE,50000,SP,SPSE,,,,,,,generalised,52.007612,-0.9529849,1414.0,SP73C,even more details about the hill,,52,-1,1414,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:50km:9,dr2811,Accepted,52,-1,35355.3,SPSE,50000,SP,SPSE,,,,,,,generalised,52.097449,-0.5532921,1414.0,SP94X,even more details about the hill,,52,-1,1414,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:50km:10,dr2811,Accepted,53,-2,35355.3,SJNE,50000,SJ,SJNE,,,,,,,generalised,53.359949,-2.377622,7071.0,SJ78,even more details about the hill,,53,-2,7071,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:50km:11,dr2811,Accepted,52,-1,35355.3,SPSW,50000,SP,SPSW,,,,,,,generalised,51.831808,-1.348371,7071.0,SP41,even more details about the hill,,52,-1,7071,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:50km:12,dr2811,Accepted,53,-3,35355.3,SJNE,50000,SJ,SJNE,,,,,,,generalised,53.18094,-2.525164,7071.0,SJ66,even more details about the hill,,53,-3,7071,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:1km:1,dr2811,Accepted,53.18,-2.38,707.1,SJ7565,1000,SJ,SJNE,SJ76,SJ76M,SJ7565,,,,generalised,53.181506,-2.375537,0.7,SJ7500065000,even more details about the hill,,53.18,-2.38,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:1km:2,dr2811,Accepted,53.09,-2.52,707.1,SJ6555,1000,SJ,SJNE,SJ65,SJ65M,SJ6555,,,,generalised,53.091055,-2.524068,0.7,SJ6500055000,even more details about the hill,,53.09,-2.52,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:1km:3,dr2811,Accepted,52.37,-2.37,707.1,SO7575,1000,SO,SONE,SO77,SO77M,SO7575,,,,generalised,52.372468,-2.368633,0.7,SO7500075000,even more details about the hill,,52.37,-2.37,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:1km:4,dr2811,Accepted,52.37,-1.78,707.1,SP1575,1000,SP,SPNW,SP17,SP17M,SP1575,,,,alreadyGeneralised,52.372842,-1.781098,707.1,SP1575,even more details about the hill,,52.37,-1.78,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:1km:5,dr2811,Accepted,53.09,-2.37,707.1,SJ7555,1000,SJ,SJNE,SJ75,SJ75M,SJ7555,,,,alreadyGeneralised,53.091619,-2.374754,707.1,SJ7555,even more details about the hill,,53.09,-2.37,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:1km:6,dr2811,Accepted,51.948459,-0.088078,707.1,TL3129,1000,TL,TLSW,TL32,TL32E,TL3129,,,,alreadyGeneralised,51.948459,-0.088078,707.1,TL3129,even more details about the hill,,51.948459,-0.088078,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:1km:7,dr2811,Accepted,53.090303,-2.673377,1414.2,SJ55M,2000,SJ,SJNE,SJ55,SJ55M,,,,,alreadyGeneralised,53.090303,-2.673377,1414.2,SJ55M,even more details about the hill,,53.090303,-2.673377,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:1km:8,dr2811,Accepted,53.091996,-2.225435,1414.2,SJ85M,2000,SJ,SJNE,SJ85,SJ85M,,,,,alreadyGeneralised,53.091996,-2.225435,1414.2,SJ85M,even more details about the hill,,53.091996,-2.225435,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:1km:9,dr2811,Accepted,51.108005,-0.787223,1414.2,SU83M,2000,SU,SUSE,SU83,SU83M,,,,,alreadyGeneralised,51.108005,-0.787223,1414.2,SU83M,even more details about the hill,,51.108005,-0.787223,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:1km:10,dr2811,Accepted,54.347561,-2.847613,7071.1,SD49,10000,SD,SDNW,SD49,,,,,,alreadyGeneralised,54.347561,-2.847613,7071.1,SD49,even more details about the hill,,54.347561,-2.847613,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:1km:11,dr2811,Accepted,53.361278,-2.377117,7071.1,SJ78,10000,SJ,SJNE,SJ78,,,,,,alreadyGeneralised,53.361278,-2.377117,7071.1,SJ78,even more details about the hill,,53.361278,-2.377117,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:1km:12,dr2811,Accepted,51.27,-0.37,7071.1,TQ15,10000,TQ,TQNW,TQ15,,,,,,alreadyGeneralised,51.268943,-0.371775,7071.1,TQ15,even more details about the hill,,51.27,-0.37,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:2km:1,dr2811,Accepted,53.18,-2.82,1414.2,SJ46M,2000,SJ,SJNW,SJ46,SJ46M,,,,,generalised,53.179245,-2.824397,0.7,SJ4500065000,even more details about the hill,,53.18,-2.82,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:2km:2,dr2811,Accepted,51.52,-0.13,1414.2,TQ28V,2000,TQ,TQNW,TQ28,TQ28V,,,,,generalised,51.520651,-0.129833,0.7,TQ2985081850,even more details about the hill,,51.52,-0.13,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:2km:3,dr2811,Accepted,51.51,-0.01,1414.2,TQ38V,2000,TQ,TQNW,TQ38,TQ38V,,,,,generalised,51.51056,-0.01167,0.7,TQ3807880944,even more details about the hill,,51.51,-0.01,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:2km:4,dr2811,Accepted,51.52,-0.04,1414.2,TQ38K,2000,TQ,TQNW,TQ38,TQ38K,,,,,generalised,51.516555,-0.041417,707.1,TQ3581,even more details about the hill,,51.52,-0.04,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:2km:5,dr2811,Accepted,51.42,-0.4,1414.2,TQ17A,2000,TQ,TQNW,TQ17,TQ17A,,,,,generalised,51.422554,-0.397773,707.1,TQ1170,even more details about the hill,,51.42,-0.4,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:2km:6,dr2811,Accepted,51.6,-0.44,1414.2,TQ08Z,2000,TQ,TQNW,TQ08,TQ08Z,,,,,generalised,51.595306,-0.438624,707.1,TQ0889,even more details about the hill,,51.6,-0.44,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:2km:7,dr2811,Accepted,51.52,-0.04,1414.2,TQ38K,2000,TQ,TQNW,TQ38,TQ38K,,,,,alreadyGeneralised,51.516555,-0.041417,1414.2,TQ38K,even more details about the hill,,51.52,-0.04,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:2km:8,dr2811,Accepted,52.155205,0.995344,1414.2,TM05M,2000,TM,TMNW,TM05,TM05M,,,,,alreadyGeneralised,52.155205,0.995344,1414.2,TM05M,even more details about the hill,,52.155205,0.995344,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:2km:9,dr2811,Accepted,53.181506,-2.375537,1414.2,SJ76M,2000,SJ,SJNE,SJ76,SJ76M,,,,,alreadyGeneralised,53.181506,-2.375537,1414.2,SJ76M,even more details about the hill,,53.181506,-2.375537,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:2km:10,dr2811,Accepted,53.270825,-2.526265,7071.1,SJ67,10000,SJ,SJNE,SJ67,,,,,,alreadyGeneralised,53.270825,-2.526265,7071.1,SJ67,even more details about the hill,,53.270825,-2.526265,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:2km:11,dr2811,Accepted,50.91,-1.4,7071.1,SU41,10000,SU,SUSW,SU41,,,,,,alreadyGeneralised,50.9097,-1.4044,7071.1,SU41,even more details about the hill,,50.91,-1.4,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:2km:12,dr2811,Accepted,53.01,-1.35,7071.1,SK44,10000,SK,SKSW,SK44,,,,,,alreadyGeneralised,53.0138,-1.3538,7071.1,SK44,even more details about the hill,,53.01,-1.35,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:10km:1,dr2811,Accepted,50.9,0.8,7071.1,TQ91,10000,TQ,TQSE,TQ91,,,,,,generalised,50.931695,0.80855,0.7,TQ9745018450,even more details about the hill,,50.9,0.8,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:10km:2,dr2811,Accepted,53.4,-3.3,7071.1,SJ18,10000,SJ,SJNW,SJ18,,,,,,generalised,53.355023,-3.278526,0.7,SJ1500085000,even more details about the hill,,53.4,-3.3,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:10km:3,dr2811,Accepted,50.8,-0.8,7071.1,SZ89,10000,SZ,SZNE,SZ89,,,,,,generalised,50.761803,-0.789103,0.7,SZ8550096500,even more details about the hill,,50.8,-0.8,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:10km:4,dr2811,Accepted,53.4,-2.7,7071.1,SJ58,10000,SJ,SJNE,SJ58,,,,,,generalised,53.359949,-2.677622,707.1,SJ5585,even more details about the hill,,53.4,-2.7,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:10km:5,dr2811,Accepted,51.5,-0.3,7071.1,TQ17,10000,TQ,TQNW,TQ17,,,,,,generalised,51.4623,-0.345997,707.1,TQ1575,even more details about the hill,,51.5,-0.3,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:10km:6,dr2811,Accepted,51.5,-0.1,7071.1,TQ38,10000,TQ,TQNW,TQ38,,,,,,generalised,51.514106,-0.114248,707.1,TQ3081,even more details about the hill,,51.5,-0.1,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:10km:7,dr2811,Accepted,51.6,-0.2,7071.1,TQ29,10000,TQ,TQNW,TQ29,,,,,,generalised,51.61822,-0.246442,1414.2,TQ29B,even more details about the hill,,51.6,-0.2,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:10km:8,dr2811,Accepted,51.6,-0.2,7071.1,TQ28,10000,TQ,TQNW,TQ28,,,,,,generalised,51.550053,-0.198582,1414.2,TQ28M,even more details about the hill,,51.6,-0.2,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:10km:9,dr2811,Accepted,51.5,-0.1,7071.1,TQ38,10000,TQ,TQNW,TQ38,,,,,,generalised,51.514106,-0.114248,1414.2,TQ38A,even more details about the hill,,51.5,-0.1,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:10km:10,dr2811,Accepted,51.5,-0.4,7071.1,TQ17,10000,TQ,TQNW,TQ17,,,,,,alreadyGeneralised,51.484871,-0.352382,7071.1,TQ17,even more details about the hill,,51.5,-0.4,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:10km:11,dr2811,Accepted,51.5,-0.1,7071.1,TQ38,10000,TQ,TQNW,TQ38,,,,,,alreadyGeneralised,51.537899,-0.086948,7071.1,TQ38,even more details about the hill,,51.5,-0.1,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:10km:12,dr2811,Accepted,51.5,-0.1,7071.1,TQ38,10000,TQ,TQNW,TQ38,,,,,,alreadyGeneralised,51.514106,-0.114248,7071.1,TQ38,even more details about the hill,,51.5,-0.1,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:50km:1,dr2811,Accepted,51,0,35355.3,TQNW,50000,TQ,TQNW,,,,,,,generalised,51.484871,-0.352382,0.7,TQ1450077500,even more details about the hill,,51,0,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:50km:2,dr2811,Accepted,52,0,35355.3,TQNW,50000,TQ,TQNW,,,,,,,generalised,51.583119,-0.305529,0.7,TQ1750088500,even more details about the hill,,52,0,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:50km:3,dr2811,Accepted,51,0,35355.3,TQNW,50000,TQ,TQNW,,,,,,,generalised,51.484871,-0.352382,0.7,TQ1450077500,even more details about the hill,,51,0,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:50km:4,dr2811,Accepted,52,0,35355.3,TQNW,50000,TQ,TQNW,,,,,,,generalised,51.575545,-0.406831,707.1,TQ1087,even more details about the hill,,52,0,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:50km:5,dr2811,Accepted,52,0,35355.3,TQNW,50000,TQ,TQNW,,,,,,,generalised,51.626106,-0.1739,707.1,TQ2693,even more details about the hill,,52,0,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:50km:6,dr2811,Accepted,51,0,35355.3,TQNW,50000,TQ,TQNW,,,,,,,generalised,51.484871,-0.352382,707.1,TQ1477,even more details about the hill,,51,0,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:50km:7,dr2811,Accepted,52,0,35355.3,TQNW,50000,TQ,TQNW,,,,,,,generalised,51.6616,-0.143555,1414.2,TQ29Y,even more details about the hill,,52,0,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:50km:8,dr2811,Accepted,51,0,35355.3,TQNW,50000,TQ,TQNW,,,,,,,generalised,51.484871,-0.352382,1414.2,TQ17N,even more details about the hill,,51,0,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:50km:9,dr2811,Accepted,51,0,35355.3,TQNW,50000,TQ,TQNW,,,,,,,generalised,51.4623,-0.345997,1414.2,TQ17M,even more details about the hill,,51,0,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:50km:10,dr2811,Accepted,52,0,35355.3,TQNW,50000,TQ,TQNW,,,,,,,generalised,51.595306,-0.438624,7071.1,TQ08,even more details about the hill,,52,0,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:50km:11,dr2811,Accepted,52,0,35355.3,TQNW,50000,TQ,TQNW,,,,,,,generalised,51.514106,-0.114248,7071.1,TQ38,even more details about the hill,,52,0,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:gs:sensitive:50km:12,dr2811,Accepted,53,0,35355.3,TLNW,50000,TL,TLNW,,,,,,,generalised,52.514106,-0.114248,7071.1,TL29,even more details about the hill,,53,0,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:1,dr2811,Accepted,51.6,-0.3,7071.1,TQ18,10000,TQ,TQNW,TQ18,,,,,,generalised,51.583119,-0.305529,1.45,TQ17508850,even more details about the hill,,51.6,-0.3,1.45,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:2,dr2811,Accepted,51.5,-0.4,7071.1,TQ17,10000,TQ,TQNW,TQ17,,,,,,generalised,51.484871,-0.352382,10.45,TQ145775,even more details about the hill,,51.5,-0.4,10.45,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:3,dr2811,Accepted,51.6,-0.4,7071.1,TQ18,10000,TQ,TQNW,TQ18,,,,,,generalised,51.575545,-0.406831,75.45,TQ1087,even more details about the hill,,51.6,-0.4,75.45,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:4,dr2811,Accepted,51.6,-0.2,7071.1,TQ29,10000,TQ,TQNW,TQ29,,,,,,generalised,51.626106,-0.1739,101.45,TQ2693,even more details about the hill,,51.6,-0.2,101.45,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:5,dr2811,Accepted,51.5,-0.4,7071.1,TQ17,10000,TQ,TQNW,TQ17,,,,,,generalised,51.484871,-0.352382,899.45,TQ17N,even more details about the hill,,51.5,-0.4,899.45,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:6,dr2811,Accepted,51.6,-0.2,7071.1,TQ29,10000,TQ,TQNW,TQ29,,,,,,generalised,51.61822,-0.246442,1001.45,TQ29B,even more details about the hill,,51.6,-0.2,1001.45,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:7,dr2811,Accepted,51.6,-0.2,7071.1,TQ28,10000,TQ,TQNW,TQ28,,,,,,generalised,51.550053,-0.198582,2201.45,TQ28,even more details about the hill,,51.6,-0.2,2201.45,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:8,dr2811,Accepted,51.5,-0.1,7071.1,,,,,,,,,,,generalised,51.514106,-0.114248,0.0,,even more details about the hill,,51.5,-0.1,0,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:9,dr2811,Accepted,52.37,-2.22,1414.2,,,,,,,,,,,generalised,52.372835,-2.221751,,,even more details about the hill,,52.37,-2.22,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:10,dr2811,Accepted,51,0,35355.3,,,,,,,,,,,generalised,51.4623,-0.345997,,,even more details about the hill,,51,0,,,,more details about the hill,,at the top of the hill near the stream,
+ac:ll:sensitive:11,dr2811,Accepted,51.5,-0.3,7071.1,,,,,,,,,,,generalised,51.4623,-0.345997,,,even more details about the hill,,51.5,-0.3,error,,,more details about the hill,,at the top of the hill near the stream,
