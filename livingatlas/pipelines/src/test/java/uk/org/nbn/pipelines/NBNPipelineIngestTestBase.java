@@ -8,6 +8,7 @@ import org.apache.parquet.Strings;
 import org.apache.solr.common.SolrDocument;
 import org.junit.Assert;
 import org.junit.jupiter.api.DynamicTest;
+import org.spark_project.guava.primitives.Doubles;
 
 import java.io.File;
 import java.io.IOException;
@@ -83,7 +84,8 @@ public class NBNPipelineIngestTestBase {
         }};
 
 
-        if (actual.getClass() == expected.getClass() && !knownTypes.containsKey(name)) {
+        //Doubles.tryParse(expected) != null is to allow for a scenario where the expected sensitive_coordinateUncertaintyInMeters was set from an un-parsable raw value
+        if (actual.getClass() == expected.getClass() && !(knownTypes.containsKey(name) && Doubles.tryParse(expected) != null)) {
             Assert.assertEquals(expected, actual); // Direct comparison if types match
         } else {
             // Attempt type conversion based on the type of 'actual' to match 'expected'
