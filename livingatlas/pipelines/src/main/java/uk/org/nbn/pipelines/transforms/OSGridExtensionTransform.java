@@ -84,7 +84,7 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
     // we know we have either a grid ref or grid size so we can compute uncertainty so...
     // set uncertainty if:
     // supplied without either lat/lon or uncertainty
-    // or we have a grid ref and the lat lon is centroid of the grid
+    // we have a grid ref and the lat lon is centroid of the grid - In this case we are overwriting the true raw uncertainty which is not ideal
 
     if (!hasSuppliedLatLon
         || Strings.isNullOrEmpty(coordinateUncertaintyValue)
