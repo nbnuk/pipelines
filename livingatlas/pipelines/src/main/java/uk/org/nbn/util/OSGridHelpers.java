@@ -1,5 +1,8 @@
 package uk.org.nbn.util;
 
+import com.google.common.base.Strings;
+import org.spark_project.guava.primitives.Ints;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,14 +15,14 @@ public class OSGridHelpers {
 //    }
 
     /**
-     * @param input coordinateUncertaintyInMeters
-     * @return the equivalent coordinateUncertaintyInMeters for a grid square (radius to Circumradius of square)
+     * @param input a length in m representing a grid based width, this maybe a "gridSizeInMeters" or "generalisation"
+     * @return the equivalent coordinateUncertaintyInMeters for a grid square of the input width (Circumradius of square)
      */
-    public static String UncertaintyToGridUncertainty(String input) {
-        return String.format("%.1f", UncertaintyToGridUncertainty(Integer.parseInt(input)));
+    public static String GridSizeToGridUncertainty(String input) {
+        return String.format("%.1f", GridSizeToGridUncertainty(Integer.parseInt(input)));
     }
 
-    public static double UncertaintyToGridUncertainty(int input) {
+    public static double GridSizeToGridUncertainty(int input) {
         return roundToDecimalPlaces((double) input / Math.sqrt(2.0),1);
     }
 

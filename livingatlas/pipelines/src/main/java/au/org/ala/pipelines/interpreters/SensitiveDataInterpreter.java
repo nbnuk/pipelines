@@ -647,7 +647,7 @@ public class SensitiveDataInterpreter {
 
       if(generalisationInMetres.isPresent() && !generalisationInMetres.get().isEmpty())
       {
-         generalisationInMetresGrid = Optional.of(OSGridHelpers.UncertaintyToGridUncertainty(generalisationInMetres.get())).map(SensitiveDataInterpreter::parseDouble);
+         generalisationInMetresGrid = Optional.of(OSGridHelpers.GridSizeToGridUncertainty(generalisationInMetres.get())).map(SensitiveDataInterpreter::parseDouble);
       }
 
       double originalUncertainty = COORDINATE_UNCERTAINTY.get(properties).getValue().map(SensitiveDataInterpreter::parseDouble).orElse(0.);
@@ -676,7 +676,7 @@ public class SensitiveDataInterpreter {
 
     if(generalisationToApplyInMetres.isPresent() && !generalisationToApplyInMetres.get().isEmpty())
     {
-      generalisationToApplyInMetresGrid = Optional.of(OSGridHelpers.UncertaintyToGridUncertainty(generalisationToApplyInMetres.get().toString()));
+      generalisationToApplyInMetresGrid = Optional.of(OSGridHelpers.GridSizeToGridUncertainty(generalisationToApplyInMetres.get().toString()));
     }
 
     double originalUncertainty = COORDINATE_UNCERTAINTY.get(properties).getValue().map(SensitiveDataInterpreter::parseDouble).orElse(0.);
@@ -714,7 +714,7 @@ public class SensitiveDataInterpreter {
 
     if(generalisationInMetres.isPresent() && !generalisationInMetres.get().isEmpty())
     {
-      generalisationInMetresGrid = Optional.of(OSGridHelpers.UncertaintyToGridUncertainty(generalisationInMetres.get())).map(SensitiveDataInterpreter::parseDouble);
+      generalisationInMetresGrid = Optional.of(OSGridHelpers.GridSizeToGridUncertainty(generalisationInMetres.get())).map(SensitiveDataInterpreter::parseDouble);
 
       //todo - This assumes that the originalUncertainty was grid based
       if(generalisationInMetresGrid.isPresent() && originalUncertainty <= generalisationInMetresGrid.get()) {

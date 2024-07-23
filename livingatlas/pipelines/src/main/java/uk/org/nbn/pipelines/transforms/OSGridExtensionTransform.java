@@ -26,6 +26,7 @@ import uk.org.nbn.parser.OSGridParser;
 import uk.org.nbn.pipelines.vocabulary.NBNOccurrenceIssue;
 import uk.org.nbn.term.OSGridTerm;
 import uk.org.nbn.util.GridUtil;
+import uk.org.nbn.util.OSGridHelpers;
 
 /** Transform to augment the core location terms from osGrid extension terms */
 @Slf4j
@@ -139,7 +140,7 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
     }
 
     if (gridSizeInMeters != null) {
-      double cornerDistFromCentre = gridSizeInMeters / Math.sqrt(2.0);
+      double cornerDistFromCentre = OSGridHelpers.GridSizeToGridUncertainty(gridSizeInMeters);
       alteredEr
           .getCoreTerms()
           .put(
