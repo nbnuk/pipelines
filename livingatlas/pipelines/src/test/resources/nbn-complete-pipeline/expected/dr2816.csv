@@ -149,7 +149,7 @@ ac:ll:notsensitive:100,dr2816,Accepted,52.372835,-2.221751,101.45,SO8575,1000,SO
 ac:ll:notsensitive:101,dr2816,Accepted,52.372835,-2.221751,899.45,SO87M,2000,SO,SONE,SO87,SO87M,,,,
 ac:ll:notsensitive:102,dr2816,Accepted,52.372835,-2.221751,1001.45,SO87M,2000,SO,SONE,SO87,SO87M,,,,
 ac:ll:notsensitive:103,dr2816,Accepted,52.372835,-2.221751,2201.45,SO87,10000,SO,SONE,SO87,,,,,
-ac:ll:notsensitive:104,dr2816,Accepted,52.372835,-2.221751,0,,,,,,,,,,
+ac:ll:notsensitive:104,dr2816,Accepted,52.372835,-2.221751,,,,,,,,,,,
 ac:ll:notsensitive:105,dr2816,Accepted,52.372835,-2.221751,,,,,,,,,,,
 ac:ll:notsensitive:IG:1,dr2816,Accepted,54.140607,-7.538879,0.7,H3018621378,1,H,HSW,H32,H32A,H3021,H301213,,
 ac:ll:notsensitive:IG:2,dr2816,Accepted,54.140607,-7.538879,707.1,H3021,1000,H,HSW,H32,H32A,H3021,,,
