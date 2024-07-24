@@ -432,12 +432,6 @@ public class IndexRecordTransform implements Serializable, IndexFields {
       }
     }
 
-    if(geospatialIssues.contains(NBNOccurrenceIssue.COORDINATE_UNCERTAINTY_CALCULATED_FROM_OSGRID.name())) {
-      if(raw.containsKey(DwcTerm.coordinateUncertaintyInMeters.qualifiedName())) {
-        raw.remove(DwcTerm.coordinateUncertaintyInMeters.qualifiedName());
-      }
-    }
-
     for (Map.Entry<String, String> entry : raw.entrySet()) {
 
       String key = entry.getKey();

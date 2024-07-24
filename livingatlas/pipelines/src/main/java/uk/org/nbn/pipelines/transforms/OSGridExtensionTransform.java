@@ -69,8 +69,6 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
 
     String decimalLatitudeValue = extractNullAwareValue(er, DwcTerm.decimalLatitude);
     String decimalLongitudeValue = extractNullAwareValue(er, DwcTerm.decimalLongitude);
-    String coordinateUncertaintyValue =
-        extractNullAwareValue(er, DwcTerm.coordinateUncertaintyInMeters);
 
     boolean hasSuppliedLatLon =
         !Strings.isNullOrEmpty(decimalLatitudeValue)
@@ -78,23 +76,6 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
 
     if (!hasSuppliedLatLon && !Strings.isNullOrEmpty(gridReferenceValue)) {
       setLatLonFromOSGrid(er, alteredEr, issues);
-    }
-
-    // this was combined from checkUncertainty and possiblyRecalculateUncertainty
-    // we know we have either a grid ref or grid size so we can compute uncertainty so...
-    // set uncertainty if:
-    // supplied without either lat/lon or uncertainty
-    // we have a grid ref and the lat lon is centroid of the grid - In this case we are overwriting the true raw uncertainty which is not ideal
-
-    if (!hasSuppliedLatLon
-        || Strings.isNullOrEmpty(coordinateUncertaintyValue)
-        || (!Strings.isNullOrEmpty(gridReferenceValue) &&
-                GridUtil.isCentroid(
-            Double.valueOf(decimalLongitudeValue),
-            Double.valueOf(decimalLatitudeValue),
-            gridReferenceValue))) {
-
-      setCoordinateUncertaintyFromOSGrid(er, alteredEr, issues);
     }
 
     // put the issues in the extension so that we can retrieve and apply them in OSGridTransform
@@ -120,34 +101,6 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
       // grid util projects all coordinates to WGS84
       alteredEr.getCoreTerms().put(DwcTerm.geodeticDatum.qualifiedName(), PIPELINES_GEODETIC_DATUM);
       issues.addAll(result.getIssues());
-    }
-  }
-
-  private void setCoordinateUncertaintyFromOSGrid(ExtendedRecord er, ExtendedRecord alteredEr, List<String> issues) {
-    String gridReferenceValue = extractNullAwareValue(er, OSGridTerm.gridReference);
-    String gridSizeInMetersValue =
-            extractNullAwareValue(er, OSGridTerm.gridSizeInMeters);
-
-    // todo - should we flag if these fail?  Internally this logs and error but this is not going to
-    // be very helpful
-
-    Integer gridSizeInMeters = null;
-
-    if(!Strings.isNullOrEmpty(gridReferenceValue)) {
-      gridSizeInMeters = GridUtil.getGridSizeInMeters(gridReferenceValue).getOrElse(null);
-    } else {
-      gridSizeInMeters = Ints.tryParse(gridSizeInMetersValue);
-    }
-
-    if (gridSizeInMeters != null) {
-      double cornerDistFromCentre = OSGridHelpers.GridSizeToGridUncertainty(gridSizeInMeters);
-      alteredEr
-          .getCoreTerms()
-          .put(
-              DwcTerm.coordinateUncertaintyInMeters.qualifiedName(),
-              String.format("%.1f", cornerDistFromCentre));
-
-      issues.add(NBNOccurrenceIssue.COORDINATE_UNCERTAINTY_CALCULATED_FROM_OSGRID.name());
     }
   }
 }

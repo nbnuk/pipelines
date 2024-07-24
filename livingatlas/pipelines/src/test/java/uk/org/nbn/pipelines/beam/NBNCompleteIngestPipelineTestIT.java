@@ -83,7 +83,7 @@ public class NBNCompleteIngestPipelineTestIT extends NBNPipelineIngestTestBase {
 
     Map<String,Integer> datasets = new HashMap<String,Integer>(){{
       put("dr2816", 165);
-      put("dr2811", 155);
+      put("dr2811", 159); //this has 4 additional records compare to ma
     }};
 
     int expectedRecords = datasets.values().stream().mapToInt(Integer::intValue).sum();

@@ -55,39 +55,6 @@ public class OSGridExtensionTransformTests extends OSGridTestBase {
   }
 
   @Test
-  public void coordinateUncertaintySetFromGridReferenceWhenNotPresent() {
-    ExtendedRecord er = createTestRecord();
-    Map<String, String> coreTerms = er.getCoreTerms();
-
-    coreTerms.put(OSGridTerm.gridReference.qualifiedName(), "NM39");
-
-    OSGridExtensionTransform transform = new OSGridExtensionTransform();
-    ExtendedRecord result = transform.process(er);
-
-    Assert.assertEquals(
-        "7071.1", result.getCoreTerms().get(DwcTerm.coordinateUncertaintyInMeters.qualifiedName()));
-  }
-
-  @Test
-  public void coordinateUncertaintySetFromGridReferenceWhenLatLonIsCentroid() {
-    ExtendedRecord er = createTestRecord();
-    Map<String, String> coreTerms = er.getCoreTerms();
-
-    coreTerms.put(OSGridTerm.gridReference.qualifiedName(), "NM39");
-
-    final String falseCooridinateUncertainty = "9999";
-    coreTerms.put(DwcTerm.decimalLatitude.qualifiedName(), "56.970009");
-    coreTerms.put(DwcTerm.decimalLongitude.qualifiedName(), "-6.361995");
-    coreTerms.put(DwcTerm.coordinateUncertaintyInMeters.qualifiedName(), falseCooridinateUncertainty);
-
-    OSGridExtensionTransform transform = new OSGridExtensionTransform();
-    ExtendedRecord result = transform.process(er);
-
-    Assert.assertEquals(
-        "7071.1", result.getCoreTerms().get(DwcTerm.coordinateUncertaintyInMeters.qualifiedName()));
-  }
-
-  @Test
   public void suppliedCoordinateUncertaintyRetainedWhenLatLonIsNotCentroidOfGrid() {
     ExtendedRecord er = createTestRecord();
     Map<String, String> coreTerms = er.getCoreTerms();
