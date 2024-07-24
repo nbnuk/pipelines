@@ -3,7 +3,6 @@ package uk.org.nbn.pipelines;
 import au.org.ala.pipelines.vocabulary.ALAOccurrenceIssue;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.gbif.api.vocabulary.OccurrenceIssue;
 import org.gbif.dwc.terms.DwcTerm;
 import org.gbif.pipelines.io.avro.ExtendedRecord;
@@ -60,7 +59,7 @@ public class NBNLocationInterpreterTests extends OSGridTestBase {
         lr.getIssues().getIssueList().contains(ALAOccurrenceIssue.UNCERTAINTY_IN_PRECISION.name()));
   }
 
-    @Test
+  @Test
   public void coordinateUncertaintySetFromGridReferenceWhenNotPresent() {
     ExtendedRecord er = createTestRecord();
     Map<String, String> coreTerms = er.getCoreTerms();
@@ -74,7 +73,11 @@ public class NBNLocationInterpreterTests extends OSGridTestBase {
 
     Double expectedCoordinateUncertainty = 7071.1;
     Assert.assertEquals(expectedCoordinateUncertainty, lr.getCoordinateUncertaintyInMeters());
-    Assert.assertFalse("Check uncertainty issue removed", lr.getIssues().getIssueList().contains(OccurrenceIssue.COORDINATE_UNCERTAINTY_METERS_INVALID.name()));
+    Assert.assertFalse(
+        "Check uncertainty issue removed",
+        lr.getIssues()
+            .getIssueList()
+            .contains(OccurrenceIssue.COORDINATE_UNCERTAINTY_METERS_INVALID.name()));
   }
 
   @Test
@@ -87,7 +90,8 @@ public class NBNLocationInterpreterTests extends OSGridTestBase {
     final String falseCooridinateUncertainty = "9999";
     coreTerms.put(DwcTerm.decimalLatitude.qualifiedName(), "56.970009");
     coreTerms.put(DwcTerm.decimalLongitude.qualifiedName(), "-6.361995");
-    coreTerms.put(DwcTerm.coordinateUncertaintyInMeters.qualifiedName(), falseCooridinateUncertainty);
+    coreTerms.put(
+        DwcTerm.coordinateUncertaintyInMeters.qualifiedName(), falseCooridinateUncertainty);
 
     LocationRecord lr = LocationRecord.newBuilder().setId(ID).build();
     NBNLocationInterpreter.interpretCoordinateUncertaintyInMeters(er, lr);
@@ -95,5 +99,4 @@ public class NBNLocationInterpreterTests extends OSGridTestBase {
     Double expectedCoordinateUncertainty = 7071.1;
     Assert.assertEquals(expectedCoordinateUncertainty, lr.getCoordinateUncertaintyInMeters());
   }
-
 }

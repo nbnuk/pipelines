@@ -7,7 +7,6 @@ import static uk.org.nbn.util.NBNModelUtils.*;
 import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.beam.sdk.metrics.Counter;
@@ -21,12 +20,8 @@ import org.gbif.pipelines.core.functions.SerializableConsumer;
 import org.gbif.pipelines.core.parsers.common.ParsedField;
 import org.gbif.pipelines.io.avro.ExtendedRecord;
 import org.gbif.pipelines.transforms.converters.OccurrenceJsonTransform;
-import org.spark_project.guava.primitives.Ints;
 import uk.org.nbn.parser.OSGridParser;
-import uk.org.nbn.pipelines.vocabulary.NBNOccurrenceIssue;
 import uk.org.nbn.term.OSGridTerm;
-import uk.org.nbn.util.GridUtil;
-import uk.org.nbn.util.OSGridHelpers;
 
 /** Transform to augment the core location terms from osGrid extension terms */
 @Slf4j

@@ -94,31 +94,31 @@ public class OSGridTransform extends Transform<KV<String, CoGbkResult>, OSGridRe
         .via((OSGridRecord lr) -> KV.of(lr.getId(), lr));
   }
 
-  public Optional<OSGridRecord> processElement(ExtendedRecord extendedRecord, LocationRecord locationRecord) {
+  public Optional<OSGridRecord> processElement(
+      ExtendedRecord extendedRecord, LocationRecord locationRecord) {
 
     OSGridRecord osGridRecord =
-            OSGridRecord.newBuilder()
-                    .setId(extendedRecord.getId())
-                    .setCreated(Instant.now().toEpochMilli())
-                    .build();
-
+        OSGridRecord.newBuilder()
+            .setId(extendedRecord.getId())
+            .setCreated(Instant.now().toEpochMilli())
+            .build();
 
     Optional<OSGridRecord> result =
-            Interpretation.from(new Tuple<>(extendedRecord, locationRecord))
-                    .to(osGridRecord)
-                    .when(er -> !er.v1().getCoreTerms().isEmpty())
-                    .via(OSGridInterpreter::applyIssues)
-                    // This populate grid sizes for those supplied with gridreference or gridsizeinmeters
-                    .via(OSGridInterpreter::addGridSize)
-                    // .via(OSGridInterpreter::possiblyRecalculateCoordinateUncertainty)
-                    .via(OSGridInterpreter::validateSuppliedGridReferenceAndLatLon)
-                    .via(OSGridInterpreter::setGridRefFromCoordinates)
-                    // This populates grids sizes for those supplied with a lat lot and have had
-                    // gridreference computed
-                    .via(OSGridInterpreter::addGridSize)
-                    //.via(OSGridInterpreter::processGridWKT)
-                    .via(OSGridInterpreter::addEastingAndNorthing)
-                    .get();
+        Interpretation.from(new Tuple<>(extendedRecord, locationRecord))
+            .to(osGridRecord)
+            .when(er -> !er.v1().getCoreTerms().isEmpty())
+            .via(OSGridInterpreter::applyIssues)
+            // This populate grid sizes for those supplied with gridreference or gridsizeinmeters
+            .via(OSGridInterpreter::addGridSize)
+            // .via(OSGridInterpreter::possiblyRecalculateCoordinateUncertainty)
+            .via(OSGridInterpreter::validateSuppliedGridReferenceAndLatLon)
+            .via(OSGridInterpreter::setGridRefFromCoordinates)
+            // This populates grids sizes for those supplied with a lat lot and have had
+            // gridreference computed
+            .via(OSGridInterpreter::addGridSize)
+            // .via(OSGridInterpreter::processGridWKT)
+            .via(OSGridInterpreter::addEastingAndNorthing)
+            .get();
 
     result.ifPresent(r -> this.incCounter());
 

@@ -33,7 +33,8 @@ public class IntegrationTestUtils extends ExternalResource {
   private static final Object MUTEX = new Object();
   private static final AtomicInteger COUNTER = new AtomicInteger(0);
 
-  private  static  final  boolean STARTSTOPDOCKER = Boolean.valueOf(System.getProperty("DOCKER_STARTSTOP","true"));
+  private static final boolean STARTSTOPDOCKER =
+      Boolean.valueOf(System.getProperty("DOCKER_STARTSTOP", "true"));
   GenericContainer nameService;
   GenericContainer sdsService;
   GenericContainer solrService;
@@ -61,40 +62,40 @@ public class IntegrationTestUtils extends ExternalResource {
   public void before() throws Throwable {
     if (COUNTER.get() == 0) {
 
-      if(STARTSTOPDOCKER) {
+      if (STARTSTOPDOCKER) {
         // setup containers
         int[] solrPorts = TestUtils.getFreePortsForSolr();
         int zkPort = solrPorts[1];
         int solrPort = solrPorts[0];
 
         solrService =
-                new FixedHostPortGenericContainer(SOLR_IMG)
-                        .withFixedExposedPort(zkPort, zkPort)
-                        .withFixedExposedPort(solrPort, solrPort)
-                        .withEnv("SOLR_PORT", solrPort + "")
-                        .withEnv("ZOO_PORT", zkPort + "")
-                        .withEnv("ZOO_HOST", "localhost")
-                        .withEnv("SOLR_HOST", "localhost")
-                        .withEnv("SOLR_MODE", "solrcloud");
+            new FixedHostPortGenericContainer(SOLR_IMG)
+                .withFixedExposedPort(zkPort, zkPort)
+                .withFixedExposedPort(solrPort, solrPort)
+                .withEnv("SOLR_PORT", solrPort + "")
+                .withEnv("ZOO_PORT", zkPort + "")
+                .withEnv("ZOO_HOST", "localhost")
+                .withEnv("SOLR_HOST", "localhost")
+                .withEnv("SOLR_MODE", "solrcloud");
         solrService.start();
 
         nameService =
-                new GenericContainer(DockerImageName.parse(NAME_SERVICE_IMG))
-                        .withExposedPorts(NAME_SERVICE_INTERNAL_PORT)
-                        .withStartupTimeout(Duration.ofMinutes(3));
+            new GenericContainer(DockerImageName.parse(NAME_SERVICE_IMG))
+                .withExposedPorts(NAME_SERVICE_INTERNAL_PORT)
+                .withStartupTimeout(Duration.ofMinutes(3));
         nameService.start();
 
         sdsService =
-                new GenericContainer(DockerImageName.parse(SENSTIVE_SERVICE_IMG))
-                        .withExposedPorts(SENSITIVE_SERVICE_INTERNAL_PORT)
-                        .withStartupTimeout(Duration.ofMinutes(3));
+            new GenericContainer(DockerImageName.parse(SENSTIVE_SERVICE_IMG))
+                .withExposedPorts(SENSITIVE_SERVICE_INTERNAL_PORT)
+                .withStartupTimeout(Duration.ofMinutes(3));
         sdsService.start();
 
         elasticsearchContainer =
-                new ElasticsearchContainer(
-                        DockerImageName.parse("docker.elastic.co/elasticsearch/elasticsearch-oss")
-                                .withTag("7.10.2"))
-                        .withReuse(true);
+            new ElasticsearchContainer(
+                    DockerImageName.parse("docker.elastic.co/elasticsearch/elasticsearch-oss")
+                        .withTag("7.10.2"))
+                .withReuse(true);
         elasticsearchContainer.start();
 
         TestUtils.setSolrPorts(solrPort, zkPort);
@@ -110,18 +111,18 @@ public class IntegrationTestUtils extends ExternalResource {
 
       config = ALAFsUtils.readConfigFile(HdfsConfigs.nullConfig(), propertiesFilePath);
 
-      if(STARTSTOPDOCKER) {
+      if (STARTSTOPDOCKER) {
         // Fix for https://github.com/gbif/pipelines/issues/568
         try (EsClient esClient =
             EsClient.from(
                 EsConfig.from(
-                    "http://localhost:" + elasticsearchContainer.getMappedPort(ES_INTERNAL_PORT)))) {
+                    "http://localhost:"
+                        + elasticsearchContainer.getMappedPort(ES_INTERNAL_PORT)))) {
           esClient.performPutRequest(
               "/_cluster/settings",
               Collections.emptyMap(),
               new NStringEntity(
                   "{\"persistent\":{\"cluster.routing.allocation.disk.threshold_enabled\":false}}"));
-
         }
       }
     }

@@ -6,6 +6,8 @@ import static org.gbif.pipelines.core.utils.ModelUtils.extractNullAwareValue;
 
 import au.org.ala.pipelines.vocabulary.ALAOccurrenceIssue;
 import com.google.common.base.Strings;
+import java.util.ArrayList;
+import java.util.List;
 import org.gbif.api.vocabulary.OccurrenceIssue;
 import org.gbif.common.parsers.NumberParser;
 import org.gbif.dwc.terms.DwcTerm;
@@ -16,9 +18,6 @@ import org.spark_project.guava.primitives.Ints;
 import uk.org.nbn.term.OSGridTerm;
 import uk.org.nbn.util.GridUtil;
 import uk.org.nbn.util.OSGridHelpers;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class NBNLocationInterpreter {
   public static void interpretCoordinateUncertaintyInMetersFromPrecisionFormat(
@@ -77,11 +76,11 @@ public class NBNLocationInterpreter {
     String decimalLatitudeValue = extractNullAwareValue(er, DwcTerm.decimalLatitude);
     String decimalLongitudeValue = extractNullAwareValue(er, DwcTerm.decimalLongitude);
     String coordinateUncertaintyValue =
-            extractNullAwareValue(er, DwcTerm.coordinateUncertaintyInMeters);
+        extractNullAwareValue(er, DwcTerm.coordinateUncertaintyInMeters);
 
     boolean hasSuppliedLatLon =
-            !Strings.isNullOrEmpty(decimalLatitudeValue)
-                    && !Strings.isNullOrEmpty(decimalLongitudeValue);
+        !Strings.isNullOrEmpty(decimalLatitudeValue)
+            && !Strings.isNullOrEmpty(decimalLongitudeValue);
 
     // this was combined from checkUncertainty and possiblyRecalculateUncertainty
     // we know we have either a grid ref or grid size so we can compute uncertainty so...
@@ -90,28 +89,27 @@ public class NBNLocationInterpreter {
     // we have a grid ref and the lat lon is centroid of the grid
 
     if (!hasSuppliedLatLon
-            || Strings.isNullOrEmpty(coordinateUncertaintyValue)
-            || (!Strings.isNullOrEmpty(gridReferenceValue) &&
-            GridUtil.isCentroid(
-                    Double.valueOf(decimalLongitudeValue),
-                    Double.valueOf(decimalLatitudeValue),
-                    gridReferenceValue))) {
+        || Strings.isNullOrEmpty(coordinateUncertaintyValue)
+        || (!Strings.isNullOrEmpty(gridReferenceValue)
+            && GridUtil.isCentroid(
+                Double.valueOf(decimalLongitudeValue),
+                Double.valueOf(decimalLatitudeValue),
+                gridReferenceValue))) {
 
-      setCoordinateUncertaintyFromOSGrid(er,lr);
-  }
+      setCoordinateUncertaintyFromOSGrid(er, lr);
+    }
   }
 
   private static void setCoordinateUncertaintyFromOSGrid(ExtendedRecord er, LocationRecord lr) {
     String gridReferenceValue = extractNullAwareValue(er, OSGridTerm.gridReference);
-    String gridSizeInMetersValue =
-            extractNullAwareValue(er, OSGridTerm.gridSizeInMeters);
+    String gridSizeInMetersValue = extractNullAwareValue(er, OSGridTerm.gridSizeInMeters);
 
     // todo - should we flag if these fail?  Internally this logs and error but this is not going to
     // be very helpful
 
     Integer gridSizeInMeters = null;
 
-    if(!Strings.isNullOrEmpty(gridReferenceValue)) {
+    if (!Strings.isNullOrEmpty(gridReferenceValue)) {
       gridSizeInMeters = GridUtil.getGridSizeInMeters(gridReferenceValue).getOrElse(null);
     } else {
       gridSizeInMeters = Ints.tryParse(gridSizeInMetersValue);
@@ -129,5 +127,4 @@ public class NBNLocationInterpreter {
     locationIssues.remove(issueName);
     lr.getIssues().setIssueList(locationIssues);
   }
-
 }

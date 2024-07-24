@@ -8,10 +8,9 @@ import au.org.ala.sds.api.SensitivityReport;
 import au.org.ala.sds.api.SpeciesCheck;
 import au.org.ala.sds.generalise.FieldAccessor;
 import au.org.ala.sds.generalise.Generalisation;
+import com.google.common.base.Strings;
 import java.util.*;
 import java.util.function.Function;
-
-import com.google.common.base.Strings;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,13 +48,12 @@ public class SensitiveDataInterpreter {
   protected static final FieldAccessor DECIMAL_LONGITUDE =
       new FieldAccessor(DwcTerm.decimalLongitude);
 
-  protected static final FieldAccessor GRID_REFERENCE =
-          new FieldAccessor(OSGridTerm.gridReference);
+  protected static final FieldAccessor GRID_REFERENCE = new FieldAccessor(OSGridTerm.gridReference);
   protected static final FieldAccessor GRID_SIZE_IN_METERS =
-          new FieldAccessor(OSGridTerm.gridSizeInMeters);
+      new FieldAccessor(OSGridTerm.gridSizeInMeters);
 
   protected static final FieldAccessor COORDINATE_UNCERTAINTY =
-          new FieldAccessor(DwcTerm.coordinateUncertaintyInMeters);
+      new FieldAccessor(DwcTerm.coordinateUncertaintyInMeters);
 
   protected static final double UNALTERED = 0.000001;
 
@@ -466,37 +464,46 @@ public class SensitiveDataInterpreter {
       sr.setGeneralisationInMetres(
           GENERALISATION_IN_METRES.get(result).getValue().map(Object::toString).orElse(null));
 
-
-      boolean latLonIsCentroidOfAlreadyGeneralisedGridReference = latLonIsCentroidOfAlreadyGeneralisedGridReference(properties, original, result, report, sr);
-      boolean uncertaintyGridIsAlreadyGeneralised = isUncertaintyGridAlreadyGeneralised(properties, original, result);
-      if(latLonIsCentroidOfAlreadyGeneralisedGridReference) {
-        removeGeneralisations(Arrays.asList(
+      boolean latLonIsCentroidOfAlreadyGeneralisedGridReference =
+          latLonIsCentroidOfAlreadyGeneralisedGridReference(
+              properties, original, result, report, sr);
+      boolean uncertaintyGridIsAlreadyGeneralised =
+          isUncertaintyGridAlreadyGeneralised(properties, original, result);
+      if (latLonIsCentroidOfAlreadyGeneralisedGridReference) {
+        removeGeneralisations(
+            Arrays.asList(
                 DwcTerm.decimalLatitude,
                 DwcTerm.decimalLongitude,
                 DwcTerm.coordinateUncertaintyInMeters,
                 OSGridTerm.gridReference,
                 OSGridTerm.gridSizeInMeters,
                 TERM_FACTORY.findTerm("easting"),
-                TERM_FACTORY.findTerm("northing")), original, result);
-      } else if (uncertaintyGridIsAlreadyGeneralised){
-        //the uncertainty is ok so grid ref will be fine but the lat lon may be more granular
-        removeGeneralisations(Arrays.asList(
+                TERM_FACTORY.findTerm("northing")),
+            original,
+            result);
+      } else if (uncertaintyGridIsAlreadyGeneralised) {
+        // the uncertainty is ok so grid ref will be fine but the lat lon may be more granular
+        removeGeneralisations(
+            Arrays.asList(
                 DwcTerm.coordinateUncertaintyInMeters,
                 OSGridTerm.gridReference,
                 OSGridTerm.gridSizeInMeters,
                 TERM_FACTORY.findTerm("easting"),
-                TERM_FACTORY.findTerm("northing")), original, result);
-      } else
-      {
+                TERM_FACTORY.findTerm("northing")),
+            original,
+            result);
+      } else {
         convertGeneralisedUncertaintyToGrid(properties, original, result);
-        generaliseOSGridReference(properties, original , result);
+        generaliseOSGridReference(properties, original, result);
       }
-
 
       sr.setOriginal(toStringMap(original));
       sr.setAltered(toStringMap(result));
       // We already have notes about generalisations
-      boolean alreadyGeneralised = !existingGeneralisations.isEmpty() || latLonIsCentroidOfAlreadyGeneralisedGridReference || uncertaintyGridIsAlreadyGeneralised;
+      boolean alreadyGeneralised =
+          !existingGeneralisations.isEmpty()
+              || latLonIsCentroidOfAlreadyGeneralisedGridReference
+              || uncertaintyGridIsAlreadyGeneralised;
       // The message contains a note about already generalising things
       if (sr.getDataGeneralizations() != null) {
         alreadyGeneralised =
@@ -637,98 +644,138 @@ public class SensitiveDataInterpreter {
       SensitivityReport report,
       ALASensitivityRecord sr) {
 
-
     String originalGridReference = GRID_REFERENCE.get(properties).getValue().orElse(null);
 
-    if(!Strings.isNullOrEmpty(originalGridReference)) {
+    if (!Strings.isNullOrEmpty(originalGridReference)) {
 
-      Optional<String> generalisationInMetres = GENERALISATION_IN_METRES.get(updated).getValue().map(Object::toString);
+      Optional<String> generalisationInMetres =
+          GENERALISATION_IN_METRES.get(updated).getValue().map(Object::toString);
       Optional<Double> generalisationInMetresGrid = Optional.empty();
 
-      if(generalisationInMetres.isPresent() && !generalisationInMetres.get().isEmpty())
-      {
-         generalisationInMetresGrid = Optional.of(OSGridHelpers.GridSizeToGridUncertainty(generalisationInMetres.get())).map(SensitiveDataInterpreter::parseDouble);
+      if (generalisationInMetres.isPresent() && !generalisationInMetres.get().isEmpty()) {
+        generalisationInMetresGrid =
+            Optional.of(OSGridHelpers.GridSizeToGridUncertainty(generalisationInMetres.get()))
+                .map(SensitiveDataInterpreter::parseDouble);
       }
 
-      double originalUncertainty = COORDINATE_UNCERTAINTY.get(properties).getValue().map(SensitiveDataInterpreter::parseDouble).orElse(0.);
-      Optional<Double> originalLat = DECIMAL_LATITUDE.get(properties).getValue().map(SensitiveDataInterpreter::parseDouble);
-      Optional<Double> originalLong = DECIMAL_LONGITUDE.get(properties).getValue().map(SensitiveDataInterpreter::parseDouble);
+      double originalUncertainty =
+          COORDINATE_UNCERTAINTY
+              .get(properties)
+              .getValue()
+              .map(SensitiveDataInterpreter::parseDouble)
+              .orElse(0.);
+      Optional<Double> originalLat =
+          DECIMAL_LATITUDE.get(properties).getValue().map(SensitiveDataInterpreter::parseDouble);
+      Optional<Double> originalLong =
+          DECIMAL_LONGITUDE.get(properties).getValue().map(SensitiveDataInterpreter::parseDouble);
 
-      //Check to see if already generalised
+      // Check to see if already generalised
       boolean originalLatLonAndGridReferenceAlreadyGeneralised =
-              generalisationInMetresGrid.isPresent() &&
-              originalLat.isPresent() &&
-              originalLong.isPresent() &&
-              //todo - This assumes that the originalUncertainty was grid based
-              originalUncertainty >= generalisationInMetresGrid.get() &&
-              GridUtil.isCentroid(originalLong.get(), originalLat.get(), originalGridReference);
+          generalisationInMetresGrid.isPresent()
+              && originalLat.isPresent()
+              && originalLong.isPresent()
+              &&
+              // todo - This assumes that the originalUncertainty was grid based
+              originalUncertainty >= generalisationInMetresGrid.get()
+              && GridUtil.isCentroid(originalLong.get(), originalLat.get(), originalGridReference);
 
-      return  originalLatLonAndGridReferenceAlreadyGeneralised;
+      return originalLatLonAndGridReferenceAlreadyGeneralised;
     }
     return false;
   }
 
+  private static boolean isUncertaintyGridAlreadyGeneralised(
+      Map<String, String> properties, Map<String, Object> original, Map<String, Object> updated) {
 
-  private static boolean isUncertaintyGridAlreadyGeneralised(Map<String,String> properties, Map<String,Object> original, Map<String,Object> updated) {
-
-    Optional<String> generalisationToApplyInMetres = GENERALISATION_TO_APPLY_IN_METRES.get(updated).getValue().map(Object::toString);
+    Optional<String> generalisationToApplyInMetres =
+        GENERALISATION_TO_APPLY_IN_METRES.get(updated).getValue().map(Object::toString);
     Optional<String> generalisationToApplyInMetresGrid = Optional.empty();
 
-    if(generalisationToApplyInMetres.isPresent() && !generalisationToApplyInMetres.get().isEmpty())
-    {
-      generalisationToApplyInMetresGrid = Optional.of(OSGridHelpers.GridSizeToGridUncertainty(generalisationToApplyInMetres.get().toString()));
+    if (generalisationToApplyInMetres.isPresent()
+        && !generalisationToApplyInMetres.get().isEmpty()) {
+      generalisationToApplyInMetresGrid =
+          Optional.of(
+              OSGridHelpers.GridSizeToGridUncertainty(
+                  generalisationToApplyInMetres.get().toString()));
     }
 
-    double originalUncertainty = COORDINATE_UNCERTAINTY.get(properties).getValue().map(SensitiveDataInterpreter::parseDouble).orElse(0.);
+    double originalUncertainty =
+        COORDINATE_UNCERTAINTY
+            .get(properties)
+            .getValue()
+            .map(SensitiveDataInterpreter::parseDouble)
+            .orElse(0.);
 
-    //todo - This assumes that the originalUncertainty was grid based
+    // todo - This assumes that the originalUncertainty was grid based
     return originalUncertainty >= Double.valueOf(generalisationToApplyInMetresGrid.get());
   }
 
-  private static void generaliseOSGridReference(Map<String,String> properties, Map<String,Object> original, Map<String,Object> updated) {
+  private static void generaliseOSGridReference(
+      Map<String, String> properties, Map<String, Object> original, Map<String, Object> updated) {
 
-    Optional<String> generalisationToApplyInMetres = GENERALISATION_TO_APPLY_IN_METRES.get(updated).getValue().map(Object::toString);
+    Optional<String> generalisationToApplyInMetres =
+        GENERALISATION_TO_APPLY_IN_METRES.get(updated).getValue().map(Object::toString);
     String originalGridReference = GRID_REFERENCE.get(properties).getValue().orElse(null);
 
-    if(Strings.isNullOrEmpty(originalGridReference)) {
+    if (Strings.isNullOrEmpty(originalGridReference)) {
       return;
     }
 
-    String generalisedGridReference = GridUtil.convertReferenceToResolution(originalGridReference, generalisationToApplyInMetres.get()).getOrElse(null);
-    if(!Strings.isNullOrEmpty(generalisedGridReference)) {
+    String generalisedGridReference =
+        GridUtil.convertReferenceToResolution(
+                originalGridReference, generalisationToApplyInMetres.get())
+            .getOrElse(null);
+    if (!Strings.isNullOrEmpty(generalisedGridReference)) {
 
       GRID_REFERENCE.get(properties).set(Optional.of(generalisedGridReference), original, updated);
 
-      Optional<Integer> generalisedGridSizeInMeters = Optional.ofNullable(GridUtil.getGridSizeInMeters(generalisedGridReference).getOrElse(null));
-      if(generalisedGridSizeInMeters.isPresent()) {
-        GRID_SIZE_IN_METERS.get(properties).set(Optional.of(generalisedGridSizeInMeters.get().toString()), original, updated);
+      Optional<Integer> generalisedGridSizeInMeters =
+          Optional.ofNullable(
+              GridUtil.getGridSizeInMeters(generalisedGridReference).getOrElse(null));
+      if (generalisedGridSizeInMeters.isPresent()) {
+        GRID_SIZE_IN_METERS
+            .get(properties)
+            .set(Optional.of(generalisedGridSizeInMeters.get().toString()), original, updated);
       }
     }
   }
 
-  private static void convertGeneralisedUncertaintyToGrid(Map<String,String> properties, Map<String,Object> original, Map<String,Object> updated) {
-    double originalUncertainty = COORDINATE_UNCERTAINTY.get(properties).getValue().map(SensitiveDataInterpreter::parseDouble).orElse(0.);
+  private static void convertGeneralisedUncertaintyToGrid(
+      Map<String, String> properties, Map<String, Object> original, Map<String, Object> updated) {
+    double originalUncertainty =
+        COORDINATE_UNCERTAINTY
+            .get(properties)
+            .getValue()
+            .map(SensitiveDataInterpreter::parseDouble)
+            .orElse(0.);
 
-    Optional<String> generalisationInMetres = GENERALISATION_IN_METRES.get(updated).getValue().map(Object::toString);
+    Optional<String> generalisationInMetres =
+        GENERALISATION_IN_METRES.get(updated).getValue().map(Object::toString);
     Optional<Double> generalisationInMetresGrid = Optional.empty();
 
-    if(generalisationInMetres.isPresent() && !generalisationInMetres.get().isEmpty())
-    {
-      generalisationInMetresGrid = Optional.of(OSGridHelpers.GridSizeToGridUncertainty(generalisationInMetres.get())).map(SensitiveDataInterpreter::parseDouble);
+    if (generalisationInMetres.isPresent() && !generalisationInMetres.get().isEmpty()) {
+      generalisationInMetresGrid =
+          Optional.of(OSGridHelpers.GridSizeToGridUncertainty(generalisationInMetres.get()))
+              .map(SensitiveDataInterpreter::parseDouble);
 
-      //todo - This assumes that the originalUncertainty was grid based
-      if(generalisationInMetresGrid.isPresent() && originalUncertainty <= generalisationInMetresGrid.get()) {
-        COORDINATE_UNCERTAINTY.get(properties).set(Optional.of(generalisationInMetresGrid.get().toString()), original, updated);
+      // todo - This assumes that the originalUncertainty was grid based
+      if (generalisationInMetresGrid.isPresent()
+          && originalUncertainty <= generalisationInMetresGrid.get()) {
+        COORDINATE_UNCERTAINTY
+            .get(properties)
+            .set(Optional.of(generalisationInMetresGrid.get().toString()), original, updated);
       }
     }
 
-    String x= "";
+    String x = "";
   }
 
-  private static void removeGeneralisations(Collection<Term> terms, Map<String,Object> original, Map<String,Object> updated) {
-    terms.forEach(t -> {
-      if (updated.containsKey(t.qualifiedName())) updated.remove(t.qualifiedName());
-      if (updated.containsKey(t.qualifiedName())) updated.remove(t.qualifiedName());
-    });
+  private static void removeGeneralisations(
+      Collection<Term> terms, Map<String, Object> original, Map<String, Object> updated) {
+    terms.forEach(
+        t -> {
+          if (updated.containsKey(t.qualifiedName())) updated.remove(t.qualifiedName());
+          if (updated.containsKey(t.qualifiedName())) updated.remove(t.qualifiedName());
+        });
   }
 }

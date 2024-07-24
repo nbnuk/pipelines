@@ -423,11 +423,12 @@ public class IndexRecordTransform implements Serializable, IndexFields {
     // Verbatim (Raw) data
     Map<String, String> raw = er.getCoreTerms();
 
-    if(geospatialIssues.contains(NBNOccurrenceIssue.DECIMAL_LAT_LONG_CALCULATED_FROM_GRID_REF.name())) {
-      if(raw.containsKey(DwcTerm.decimalLatitude.qualifiedName())) {
+    if (geospatialIssues.contains(
+        NBNOccurrenceIssue.DECIMAL_LAT_LONG_CALCULATED_FROM_GRID_REF.name())) {
+      if (raw.containsKey(DwcTerm.decimalLatitude.qualifiedName())) {
         raw.remove(DwcTerm.decimalLatitude.qualifiedName());
       }
-      if(raw.containsKey(DwcTerm.decimalLongitude.qualifiedName())) {
+      if (raw.containsKey(DwcTerm.decimalLongitude.qualifiedName())) {
         raw.remove(DwcTerm.decimalLongitude.qualifiedName());
       }
     }
@@ -955,9 +956,9 @@ public class IndexRecordTransform implements Serializable, IndexFields {
                 .map(Field::name)
                 .collect(Collectors.toList()))
         .addAll(
-                OSGridRecord.getClassSchema().getFields().stream()
-                        .map(Field::name)
-                        .collect(Collectors.toList()))
+            OSGridRecord.getClassSchema().getFields().stream()
+                .map(Field::name)
+                .collect(Collectors.toList()))
         .add(DwcTerm.class_.simpleName())
         .add(DwcTerm.geodeticDatum.simpleName())
         .add(DwcTerm.associatedOccurrences.simpleName())
@@ -1246,10 +1247,12 @@ public class IndexRecordTransform implements Serializable, IndexFields {
     if (record.getClass() == OSGridRecord.class) {
       OSGridRecord osg = (OSGridRecord) record;
 
-      if(!Strings.isNullOrEmpty(osg.getGridReference())) {
-        Map<String,String> gridAtResolutions =  uk.org.nbn.util.GridUtil.getGridRefAsResolutions(osg.getGridReference());
-        gridAtResolutions.entrySet().forEach(r -> builder.getStrings().put(r.getKey(), r.getValue()));
-
+      if (!Strings.isNullOrEmpty(osg.getGridReference())) {
+        Map<String, String> gridAtResolutions =
+            uk.org.nbn.util.GridUtil.getGridRefAsResolutions(osg.getGridReference());
+        gridAtResolutions
+            .entrySet()
+            .forEach(r -> builder.getStrings().put(r.getKey(), r.getValue()));
       }
     }
   }

@@ -47,7 +47,6 @@ import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.Schema;
-import org.apache.beam.sdk.transforms.join.KeyedPCollectionTuple;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.gbif.api.model.pipelines.StepType;
@@ -242,7 +241,7 @@ public class ALAVerbatimToInterpretedPipeline {
         OccurrenceExtensionTransform.create().counterFn(incMetricFn);
 
     OSGridExtensionTransform osGridExtensionTransform =
-            OSGridExtensionTransform.create().counterFn(incMetricFn);
+        OSGridExtensionTransform.create().counterFn(incMetricFn);
 
     // Collectory metadata
     ALAMetadataTransform metadataTransform =
@@ -314,10 +313,10 @@ public class ALAVerbatimToInterpretedPipeline {
             .create();
 
     uk.org.nbn.pipelines.transforms.OSGridTransform osGridTransform =
-            uk.org.nbn.pipelines.transforms.OSGridTransform.builder()
-                    .erTag(verbatimTransform.getTag())
-                    .lrTag(locationTransform.getTag())
-                    .create();
+        uk.org.nbn.pipelines.transforms.OSGridTransform.builder()
+            .erTag(verbatimTransform.getTag())
+            .lrTag(locationTransform.getTag())
+            .create();
 
     basicTransform.setup();
     temporalTransform.setup();
@@ -344,8 +343,8 @@ public class ALAVerbatimToInterpretedPipeline {
             createWriter(options, LocationRecord.getClassSchema(), locationTransform, id);
         SyncDataFileWriter<ALATaxonRecord> alaTaxonWriter =
             createWriter(options, ALATaxonRecord.getClassSchema(), alaTaxonomyTransform, id);
-         SyncDataFileWriter<OSGridRecord> osgridWriter =
-                 createWriter(options, OSGridRecord.getClassSchema(), osGridTransform, id);
+        SyncDataFileWriter<OSGridRecord> osgridWriter =
+            createWriter(options, OSGridRecord.getClassSchema(), osGridTransform, id);
         SyncDataFileWriter<ALAAttributionRecord> alaAttributionWriter =
             createWriter(
                 options, ALAAttributionRecord.getClassSchema(), alaAttributionTransform, id)) {
@@ -373,7 +372,7 @@ public class ALAVerbatimToInterpretedPipeline {
             temporalTransform.processElement(er).ifPresent(temporalWriter::append);
             multimediaTransform.processElement(er).ifPresent(multimediaWriter::append);
             // ALA specific
-            Optional<LocationRecord> lr =  locationTransform.processElement(er);
+            Optional<LocationRecord> lr = locationTransform.processElement(er);
             lr.ifPresent(locationWriter::append);
 
             osGridTransform.processElement(er, lr.get()).ifPresent(osgridWriter::append);

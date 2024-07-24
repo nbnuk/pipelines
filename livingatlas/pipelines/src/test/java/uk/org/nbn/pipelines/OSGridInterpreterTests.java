@@ -15,8 +15,8 @@ import org.gbif.pipelines.io.avro.OSGridRecord;
 import org.junit.Assert;
 import org.junit.Test;
 import uk.org.nbn.pipelines.interpreters.OSGridInterpreter;
-import uk.org.nbn.term.OSGridTerm;
 import uk.org.nbn.pipelines.vocabulary.NBNOccurrenceIssue;
+import uk.org.nbn.term.OSGridTerm;
 
 public class OSGridInterpreterTests extends OSGridTestBase {
 

@@ -143,8 +143,8 @@ public class ALAInterpretedToSensitivePipeline {
             .apply("Map Taxon to KV", alaTaxonomyTransform.toKv());
 
     PCollection<KV<String, OSGridRecord>> inputOSGridCollection =
-            p.apply("Read Taxon", osGridTransform.read(inputPathFn))
-                    .apply("Map Taxon to KV", osGridTransform.toKv());
+        p.apply("Read Taxon", osGridTransform.read(inputPathFn))
+            .apply("Map Taxon to KV", osGridTransform.toKv());
 
     if (ArchiveUtils.isEventCore(options)) {
 

@@ -71,10 +71,7 @@ public enum NBNOccurrenceIssue implements InterpretationRemark {
     private TermsGroup() {}
 
     static {
-      OSGRID_TERMS =
-          new Term[] {
-            OSGridTerm.gridReference, OSGridTerm.gridSizeInMeters
-          };
+      OSGRID_TERMS = new Term[] {OSGridTerm.gridReference, OSGridTerm.gridSizeInMeters};
     }
   }
 }

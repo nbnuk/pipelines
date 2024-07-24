@@ -1,28 +1,23 @@
 package uk.org.nbn.pipelines.interpreters;
 
-import static org.gbif.api.vocabulary.OccurrenceIssue.COORDINATE_UNCERTAINTY_METERS_INVALID;
 import static org.gbif.pipelines.core.utils.ModelUtils.*;
 import static uk.org.nbn.util.NBNModelUtils.getListFromString;
 import static uk.org.nbn.util.ScalaToJavaUtil.scalaOptionToString;
 
 import com.google.common.base.Strings;
-import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Ints;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.elasticsearch.common.collect.Tuple;
-import org.gbif.common.parsers.core.ParseResult;
-import org.gbif.common.parsers.geospatial.MeterRangeParser;
 import org.gbif.dwc.terms.DwcTerm;
 import org.gbif.pipelines.io.avro.ExtendedRecord;
 import org.gbif.pipelines.io.avro.LocationRecord;
 import org.gbif.pipelines.io.avro.OSGridRecord;
+import uk.org.nbn.pipelines.vocabulary.NBNOccurrenceIssue;
 import uk.org.nbn.term.OSGridTerm;
 import uk.org.nbn.util.GISPoint;
-import uk.org.nbn.util.GridRef;
 import uk.org.nbn.util.GridUtil;
-import uk.org.nbn.pipelines.vocabulary.NBNOccurrenceIssue;
 
 public class OSGridInterpreter {
 
@@ -67,10 +62,8 @@ public class OSGridInterpreter {
 
     ExtendedRecord extendedRecord = source.v1();
 
-    String gridReference =
-            extractNullAwareValue(extendedRecord, OSGridTerm.gridReference);
-    String gridSizeInMeters =
-            extractNullAwareValue(extendedRecord, OSGridTerm.gridSizeInMeters);
+    String gridReference = extractNullAwareValue(extendedRecord, OSGridTerm.gridReference);
+    String gridSizeInMeters = extractNullAwareValue(extendedRecord, OSGridTerm.gridSizeInMeters);
 
     if (osGridRecord.getGridSizeInMeters() == null) {
       if (!Strings.isNullOrEmpty(osGridRecord.getGridReference())) {
@@ -104,8 +97,7 @@ public class OSGridInterpreter {
       Tuple<ExtendedRecord, LocationRecord> source, OSGridRecord osGridRecord) {
 
     ExtendedRecord extendedRecord = source.v1();
-    String gridReferenceIssues =
-            extractNullAwareValue(extendedRecord, OSGridTerm.issues);
+    String gridReferenceIssues = extractNullAwareValue(extendedRecord, OSGridTerm.issues);
 
     if (!Strings.isNullOrEmpty(gridReferenceIssues)) {
       getListFromString(gridReferenceIssues).stream()
@@ -131,8 +123,7 @@ public class OSGridInterpreter {
 
     ExtendedRecord extendedRecord = source.v1();
 
-    String rawGridReference =
-            extractNullAwareValue(extendedRecord, OSGridTerm.gridReference);
+    String rawGridReference = extractNullAwareValue(extendedRecord, OSGridTerm.gridReference);
 
     if (Strings.isNullOrEmpty(rawGridReference)) {
       return;
@@ -228,8 +219,7 @@ public class OSGridInterpreter {
   }
 
   private static boolean suppliedWithGridReference(ExtendedRecord extendedRecord) {
-    return !Strings.isNullOrEmpty(
-            extractNullAwareValue(extendedRecord, OSGridTerm.gridReference));
+    return !Strings.isNullOrEmpty(extractNullAwareValue(extendedRecord, OSGridTerm.gridReference));
   }
 
   private static boolean suppliedWithLatLon(
@@ -237,27 +227,29 @@ public class OSGridInterpreter {
 
     boolean rawLatLonWasComputedFromOSGrid =
         osGridRecord
-                .getIssues()
-                .getIssueList()
-                .contains(NBNOccurrenceIssue.DECIMAL_LAT_LONG_CALCULATED_FROM_GRID_REF.name());
+            .getIssues()
+            .getIssueList()
+            .contains(NBNOccurrenceIssue.DECIMAL_LAT_LONG_CALCULATED_FROM_GRID_REF.name());
 
     return !rawLatLonWasComputedFromOSGrid
         && !Strings.isNullOrEmpty(extractNullAwareValue(extendedRecord, DwcTerm.decimalLatitude))
         && !Strings.isNullOrEmpty(extractNullAwareValue(extendedRecord, DwcTerm.decimalLongitude));
   }
 
-  public static void addEastingAndNorthing(Tuple<ExtendedRecord, LocationRecord> source, OSGridRecord osGridRecord) {
-      //In biocache-store only records grid reference produces easting and northing.
-      //todo -should we be using the processed value
-      ExtendedRecord extendedRecord = source.v1();
-      if(suppliedWithGridReference(extendedRecord)) {
-        GISPoint gisPoint = GridUtil.processGridReference(osGridRecord.getGridReference()).getOrElse(null);
+  public static void addEastingAndNorthing(
+      Tuple<ExtendedRecord, LocationRecord> source, OSGridRecord osGridRecord) {
+    // In biocache-store only records grid reference produces easting and northing.
+    // todo -should we be using the processed value
+    ExtendedRecord extendedRecord = source.v1();
+    if (suppliedWithGridReference(extendedRecord)) {
+      GISPoint gisPoint =
+          GridUtil.processGridReference(osGridRecord.getGridReference()).getOrElse(null);
 
-        if(gisPoint != null) {
-          osGridRecord.setEasting(Ints.tryParse(gisPoint.easting()));
-          osGridRecord.setNorthing(Ints.tryParse(gisPoint.northing()));
-        }
+      if (gisPoint != null) {
+        osGridRecord.setEasting(Ints.tryParse(gisPoint.easting()));
+        osGridRecord.setNorthing(Ints.tryParse(gisPoint.northing()));
       }
+    }
   }
 
   public static void setCoreId(ExtendedRecord er, OSGridRecord e) {

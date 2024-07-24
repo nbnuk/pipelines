@@ -153,12 +153,18 @@ public class ALASensitiveDataRecordTransform
       generalisations = conservationService.getGeneralisations();
       sensitiveFields = null;
 
-      //todo - these should be added to the sds service
-      Collection<Term> additionalTermsToClear = Arrays.asList(OSGridTerm.gridReference, OSGridTerm.gridSizeInMeters);
+      // todo - these should be added to the sds service
+      Collection<Term> additionalTermsToClear =
+          Arrays.asList(OSGridTerm.gridReference, OSGridTerm.gridSizeInMeters);
 
-      //remove any that have conflicting simple name such as http://unkown.org/gridReference
-      //generalisations.removeIf(g -> g.getFields().stream().anyMatch(f -> additionalTermsToClear.stream().anyMatch( atc -> atc.simpleName().equals(f.getField().simpleName()))));
-      generalisations.addAll(additionalTermsToClear.stream().map(t -> new ClearGeneralisation(t)).collect(Collectors.toList()));
+      // remove any that have conflicting simple name such as http://unkown.org/gridReference
+      // generalisations.removeIf(g -> g.getFields().stream().anyMatch(f ->
+      // additionalTermsToClear.stream().anyMatch( atc ->
+      // atc.simpleName().equals(f.getField().simpleName()))));
+      generalisations.addAll(
+          additionalTermsToClear.stream()
+              .map(t -> new ClearGeneralisation(t))
+              .collect(Collectors.toList()));
     }
     if (sensitiveFields == null && generalisations != null) {
       log.debug("Building sensitive field list");
@@ -229,8 +235,9 @@ public class ALASensitiveDataRecordTransform
     SensitiveDataInterpreter.constructFields(sensitiveFields, properties, ier);
     SensitiveDataInterpreter.constructFields(sensitiveFields, properties, osgr);
 
-    //todo - just for debugging
-    properties.put(DwcTerm.occurrenceID.qualifiedName(), extractNullAwareValue(ier,DwcTerm.occurrenceID));
+    // todo - just for debugging
+    properties.put(
+        DwcTerm.occurrenceID.qualifiedName(), extractNullAwareValue(ier, DwcTerm.occurrenceID));
 
     if (SensitiveDataInterpreter.sourceQualityChecks(properties, sr)) {
       SensitiveDataInterpreter.sensitiveDataInterpreter(
