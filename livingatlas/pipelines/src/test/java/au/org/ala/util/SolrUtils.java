@@ -163,8 +163,7 @@ public class SolrUtils {
 
   public static Optional<SolrDocument> getRecord(String indexName, String queryUrl)
       throws Exception {
-    CloudSolrClient solr = new CloudSolrClient.Builder(getZkHosts(), Optional.empty()).build();
-    solr.setDefaultCollection(indexName);
+    CloudSolrClient solr = getCollectionClient(indexName);
 
     SolrQuery params = new SolrQuery();
     params.setQuery(queryUrl);
@@ -182,8 +181,7 @@ public class SolrUtils {
   }
 
   public static Long getRecordCount(String indexName, String queryUrl) throws Exception {
-    CloudSolrClient solr = new CloudSolrClient.Builder(getZkHosts(), Optional.empty()).build();
-    solr.setDefaultCollection(indexName);
+    CloudSolrClient solr = getCollectionClient(indexName);
 
     SolrQuery params = new SolrQuery();
     params.setQuery(queryUrl);
@@ -196,9 +194,28 @@ public class SolrUtils {
     return results.getNumFound();
   }
 
+  static Map<String, CloudSolrClient> clients = new HashMap<>();
+
+  public static CloudSolrClient getCollectionClient(String indexName) throws Exception {
+
+    clients.computeIfAbsent(indexName, (String key) -> {
+
+        CloudSolrClient solr = null;
+        try {
+            solr = new CloudSolrClient.Builder(getZkHosts(), Optional.empty()).build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        solr.setDefaultCollection(key);
+      return solr;
+    });
+
+    return  clients.get(indexName);
+  }
+
   public static SolrDocumentList getRecords(String indexName, String queryUrl) throws Exception {
-    CloudSolrClient solr = new CloudSolrClient.Builder(getZkHosts(), Optional.empty()).build();
-    solr.setDefaultCollection(indexName);
+
+    CloudSolrClient solr = getCollectionClient(indexName);
 
     SolrQuery params = new SolrQuery();
     params.setQuery(queryUrl);

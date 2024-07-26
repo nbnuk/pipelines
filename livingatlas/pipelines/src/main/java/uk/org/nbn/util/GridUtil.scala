@@ -4,10 +4,11 @@ import com.google.common.cache.CacheBuilder
 import org.apache.commons.lang.StringUtils
 import org.geotools.referencing.CRS
 import org.slf4j.LoggerFactory
+import uk.org.nbn.pipelines.vocabulary.NBNOccurrenceIssue
 
 import java.util
-import scala.collection.JavaConversions
-import scala.collection.mutable.ArrayBuffer
+import scala.collection.{JavaConversions, mutable}
+import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 
 
 
@@ -860,7 +861,7 @@ object GridUtil {
     */
   //TODO KR what to do with assertions
 //  def processNorthingEastingZone(verbatimSRS: String, easting: String, northing: String, zone: String,
-//                                         assertions: ArrayBuffer[QualityAssertion]): Option[GISPoint] = {
+//                                         assertions: ListBuffer[String]): Option[GISPoint] = {
 //
 //    // Need a datum and a zone to get an epsg code for transforming easting/northing values
 //    val epsgCodeKey = {
@@ -874,21 +875,19 @@ object GridUtil {
 //
 //    if (zoneEpsgCodesMap.contains(epsgCodeKey)) {
 //      val crsEpsgCode = zoneEpsgCodesMap(epsgCodeKey)
-//      val eastingAsDouble = easting.toDoubleWithOption
-//      val northingAsDouble = northing.toDoubleWithOption
+//      val eastingAsDouble = new StringHelper(easting).toDoubleWithOption
+//      val northingAsDouble = new StringHelper(northing).toDoubleWithOption
 //
 //      if (!eastingAsDouble.isEmpty && !northingAsDouble.isEmpty) {
 //        // Always round to 5 decimal places as easting/northing values are in metres and 0.00001 degree is approximately equal to 1m.
 //        val reprojectedCoords = GISUtil.reprojectCoordinatesToWGS84(eastingAsDouble.get, northingAsDouble.get, crsEpsgCode, 5)
 //        if (reprojectedCoords.isEmpty) {
-//          assertions += QualityAssertion(DECIMAL_LAT_LONG_CALCULATION_FROM_EASTING_NORTHING_FAILED,
-//            "Transformation of verbatim easting and northing to WGS84 failed")
+//          assertions.add(NBNOccurrenceIssue.DECIMAL_LAT_LONG_CALCULATION_FROM_EASTING_NORTHING_FAILED.name())
 //          None
 //        } else {
 //          //lat and long from easting and northing did NOT fail:
-//          assertions += QualityAssertion(DECIMAL_LAT_LONG_CALCULATION_FROM_EASTING_NORTHING_FAILED, PASSED)
-//          assertions += QualityAssertion(DECIMAL_LAT_LONG_CALCULATED_FROM_EASTING_NORTHING,
-//            "Decimal latitude and longitude were calculated using easting, northing and zone.")
+//          //assertions += QualityAssertion(DECIMAL_LAT_LONG_CALCULATION_FROM_EASTING_NORTHING_FAILED, PASSED)
+//          assertions.add(NBNOccurrenceIssue.DECIMAL_LAT_LONG_CALCULATED_FROM_EASTING_NORTHING.name())
 //          val (reprojectedLatitude, reprojectedLongitude) = reprojectedCoords.get
 //          Some(GISPoint(reprojectedLatitude, reprojectedLongitude, GISUtil.WGS84_EPSG_Code, null))
 //        }
@@ -897,11 +896,9 @@ object GridUtil {
 //      }
 //    } else {
 //      if (verbatimSRS == null) {
-//        assertions += QualityAssertion(DECIMAL_LAT_LONG_CALCULATION_FROM_EASTING_NORTHING_FAILED,
-//          "Unrecognized zone GDA94 / MGA zone " + zone)
+//        assertions.add(NBNOccurrenceIssue.DECIMAL_LAT_LONG_CALCULATION_FROM_EASTING_NORTHING_UNRECOGNISED_GDA94_ZONE.name())
 //      } else {
-//        assertions += QualityAssertion(DECIMAL_LAT_LONG_CALCULATION_FROM_EASTING_NORTHING_FAILED,
-//          "Unrecognized zone " + verbatimSRS + " / zone " + zone)
+//        assertions.add(NBNOccurrenceIssue.DECIMAL_LAT_LONG_CALCULATION_FROM_EASTING_NORTHING_UNRECOGNISED_VERBATIMSRS_ZONE.name())
 //      }
 //      None
 //    }

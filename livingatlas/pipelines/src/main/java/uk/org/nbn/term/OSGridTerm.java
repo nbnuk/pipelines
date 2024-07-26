@@ -6,9 +6,6 @@ import org.gbif.dwc.terms.Term;
 /** Set of terms in use by seedbank */
 public enum OSGridTerm implements Term {
   gridReference,
-  easting,
-  northing,
-  zone,
   gridSizeInMeters,
   issues;
   private static final URI NS_URI = URI.create("http://nbn.org.uk/dwc/terms/osgrid/");

@@ -47,6 +47,7 @@ import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.Schema;
+import org.apache.beam.sdk.transforms.join.KeyedPCollectionTuple;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.gbif.api.model.pipelines.StepType;
@@ -75,6 +76,7 @@ import org.gbif.pipelines.io.avro.ExtendedRecord;
 import org.gbif.pipelines.io.avro.LocationRecord;
 import org.gbif.pipelines.io.avro.MeasurementOrFactRecord;
 import org.gbif.pipelines.io.avro.MultimediaRecord;
+import org.gbif.pipelines.io.avro.OSGridRecord;
 import org.gbif.pipelines.io.avro.TemporalRecord;
 import org.gbif.pipelines.transforms.Transform;
 import org.gbif.pipelines.transforms.core.VerbatimTransform;
@@ -82,6 +84,7 @@ import org.gbif.pipelines.transforms.extension.MeasurementOrFactTransform;
 import org.gbif.pipelines.transforms.extension.MultimediaTransform;
 import org.gbif.pipelines.transforms.java.OccurrenceExtensionTransform;
 import org.slf4j.MDC;
+import uk.org.nbn.pipelines.transforms.java.OSGridExtensionTransform;
 
 /**
  * WARNING - this is not suitable for use for archives over 500k records due to in-memory cache use.
@@ -238,6 +241,9 @@ public class ALAVerbatimToInterpretedPipeline {
     OccurrenceExtensionTransform occExtensionTransform =
         OccurrenceExtensionTransform.create().counterFn(incMetricFn);
 
+    OSGridExtensionTransform osGridExtensionTransform =
+            OSGridExtensionTransform.create().counterFn(incMetricFn);
+
     // Collectory metadata
     ALAMetadataTransform metadataTransform =
         ALAMetadataTransform.builder()
@@ -307,12 +313,19 @@ public class ALAVerbatimToInterpretedPipeline {
             .dataResourceKvStoreSupplier(ALAAttributionKVStoreFactory.getInstanceSupplier(config))
             .create();
 
+    uk.org.nbn.pipelines.transforms.OSGridTransform osGridTransform =
+            uk.org.nbn.pipelines.transforms.OSGridTransform.builder()
+                    .erTag(verbatimTransform.getTag())
+                    .lrTag(locationTransform.getTag())
+                    .create();
+
     basicTransform.setup();
     temporalTransform.setup();
     locationTransform.setup();
     alaTaxonomyTransform.setup();
     alaAttributionTransform.setup();
     multimediaTransform.setup();
+    osGridTransform.setup();
 
     log.info("Creating writers");
     try (SyncDataFileWriter<ExtendedRecord> verbatimWriter =
@@ -331,6 +344,8 @@ public class ALAVerbatimToInterpretedPipeline {
             createWriter(options, LocationRecord.getClassSchema(), locationTransform, id);
         SyncDataFileWriter<ALATaxonRecord> alaTaxonWriter =
             createWriter(options, ALATaxonRecord.getClassSchema(), alaTaxonomyTransform, id);
+         SyncDataFileWriter<OSGridRecord> osgridWriter =
+                 createWriter(options, OSGridRecord.getClassSchema(), osGridTransform, id);
         SyncDataFileWriter<ALAAttributionRecord> alaAttributionWriter =
             createWriter(
                 options, ALAAttributionRecord.getClassSchema(), alaAttributionTransform, id)) {
@@ -344,6 +359,7 @@ public class ALAVerbatimToInterpretedPipeline {
 
       log.info("Reading DwcA - extension transform");
       Map<String, ExtendedRecord> erExtMap = occExtensionTransform.transform(erMap);
+      erExtMap = osGridExtensionTransform.transform(erExtMap);
       alaDefaultValuesTransform.replaceDefaultValues(erExtMap);
 
       boolean useSyncMode = options.getSyncThreshold() > erExtMap.size();
@@ -357,7 +373,11 @@ public class ALAVerbatimToInterpretedPipeline {
             temporalTransform.processElement(er).ifPresent(temporalWriter::append);
             multimediaTransform.processElement(er).ifPresent(multimediaWriter::append);
             // ALA specific
-            locationTransform.processElement(er).ifPresent(locationWriter::append);
+            Optional<LocationRecord> lr =  locationTransform.processElement(er);
+            lr.ifPresent(locationWriter::append);
+
+            osGridTransform.processElement(er, lr.get()).ifPresent(osgridWriter::append);
+
             alaTaxonomyTransform.processElement(er).ifPresent(alaTaxonWriter::append);
             alaAttributionTransform.processElement(er, mdr).ifPresent(alaAttributionWriter::append);
             measurementOrFactTransform

@@ -1,0 +1,19 @@
+/**
+ * Additional structure for GridReference model
+ */
+{
+  "name": "OSGridRecord",
+  "namespace": "org.gbif.pipelines.io.avro",
+  "type": "record",
+  "doc": "OS Grid details",
+  "fields": [
+    {"name": "id","type":"string" },
+    {"name": "coreId","type":["null","string"],"default": null },
+    {"name": "gridReference", "type":["null","string"], "default":null, "doc":"http://nbn.org.uk/dwc/terms/osgrid/gridReference"},
+    {"name": "gridSizeInMeters", "type": ["null","int"], "default":null, "doc":"http://nbn.org.uk/dwc/terms/osgrid/gridSizeInMeters"},
+    {"name": "easting", "type":["null","int"], "default":null, "doc":"http://nbn.org.uk/easting"},
+    {"name": "northing", "type":["null","int"], "default":null, "doc":"http://nbn.org.uk/northing"},
+    {"name": "created", "type": ["null", "long"], "default": null },
+    {"name": "issues", "type": "IssueRecord", "default":{}, "doc":"http://nbn.org.uk/dwc/terms/osgrid/issues"}
+  ]
+}

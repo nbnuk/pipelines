@@ -42,6 +42,7 @@ import org.gbif.pipelines.transforms.extension.MultimediaTransform;
 import org.slf4j.MDC;
 import uk.org.nbn.pipelines.io.avro.NBNAccessControlledRecord;
 import uk.org.nbn.pipelines.transforms.NBNAccessControlRecordTransform;
+import uk.org.nbn.pipelines.transforms.OSGridTransform;
 
 /**
  * Pipeline for creating an index of the records in AVRO.
@@ -149,6 +150,7 @@ public class IndexRecordPipeline {
         ALASensitiveDataRecordTransform.builder().create();
     NBNAccessControlRecordTransform nbnAccessControlRecordTransform =
         NBNAccessControlRecordTransform.builder().create();
+    OSGridTransform osGridTransform = OSGridTransform.builder().create();
 
     log.info("Adding step 3: Creating beam pipeline");
     PCollection<KV<String, ExtendedRecord>> verbatimCollection =
@@ -242,6 +244,10 @@ public class IndexRecordPipeline {
               .apply("Map access controlled data to KV", nbnAccessControlRecordTransform.toKv());
     }
 
+    PCollection<KV<String, OSGridRecord>> osGridDataCollection =
+        p.apply("Read access controlled data", osGridTransform.read(pathFn))
+            .apply("Map access controlled data to KV", osGridTransform.toKv());
+
     final TupleTag<ImageRecord> imageRecordTupleTag = new TupleTag<ImageRecord>() {};
     final TupleTag<TaxonProfile> speciesListsRecordTupleTag = new TupleTag<TaxonProfile>() {};
 
@@ -262,6 +268,7 @@ public class IndexRecordPipeline {
                 ? alaSensitiveDataRecordTransform.getTag()
                 : null,
             options.getApplyAccessControl() ? nbnAccessControlRecordTransform.getTag() : null,
+            osGridTransform.getTag(),
             EVENT_CORE_TAG,
             EVENT_LOCATION_TAG,
             EVENT_TEMPORAL_TAG,
@@ -310,6 +317,8 @@ public class IndexRecordPipeline {
     if (options.getApplyAccessControl()) {
       kpct = kpct.and(nbnAccessControlRecordTransform.getTag(), nbnAccessControlledDataCollection);
     }
+
+    kpct = kpct.and(osGridTransform.getTag(), osGridDataCollection);
 
     PCollection<IndexRecord> indexRecordCollection =
         kpct.apply("Grouping objects", CoGroupByKey.create())

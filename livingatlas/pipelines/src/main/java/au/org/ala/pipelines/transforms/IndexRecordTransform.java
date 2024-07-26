@@ -8,6 +8,7 @@ import static org.gbif.pipelines.common.PipelinesVariables.Metrics.AVRO_TO_JSON_
 import au.org.ala.pipelines.common.SolrFieldSchema;
 import au.org.ala.pipelines.interpreters.SensitiveDataInterpreter;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import java.io.Serializable;
 import java.text.DecimalFormat;
@@ -88,6 +89,8 @@ public class IndexRecordTransform implements Serializable, IndexFields {
 
   @NonNull private TupleTag<NBNAccessControlledRecord> accessControlledRecordTag;
 
+  @NonNull private TupleTag<OSGridRecord> osGridRecordTag;
+
   @NonNull private TupleTag<EventCoreRecord> eventCoreTag;
 
   @NonNull private TupleTag<LocationRecord> eventLocationTag;
@@ -120,6 +123,7 @@ public class IndexRecordTransform implements Serializable, IndexFields {
       TupleTag<TaxonProfile> tpTag,
       TupleTag<ALASensitivityRecord> srTag,
       TupleTag<NBNAccessControlledRecord> accessControlledRecordTag,
+      TupleTag<OSGridRecord> osGridRecordTag,
       TupleTag<EventCoreRecord> eventCoreTag,
       TupleTag<LocationRecord> eventLocationTag,
       TupleTag<TemporalRecord> eventTemporalTag,
@@ -146,6 +150,7 @@ public class IndexRecordTransform implements Serializable, IndexFields {
     t.lastLoadDate = lastLoadDate;
     t.lastLoadProcessed = lastLoadProcessed;
     t.accessControlledRecordTag = accessControlledRecordTag;
+    t.osGridRecordTag = osGridRecordTag;
     return t;
   }
 
@@ -168,6 +173,7 @@ public class IndexRecordTransform implements Serializable, IndexFields {
       TaxonProfile tpr,
       ALASensitivityRecord sr,
       NBNAccessControlledRecord accessControlledRecord,
+      OSGridRecord osGridRecord,
       MultimediaRecord mr,
       EventCoreRecord ecr,
       LocationRecord elr,
@@ -264,10 +270,10 @@ public class IndexRecordTransform implements Serializable, IndexFields {
       }
 
       // TODO HMJ - need to implement this
-      //      if (osgridRecord ! = null) {
-      //        osgridRecord = OSGridRecord.newBuilder(osgridRecord).build();
-      //        SensitiveDataInterpreter.applyAccessControls(accessControlledRecord, osgridRecord);
-      //      }
+      if (osGridRecord != null) {
+        osGridRecord = OSGridRecord.newBuilder(osGridRecord).build();
+        SensitiveDataInterpreter.applySensitivity(sensitiveTerms, sr, osGridRecord);
+      }
     }
 
     boolean isAccessControlled =
@@ -288,15 +294,15 @@ public class IndexRecordTransform implements Serializable, IndexFields {
       }
 
       // TODO HMJ - need to implement this
-      //      if (osgridRecord ! = null) {
-      //        osgridRecord = OSGridRecord.newBuilder(osgridRecord).build();
-      //        NBNAccessControlledDataInterpreter.applyAccessControls(accessControlledRecord,
-      // osgridRecord);
-      //      }
+      if (osGridRecord != null) {
+        osGridRecord = OSGridRecord.newBuilder(osGridRecord).build();
+        NBNAccessControlledDataInterpreter.applyAccessControls(
+            accessControlledRecord, osGridRecord);
+      }
     }
 
     // TODO HMJ addToIndexRecord(osgridRecord, indexRecord, skipKeys);
-
+    addToIndexRecord(osGridRecord, indexRecord, skipKeys);
     addToIndexRecord(lr, indexRecord, skipKeys);
     addToIndexRecord(tr, indexRecord, skipKeys);
     addToIndexRecord(br, indexRecord, skipKeys);
@@ -389,6 +395,7 @@ public class IndexRecordTransform implements Serializable, IndexFields {
     List<String> temporalIssues = tr.getIssues().getIssueList();
     List<String> taxonomicIssues = atxr.getIssues().getIssueList();
     List<String> geospatialIssues = lr.getIssues().getIssueList();
+    geospatialIssues.addAll(osGridRecord.getIssues().getIssueList());
 
     if (taxonomicIssues != null && !taxonomicIssues.isEmpty()) {
       indexRecord.getMultiValues().put(TAXONOMIC_ISSUES, temporalIssues);
@@ -946,6 +953,10 @@ public class IndexRecordTransform implements Serializable, IndexFields {
             NBNAccessControlledRecord.getClassSchema().getFields().stream()
                 .map(Field::name)
                 .collect(Collectors.toList()))
+        .addAll(
+                OSGridRecord.getClassSchema().getFields().stream()
+                        .map(Field::name)
+                        .collect(Collectors.toList()))
         .add(DwcTerm.class_.simpleName())
         .add(DwcTerm.geodeticDatum.simpleName())
         .add(DwcTerm.associatedOccurrences.simpleName())
@@ -1094,6 +1105,11 @@ public class IndexRecordTransform implements Serializable, IndexFields {
                 accessControlledRecord = v.getOnly(accessControlledRecordTag, null);
               }
 
+              OSGridRecord osGridRecord = null;
+              if (osGridRecordTag != null) {
+                osGridRecord = v.getOnly(osGridRecordTag, null);
+              }
+
               MultimediaRecord mr = null;
               if (srTag != null) {
                 mr = v.getOnly(mrTag, null);
@@ -1118,6 +1134,7 @@ public class IndexRecordTransform implements Serializable, IndexFields {
                         tpr,
                         sr,
                         accessControlledRecord,
+                        osGridRecord,
                         mr,
                         ecr,
                         elr,
@@ -1224,6 +1241,16 @@ public class IndexRecordTransform implements Serializable, IndexFields {
   static void addToIndexRecord(
       SpecificRecordBase record, IndexRecord.Builder builder, Set<String> skipKeys) {
     addToIndexRecord(record, builder, skipKeys, true);
+
+    if (record.getClass() == OSGridRecord.class) {
+      OSGridRecord osg = (OSGridRecord) record;
+
+      if(!Strings.isNullOrEmpty(osg.getGridReference())) {
+        Map<String,String> gridAtResolutions =  uk.org.nbn.util.GridUtil.getGridRefAsResolutions(osg.getGridReference());
+        gridAtResolutions.entrySet().forEach(r -> builder.getStrings().put(r.getKey(), r.getValue()));
+
+      }
+    }
   }
 
   static void addToIndexRecord(

@@ -45,7 +45,7 @@ public class CoordinatesParser {
               extractValue(er, DwcTerm.verbatimLatitude),
               extractValue(er, DwcTerm.verbatimLongitude)));
 
-  // parses verbatim coordinates fields
+  // NBN parses verbatim coordinates fields
   private static final Function<ExtendedRecord, ParsedField<LatLng>> VERBATIM_COORDS_FN =
       (er ->
           CoordinateParseUtils.parseVerbatimCoordinates(

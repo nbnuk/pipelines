@@ -19,18 +19,6 @@ public enum NBNOccurrenceIssue implements InterpretationRemark {
   DECIMAL_LAT_LONG_CALCULATED_FROM_GRID_REF(
       InterpretationRemarkSeverity.INFO,
       new Term[] {DwcTerm.decimalLatitude, DwcTerm.decimalLongitude, OSGridTerm.gridReference}),
-  DECIMAL_LAT_LONG_CALCULATION_FROM_EASTING_NORTHING_FAILED(
-      InterpretationRemarkSeverity.WARNING,
-      new Term[] {OSGridTerm.easting, OSGridTerm.northing, OSGridTerm.zone}),
-  DECIMAL_LAT_LONG_CALCULATED_FROM_EASTING_NORTHING(
-      InterpretationRemarkSeverity.INFO,
-      new Term[] {OSGridTerm.easting, OSGridTerm.northing, OSGridTerm.zone}),
-
-  DECIMAL_LAT_LONG_CALCULATION_FROM_EASTING_NORTHING_UNRECOGNISED_GDA94_ZONE(
-      InterpretationRemarkSeverity.WARNING, new Term[] {DwcTerm.verbatimSRS, OSGridTerm.zone}),
-
-  DECIMAL_LAT_LONG_CALCULATION_FROM_EASTING_NORTHING_UNRECOGNISED_VERBATIMSRS_ZONE(
-      InterpretationRemarkSeverity.WARNING, new Term[] {DwcTerm.verbatimSRS, OSGridTerm.zone}),
 
   COORDINATES_NOT_CENTRE_OF_GRID(
       InterpretationRemarkSeverity.INFO,
@@ -86,7 +74,7 @@ public enum NBNOccurrenceIssue implements InterpretationRemark {
     static {
       OSGRID_TERMS =
           new Term[] {
-            OSGridTerm.gridReference, OSGridTerm.easting, OSGridTerm.northing, OSGridTerm.zone
+            OSGridTerm.gridReference, OSGridTerm.gridSizeInMeters
           };
     }
   }

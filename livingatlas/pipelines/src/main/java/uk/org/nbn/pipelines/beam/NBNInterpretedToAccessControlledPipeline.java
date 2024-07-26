@@ -29,6 +29,7 @@ import org.gbif.pipelines.core.pojo.HdfsConfigs;
 import org.gbif.pipelines.core.utils.FsUtils;
 import org.gbif.pipelines.io.avro.ExtendedRecord;
 import org.gbif.pipelines.io.avro.LocationRecord;
+import org.gbif.pipelines.io.avro.OSGridRecord;
 import org.gbif.pipelines.transforms.core.LocationTransform;
 import org.gbif.pipelines.transforms.core.VerbatimTransform;
 import org.slf4j.MDC;
@@ -36,6 +37,7 @@ import uk.org.nbn.kvs.cache.DataResourceNBNKVStoreFactory;
 import uk.org.nbn.kvs.client.DataResourceNBN;
 import uk.org.nbn.pipelines.options.NBNInterpretedToAccessControlledPipelineOptions;
 import uk.org.nbn.pipelines.transforms.NBNAccessControlRecordTransform;
+import uk.org.nbn.pipelines.transforms.OSGridTransform;
 
 /** ALA Beam pipeline to process sensitive data. */
 @Slf4j
@@ -101,6 +103,7 @@ public class NBNInterpretedToAccessControlledPipeline {
     // Core
     VerbatimTransform verbatimTransform = VerbatimTransform.create();
     LocationTransform locationTransform = LocationTransform.builder().create();
+    OSGridTransform osGridTransform = OSGridTransform.builder().create();
     // TODO HMJ osgrid eventCoreTransform = EventCoreTransform.builder().create();
     log.info(
         "dataResourceNBN found:"
@@ -116,6 +119,7 @@ public class NBNInterpretedToAccessControlledPipeline {
             .datasetId(options.getDatasetId())
             .erTag(verbatimTransform.getTag())
             .lrTag(locationTransform.getTag())
+            .osgrTag(osGridTransform.getTag())
             .create();
 
     log.info("Adding step 3: Creating beam pipeline");
@@ -127,11 +131,16 @@ public class NBNInterpretedToAccessControlledPipeline {
         p.apply("Read Location", locationTransform.read(inputPathFn))
             .apply("Map Location to KV", locationTransform.toKv());
 
+    PCollection<KV<String, OSGridRecord>> inputOSGridCollection =
+        p.apply("Read OSGrid", osGridTransform.read(inputPathFn))
+            .apply("Map OSGrid to KV", osGridTransform.toKv());
+
     KeyedPCollectionTuple<String> inputTuples =
         KeyedPCollectionTuple
             // Core
             .of(verbatimTransform.getTag(), inputVerbatimCollection)
-            .and(locationTransform.getTag(), inputLocationCollection);
+            .and(locationTransform.getTag(), inputLocationCollection)
+            .and(osGridTransform.getTag(), inputOSGridCollection);
 
     log.info("Creating access controlled records");
     inputTuples
