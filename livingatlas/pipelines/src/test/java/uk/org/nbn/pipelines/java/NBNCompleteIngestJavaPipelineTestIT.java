@@ -27,6 +27,7 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 import uk.org.nbn.pipelines.NBNPipelineIngestTestBase;
 import uk.org.nbn.pipelines.beam.NBNInterpretedToAccessControlledPipeline;
+import uk.org.nbn.pipelines.options.NBNInterpretedToAccessControlledPipelineOptions;
 
 /**
  * Complete pipeline tests that use the java variant of the pipeline where possible. Currently this
@@ -189,9 +190,9 @@ public class NBNCompleteIngestJavaPipelineTestIT extends NBNPipelineIngestTestBa
             });
     ALAInterpretedToSensitivePipeline.run(sensitivityOptions);
 
-    InterpretationPipelineOptions accessControlOptions =
+    NBNInterpretedToAccessControlledPipelineOptions accessControlOptions =
         PipelinesOptionsFactory.create(
-            InterpretationPipelineOptions.class,
+            NBNInterpretedToAccessControlledPipelineOptions.class,
             new String[] {
               "--datasetId=" + datasetID,
               "--attempt=1",

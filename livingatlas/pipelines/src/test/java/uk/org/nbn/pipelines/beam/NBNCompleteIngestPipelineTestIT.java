@@ -23,6 +23,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 import uk.org.nbn.pipelines.NBNPipelineIngestTestBase;
+import uk.org.nbn.pipelines.options.NBNInterpretedToAccessControlledPipelineOptions;
 
 /**
  * Complete pipeline tests that start with DwCAs and finish with the SOLR index. Includes all
@@ -189,9 +190,9 @@ public class NBNCompleteIngestPipelineTestIT extends NBNPipelineIngestTestBase {
             });
     ALAInterpretedToSensitivePipeline.run(sensitivityOptions);
 
-    InterpretationPipelineOptions accessControlOptions =
+    NBNInterpretedToAccessControlledPipelineOptions accessControlOptions =
         PipelinesOptionsFactory.create(
-            InterpretationPipelineOptions.class,
+            NBNInterpretedToAccessControlledPipelineOptions.class,
             new String[] {
               "--datasetId=" + datasetID,
               "--attempt=1",
