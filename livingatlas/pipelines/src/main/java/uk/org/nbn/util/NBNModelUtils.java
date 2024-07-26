@@ -1,12 +1,9 @@
 package uk.org.nbn.util;
 
-import com.beust.jcommander.ParameterException;
 import java.util.Arrays;
 import java.util.List;
 import org.gbif.dwc.terms.Term;
-import org.gbif.pipelines.core.utils.ModelUtils;
 import org.gbif.pipelines.io.avro.ExtendedRecord;
-import uk.org.nbn.term.OSGridTerm;
 
 public class NBNModelUtils {
 

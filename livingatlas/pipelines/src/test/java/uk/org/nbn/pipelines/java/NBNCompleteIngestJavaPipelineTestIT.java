@@ -1,5 +1,8 @@
 package uk.org.nbn.pipelines.java;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import au.org.ala.pipelines.beam.*;
 import au.org.ala.pipelines.java.IndexRecordPipeline;
 import au.org.ala.pipelines.options.IndexingPipelineOptions;
@@ -11,13 +14,13 @@ import au.org.ala.util.IntegrationTestUtils;
 import au.org.ala.util.SolrUtils;
 import au.org.ala.util.TestUtils;
 import au.org.ala.utils.ValidationUtils;
+import java.io.File;
+import java.util.*;
 import org.apache.commons.io.FileUtils;
-import org.apache.solr.common.SolrDocument;
 import org.gbif.pipelines.common.beam.options.DwcaPipelineOptions;
 import org.gbif.pipelines.common.beam.options.InterpretationPipelineOptions;
 import org.gbif.pipelines.common.beam.options.PipelinesOptionsFactory;
 import org.junit.ClassRule;
-import org.junit.Test;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DynamicTest;
@@ -25,21 +28,13 @@ import org.junit.jupiter.api.TestFactory;
 import uk.org.nbn.pipelines.NBNPipelineIngestTestBase;
 import uk.org.nbn.pipelines.beam.NBNInterpretedToAccessControlledPipeline;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.UUID;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 /**
  * Complete pipeline tests that use the java variant of the pipeline where possible. Currently this
  * is for Interpretation and SOLR indexing only.
  *
- * <p>This needs to be ran with -Xmx128m
- * You will likely need to set the following vm options -DZK_PORT=9983 -DSOLR_PORT=8983 -DDOCKER_STARTSTOP=false
- * And also copy or link /data/pipelines-shp to /tmp/pipelines-shp
+ * <p>This needs to be ran with -Xmx128m You will likely need to set the following vm options
+ * -DZK_PORT=9983 -DSOLR_PORT=8983 -DDOCKER_STARTSTOP=false And also copy or link
+ * /data/pipelines-shp to /tmp/pipelines-shp
  */
 public class NBNCompleteIngestJavaPipelineTestIT extends NBNPipelineIngestTestBase {
 
@@ -48,14 +43,12 @@ public class NBNCompleteIngestJavaPipelineTestIT extends NBNPipelineIngestTestBa
   public static final String INDEX_NAME = "complete_java_pipeline";
 
   @BeforeAll
-  public static void beforeAll() throws Throwable
-  {
+  public static void beforeAll() throws Throwable {
     itUtils.before();
   }
 
   @AfterAll
-  public static void afterAll()
-  {
+  public static void afterAll() {
     itUtils.after();
   }
 
@@ -70,43 +63,62 @@ public class NBNCompleteIngestJavaPipelineTestIT extends NBNPipelineIngestTestBa
 
     String absolutePath = new File("src/test/resources").getAbsolutePath();
 
-    String datasetId = "dr2816";
-    int expectedRecords = 165;
+    Map<String, Integer> datasets =
+        new HashMap<String, Integer>() {
+          {
+            put("dr2816", 165);
+            put("dr2811", 159); // this has 4 additional records compare to ma
+          }
+        };
 
-    //set to false in order to just running tests without reprocessing data
-    if(true) {
+    int expectedRecords = datasets.values().stream().mapToInt(Integer::intValue).sum();
+
+    // set to false in order to just running tests without reprocessing data
+    if (true) {
       // clear SOLR index
       SolrUtils.setupIndex(INDEX_NAME);
 
-      // Step 1: load a dataset and verify all records have a UUID associated
-      loadTestDataset(datasetId, absolutePath + "/nbn-complete-pipeline/" + datasetId);
+      for (Map.Entry<String, Integer> entry : datasets.entrySet()) {
+        String datasetId = entry.getKey();
+        loadTestDataset(datasetId, absolutePath + "/nbn-complete-pipeline/" + datasetId);
+      }
 
       // reload
       SolrUtils.reloadSolrIndex(INDEX_NAME);
     }
 
     // validate SOLR index
-    tests.add(DynamicTest.dynamicTest("Test index", () -> {
+    tests.add(
+        DynamicTest.dynamicTest(
+            "Test index",
+            () -> {
+              assertEquals(
+                  "Check number of records",
+                  Long.valueOf(expectedRecords),
+                  SolrUtils.getRecordCount(INDEX_NAME, "*:*"));
 
-      assertEquals(Long.valueOf(expectedRecords), SolrUtils.getRecordCount(INDEX_NAME, "*:*"));
+              // 1. includes UUIDs
+              String documentId = (String) SolrUtils.getRecords(INDEX_NAME, "*:*").get(0).get("id");
+              assertNotNull("Check UUIDs present", documentId);
+              UUID uuid = null;
+              try {
+                uuid = UUID.fromString(documentId);
+                // do something
+              } catch (IllegalArgumentException exception) {
+                // handle the case where string is not valid UUID
+              }
 
-      // 1. includes UUIDs
-      String documentId = (String) SolrUtils.getRecords(INDEX_NAME, "*:*").get(0).get("id");
-      assertNotNull(documentId);
-      UUID uuid = null;
-      try {
-        uuid = UUID.fromString(documentId);
-        // do something
-      } catch (IllegalArgumentException exception) {
-        // handle the case where string is not valid UUID
-      }
+              assertNotNull("Check UUIDs format", uuid);
+            }));
 
-      assertNotNull(uuid);
-    }));
+    // 4. check content of records
+    for (Map.Entry<String, Integer> entry : datasets.entrySet()) {
+      String datasetId = entry.getKey();
+      Collection<DynamicTest> occurrenceTests =
+          checkExpectedValuesForRecords(INDEX_NAME, datasetId);
+      tests.addAll(occurrenceTests);
+    }
 
-    //4. check content of records
-    Collection<DynamicTest> occurrenceTests = checkExpectedValuesForRecords(INDEX_NAME, datasetId);
-    tests.addAll(occurrenceTests);
     return tests;
   }
 
@@ -138,7 +150,9 @@ public class NBNCompleteIngestJavaPipelineTestIT extends NBNPipelineIngestTestBa
               "--interpretationTypes=ALL",
               "--metaFileName=" + ValidationUtils.INTERPRETATION_METRICS,
               "--targetPath=/tmp/la-pipelines-test/nbn-complete-pipeline-java",
-              "--inputPath=/tmp/la-pipelines-test/nbn-complete-pipeline-java/" + datasetID + "/1/verbatim.avro",
+              "--inputPath=/tmp/la-pipelines-test/nbn-complete-pipeline-java/"
+                  + datasetID
+                  + "/1/verbatim.avro",
               "--properties=" + itUtils.getPropertiesFilePath(),
               "--useExtendedRecordId=true"
             });
@@ -176,18 +190,18 @@ public class NBNCompleteIngestJavaPipelineTestIT extends NBNPipelineIngestTestBa
     ALAInterpretedToSensitivePipeline.run(sensitivityOptions);
 
     InterpretationPipelineOptions accessControlOptions =
-            PipelinesOptionsFactory.create(
-                    InterpretationPipelineOptions.class,
-                    new String[] {
-                            "--datasetId=" + datasetID,
-                            "--attempt=1",
-                            "--runner=DirectRunner",
-                            "--metaFileName=" + ValidationUtils.SENSITIVE_METRICS,
-                            "--targetPath=/tmp/la-pipelines-test/nbn-complete-pipeline-java",
-                            "--inputPath=/tmp/la-pipelines-test/nbn-complete-pipeline-java",
-                            "--properties=" + itUtils.getPropertiesFilePath(),
-                            "--useExtendedRecordId=true"
-                    });
+        PipelinesOptionsFactory.create(
+            InterpretationPipelineOptions.class,
+            new String[] {
+              "--datasetId=" + datasetID,
+              "--attempt=1",
+              "--runner=DirectRunner",
+              "--metaFileName=" + ValidationUtils.SENSITIVE_METRICS,
+              "--targetPath=/tmp/la-pipelines-test/nbn-complete-pipeline-java",
+              "--inputPath=/tmp/la-pipelines-test/nbn-complete-pipeline-java",
+              "--properties=" + itUtils.getPropertiesFilePath(),
+              "--useExtendedRecordId=true"
+            });
 
     NBNInterpretedToAccessControlledPipeline.run(accessControlOptions);
 

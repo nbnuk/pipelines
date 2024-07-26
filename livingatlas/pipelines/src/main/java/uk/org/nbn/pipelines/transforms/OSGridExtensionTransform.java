@@ -7,7 +7,6 @@ import static uk.org.nbn.util.NBNModelUtils.*;
 import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.beam.sdk.metrics.Counter;
@@ -21,10 +20,8 @@ import org.gbif.pipelines.core.functions.SerializableConsumer;
 import org.gbif.pipelines.core.parsers.common.ParsedField;
 import org.gbif.pipelines.io.avro.ExtendedRecord;
 import org.gbif.pipelines.transforms.converters.OccurrenceJsonTransform;
-import org.spark_project.guava.primitives.Ints;
 import uk.org.nbn.parser.OSGridParser;
 import uk.org.nbn.term.OSGridTerm;
-import uk.org.nbn.util.GridUtil;
 
 /** Transform to augment the core location terms from osGrid extension terms */
 @Slf4j
@@ -67,8 +64,6 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
 
     String decimalLatitudeValue = extractNullAwareValue(er, DwcTerm.decimalLatitude);
     String decimalLongitudeValue = extractNullAwareValue(er, DwcTerm.decimalLongitude);
-    String coordinateUncertaintyValue =
-        extractNullAwareValue(er, DwcTerm.coordinateUncertaintyInMeters);
 
     boolean hasSuppliedLatLon =
         !Strings.isNullOrEmpty(decimalLatitudeValue)
@@ -76,23 +71,6 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
 
     if (!hasSuppliedLatLon && !Strings.isNullOrEmpty(gridReferenceValue)) {
       setLatLonFromOSGrid(er, alteredEr, issues);
-    }
-
-    // this was combined from checkUncertainty and possiblyRecalculateUncertainty
-    // we know we have either a grid ref or grid size so we can compute uncertainty so...
-    // set uncertainty if:
-    // supplied without either lat/lon or uncertainty
-    // or we have a grid ref and the lat lon is centroid of the grid
-
-    if (!hasSuppliedLatLon
-        || Strings.isNullOrEmpty(coordinateUncertaintyValue)
-        || (!Strings.isNullOrEmpty(gridReferenceValue) &&
-                GridUtil.isCentroid(
-            Double.valueOf(decimalLongitudeValue),
-            Double.valueOf(decimalLatitudeValue),
-            gridReferenceValue))) {
-
-      setCoordinateUncertaintyFromOSGrid(er, alteredEr);
     }
 
     // put the issues in the extension so that we can retrieve and apply them in OSGridTransform
@@ -118,32 +96,6 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
       // grid util projects all coordinates to WGS84
       alteredEr.getCoreTerms().put(DwcTerm.geodeticDatum.qualifiedName(), PIPELINES_GEODETIC_DATUM);
       issues.addAll(result.getIssues());
-    }
-  }
-
-  private void setCoordinateUncertaintyFromOSGrid(ExtendedRecord er, ExtendedRecord alteredEr) {
-    String gridReferenceValue = extractNullAwareValue(er, OSGridTerm.gridReference);
-    String gridSizeInMetersValue =
-            extractNullAwareValue(er, OSGridTerm.gridSizeInMeters);
-
-    // todo - should we flag if these fail?  Internally this logs and error but this is not going to
-    // be very helpful
-
-    Integer gridSizeInMeters = null;
-
-    if(!Strings.isNullOrEmpty(gridReferenceValue)) {
-      gridSizeInMeters = GridUtil.getGridSizeInMeters(gridReferenceValue).getOrElse(null);
-    } else {
-      gridSizeInMeters = Ints.tryParse(gridSizeInMetersValue);
-    }
-
-    if (gridSizeInMeters != null) {
-      double cornerDistFromCentre = gridSizeInMeters / Math.sqrt(2.0);
-      alteredEr
-          .getCoreTerms()
-          .put(
-              DwcTerm.coordinateUncertaintyInMeters.qualifiedName(),
-              String.format("%.1f", cornerDistFromCentre));
     }
   }
 }

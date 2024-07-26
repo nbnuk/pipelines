@@ -1,6 +1,7 @@
 package au.org.ala.pipelines.transforms;
 
 import static au.org.ala.pipelines.common.ALARecordTypes.ALA_SENSITIVE_DATA;
+import static org.gbif.pipelines.core.utils.ModelUtils.extractNullAwareValue;
 
 import au.org.ala.kvs.ALAPipelinesConfig;
 import au.org.ala.pipelines.interpreters.SensitiveDataInterpreter;
@@ -10,6 +11,7 @@ import au.org.ala.sds.api.ConservationApi;
 import au.org.ala.sds.api.SensitivityQuery;
 import au.org.ala.sds.api.SensitivityReport;
 import au.org.ala.sds.api.SpeciesCheck;
+import au.org.ala.sds.generalise.ClearGeneralisation;
 import au.org.ala.sds.generalise.FieldAccessor;
 import au.org.ala.sds.generalise.Generalisation;
 import java.io.FileNotFoundException;
@@ -31,6 +33,7 @@ import org.gbif.pipelines.core.functions.SerializableSupplier;
 import org.gbif.pipelines.core.interpreters.core.TaxonomyInterpreter;
 import org.gbif.pipelines.io.avro.*;
 import org.gbif.pipelines.transforms.Transform;
+import uk.org.nbn.term.OSGridTerm;
 
 /**
  * Perform transformations on sensitive data.
@@ -70,6 +73,7 @@ public class ALASensitiveDataRecordTransform
   @NonNull private final TupleTag<TaxonRecord> txrTag;
   @NonNull private final TupleTag<ALATaxonRecord> atxrTag;
   @NonNull private final TupleTag<LocationRecord> lrTag;
+  @NonNull private final TupleTag<OSGridRecord> osgrTag;
 
   @Builder(buildMethodName = "create")
   private ALASensitiveDataRecordTransform(
@@ -85,7 +89,8 @@ public class ALASensitiveDataRecordTransform
       TupleTag<TemporalRecord> trTag,
       TupleTag<LocationRecord> lrTag,
       TupleTag<TaxonRecord> txrTag,
-      TupleTag<ALATaxonRecord> atxrTag) {
+      TupleTag<ALATaxonRecord> atxrTag,
+      TupleTag<OSGridRecord> osgrTag) {
     super(
         ALASensitivityRecord.class,
         ALA_SENSITIVE_DATA,
@@ -107,6 +112,7 @@ public class ALASensitiveDataRecordTransform
     this.lrTag = lrTag;
     this.txrTag = txrTag;
     this.atxrTag = atxrTag;
+    this.osgrTag = osgrTag;
   }
 
   /**
@@ -146,6 +152,19 @@ public class ALASensitiveDataRecordTransform
       log.debug("Get generalisations to apply");
       generalisations = conservationService.getGeneralisations();
       sensitiveFields = null;
+
+      // todo - these should be added to the sds service
+      Collection<Term> additionalTermsToClear =
+          Arrays.asList(OSGridTerm.gridReference, OSGridTerm.gridSizeInMeters);
+
+      // remove any that have conflicting simple name such as http://unkown.org/gridReference
+      // generalisations.removeIf(g -> g.getFields().stream().anyMatch(f ->
+      // additionalTermsToClear.stream().anyMatch( atc ->
+      // atc.simpleName().equals(f.getField().simpleName()))));
+      generalisations.addAll(
+          additionalTermsToClear.stream()
+              .map(t -> new ClearGeneralisation(t))
+              .collect(Collectors.toList()));
     }
     if (sensitiveFields == null && generalisations != null) {
       log.debug("Building sensitive field list");
@@ -194,7 +213,7 @@ public class ALASensitiveDataRecordTransform
     TaxonRecord itxr = txrTag == null ? null : v.getOnly(txrTag, null);
     ALATaxonRecord iatxr = atxrTag == null ? null : v.getOnly(atxrTag, null);
     LocationRecord ilr = lrTag == null ? null : v.getOnly(lrTag, null);
-    // todo - osgridrecord
+    OSGridRecord osgr = osgrTag == null ? null : v.getOnly(osgrTag, null);
 
     ALASensitivityRecord sr = ALASensitivityRecord.newBuilder().setId(id).build();
 
@@ -214,6 +233,11 @@ public class ALASensitiveDataRecordTransform
     SensitiveDataInterpreter.constructFields(sensitiveFields, properties, itr);
     SensitiveDataInterpreter.constructFields(sensitiveFields, properties, ilr);
     SensitiveDataInterpreter.constructFields(sensitiveFields, properties, ier);
+    SensitiveDataInterpreter.constructFields(sensitiveFields, properties, osgr);
+
+    // todo - just for debugging
+    properties.put(
+        DwcTerm.occurrenceID.qualifiedName(), extractNullAwareValue(ier, DwcTerm.occurrenceID));
 
     if (SensitiveDataInterpreter.sourceQualityChecks(properties, sr)) {
       SensitiveDataInterpreter.sensitiveDataInterpreter(

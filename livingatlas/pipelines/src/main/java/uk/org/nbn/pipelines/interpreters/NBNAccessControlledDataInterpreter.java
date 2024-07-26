@@ -1,7 +1,6 @@
 package uk.org.nbn.pipelines.interpreters;
 
 import au.org.ala.sds.generalise.FieldAccessor;
-import com.google.common.base.Strings;
 import java.util.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

@@ -1,0 +1,9 @@
+<eml:eml packageId="ala" system="galaxias-python" xmlns:eml="https://eml.ecoinformatics.org/eml-2.2.0" xmlns:stmml="http://www.xml-cml.org/schema/stmml-1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://eml.ecoinformatics.org/eml-2.2.0 https://nis.lternet.edu/schemas/EML/eml-2.2.0/xsd/eml.xsd">
+    <dataset>
+        <title>access_controls_sensitive_0</title>
+    </dataset>
+    <abstract></abstract>
+    <intellectualRights>
+        <para>None</para>
+    </intellectualRights>
+</eml:eml>

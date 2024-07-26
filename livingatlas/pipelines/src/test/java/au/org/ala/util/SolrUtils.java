@@ -198,19 +198,20 @@ public class SolrUtils {
 
   public static CloudSolrClient getCollectionClient(String indexName) throws Exception {
 
-    clients.computeIfAbsent(indexName, (String key) -> {
-
-        CloudSolrClient solr = null;
-        try {
+    clients.computeIfAbsent(
+        indexName,
+        (String key) -> {
+          CloudSolrClient solr = null;
+          try {
             solr = new CloudSolrClient.Builder(getZkHosts(), Optional.empty()).build();
-        } catch (Exception e) {
+          } catch (Exception e) {
             throw new RuntimeException(e);
-        }
-        solr.setDefaultCollection(key);
-      return solr;
-    });
+          }
+          solr.setDefaultCollection(key);
+          return solr;
+        });
 
-    return  clients.get(indexName);
+    return clients.get(indexName);
   }
 
   public static SolrDocumentList getRecords(String indexName, String queryUrl) throws Exception {

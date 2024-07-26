@@ -14,7 +14,6 @@ import uk.org.nbn.term.OSGridTerm;
  * org.gbif.api.vocabulary.OccurrenceIssue} enum See: https://github.com/gbif/pipelines/issues/530
  */
 public enum NBNOccurrenceIssue implements InterpretationRemark {
-
   // Location related
   DECIMAL_LAT_LONG_CALCULATED_FROM_GRID_REF(
       InterpretationRemarkSeverity.INFO,
@@ -72,10 +71,7 @@ public enum NBNOccurrenceIssue implements InterpretationRemark {
     private TermsGroup() {}
 
     static {
-      OSGRID_TERMS =
-          new Term[] {
-            OSGridTerm.gridReference, OSGridTerm.gridSizeInMeters
-          };
+      OSGRID_TERMS = new Term[] {OSGridTerm.gridReference, OSGridTerm.gridSizeInMeters};
     }
   }
 }
