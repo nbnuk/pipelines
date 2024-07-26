@@ -48,6 +48,7 @@ public class NBNAccessControlRecordTransform
 
   private final ALAPipelinesConfig config;
   private final String datasetId;
+  private final Integer publicResolutionToApplyInMeters;
 
   @NonNull private final TupleTag<ExtendedRecord> erTag;
   @NonNull private final TupleTag<LocationRecord> lrTag;
@@ -57,6 +58,7 @@ public class NBNAccessControlRecordTransform
   private NBNAccessControlRecordTransform(
       ALAPipelinesConfig config,
       String datasetId,
+      Integer publicResolutionToApplyInMeters,
       TupleTag<ExtendedRecord> erTag,
       TupleTag<LocationRecord> lrTag,
       TupleTag<OSGridRecord> osgrTag) {
@@ -68,6 +70,7 @@ public class NBNAccessControlRecordTransform
 
     this.config = config;
     this.datasetId = datasetId;
+    this.publicResolutionToApplyInMeters = publicResolutionToApplyInMeters;
     this.erTag = erTag;
     this.lrTag = lrTag;
     this.osgrTag = osgrTag;
@@ -129,7 +132,7 @@ public class NBNAccessControlRecordTransform
         NBNAccessControlledRecord.newBuilder().setId(id).build();
 
     NBNAccessControlledDataInterpreter.accessControlledDataInterpreter(
-        datasetId, er, lr, osgr, accessControlledRecord);
+        datasetId, publicResolutionToApplyInMeters, er, lr, osgr, accessControlledRecord);
 
     return Optional.of(accessControlledRecord);
   }

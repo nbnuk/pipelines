@@ -33,6 +33,9 @@ import org.gbif.pipelines.io.avro.OSGridRecord;
 import org.gbif.pipelines.transforms.core.LocationTransform;
 import org.gbif.pipelines.transforms.core.VerbatimTransform;
 import org.slf4j.MDC;
+import uk.org.nbn.kvs.cache.DataResourceNBNKVStoreFactory;
+import uk.org.nbn.kvs.client.DataResourceNBN;
+import uk.org.nbn.pipelines.options.NBNInterpretedToAccessControlledPipelineOptions;
 import uk.org.nbn.pipelines.transforms.NBNAccessControlRecordTransform;
 import uk.org.nbn.pipelines.transforms.OSGridTransform;
 
@@ -43,14 +46,15 @@ public class NBNInterpretedToAccessControlledPipeline {
 
   public static void main(String[] args) throws IOException {
     VersionInfo.print();
-    String[] combinedArgs = new CombinedYamlConfiguration(args).toArgs("general", "sensitive");
-    InterpretationPipelineOptions options =
-        PipelinesOptionsFactory.createInterpretation(combinedArgs);
+    String[] combinedArgs = new CombinedYamlConfiguration(args).toArgs("general", "accessControl");
+    NBNInterpretedToAccessControlledPipelineOptions options =
+        PipelinesOptionsFactory.create(
+            NBNInterpretedToAccessControlledPipelineOptions.class, combinedArgs);
     options.setMetaFileName("access-control-metrics.yml");
     run(options);
   }
 
-  public static void run(InterpretationPipelineOptions options) {
+  public static void run(NBNInterpretedToAccessControlledPipelineOptions options) {
 
     ALAPipelinesConfig config =
         ALAPipelinesConfigFactory.getInstance(
@@ -86,16 +90,32 @@ public class NBNInterpretedToAccessControlledPipeline {
 
     Pipeline p = Pipeline.create(options);
 
+    // curl -H "Authorization: api-key"
+    // https://registry.legacy.nbnatlas.org/ws/accessControl/dataResourceNbn/dr2818
+    DataResourceNBN dataResourceNBN =
+        DataResourceNBNKVStoreFactory.create(config).get(options.getDatasetId());
+    Integer publicResolutionToApplyInMeters =
+        dataResourceNBN != null
+            ? dataResourceNBN.getPublicResolutionToBeApplied()
+            : options.getDefaultPublicResolutionInMeters();
+
     log.info("Adding step 2: Creating transformations");
     // Core
     VerbatimTransform verbatimTransform = VerbatimTransform.create();
     LocationTransform locationTransform = LocationTransform.builder().create();
     OSGridTransform osGridTransform = OSGridTransform.builder().create();
     // TODO HMJ osgrid eventCoreTransform = EventCoreTransform.builder().create();
-
+    log.info(
+        "dataResourceNBN found:"
+            + (dataResourceNBN != null)
+            + " publicResolution being applied: "
+            + publicResolutionToApplyInMeters
+            + " datasetId:"
+            + options.getDatasetId());
     NBNAccessControlRecordTransform nbnAccessControlRecordTransform =
         NBNAccessControlRecordTransform.builder()
             .config(config)
+            .publicResolutionToApplyInMeters(publicResolutionToApplyInMeters)
             .datasetId(options.getDatasetId())
             .erTag(verbatimTransform.getTag())
             .lrTag(locationTransform.getTag())

@@ -732,6 +732,12 @@
   <copyField source="lat_long"         dest="packedQuad"/>
   <copyField source="occurrenceYear"   dest="occurrence_year"/>
 
+  <!-- NBN fields -->
+  <field name="habitatsTaxon" type="string" docValues="true" multiValued="true" indexed="true"/>
+  <field name="establishmentMeansTaxon" type="string" docValues="true" multiValued="false" indexed="true"/>
+  <field name="publicResolutionInMeters" type="int" docValues="true" multiValued="false" indexed="true"/>
+  <field name="vitality" type="string" docValues="true" multiValued="false" indexed="true"/>
+
   <!-- Do we need this -->
   <copyField source="basisOfRecord" dest="text"/>
   <copyField source="catalogNumber" dest="text"/>

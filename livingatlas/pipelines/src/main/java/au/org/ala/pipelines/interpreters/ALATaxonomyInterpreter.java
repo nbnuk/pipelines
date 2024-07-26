@@ -217,6 +217,10 @@ public class ALATaxonomyInterpreter {
             }
           }
         }
+        // NBN added fields
+        atr.setEstablishmentMeansTaxon(usageMatch.getEstablishmentMeans());
+        atr.setHabitatsTaxon(Arrays.asList(usageMatch.getHabitat().split("/")));
+        atr.setNomenclaturalStatus(usageMatch.getNomenclaturalStatus());
       }
     };
   }

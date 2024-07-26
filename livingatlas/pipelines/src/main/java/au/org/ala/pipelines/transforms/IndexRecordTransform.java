@@ -355,7 +355,9 @@ public class IndexRecordTransform implements Serializable, IndexFields {
       if (accessControlledRecord.getPublicResolutionInMetres() != null)
         indexRecord
             .getStrings()
-            .put("publicResolutionInMeters", accessControlledRecord.getPublicResolutionInMetres());
+            .put(
+                NBN_PUBLIC_RESOLUTION_IN_METERS,
+                accessControlledRecord.getPublicResolutionInMetres());
 
       // add original sensitive values - these will overwrite whatever the sensitive original values
       // were
@@ -604,6 +606,7 @@ public class IndexRecordTransform implements Serializable, IndexFields {
             && !field.name().equals(SPECIES_GROUP)
             && !field.name().equals(SPECIES_SUBGROUP)
             && !field.name().equals(TAXON_RANK)
+            && !field.name().equals(HABITATS_TAXON)
             && !skipKeys.contains(field.name())) {
 
           if (field.name().equalsIgnoreCase(CLASSS)) {
@@ -633,6 +636,12 @@ public class IndexRecordTransform implements Serializable, IndexFields {
           }
         }
       }
+      indexRecord
+          .getMultiValues()
+          .put(
+              HABITATS_TAXON,
+              atxr.getHabitatsTaxon().stream().distinct().collect(Collectors.toList()));
+
       // legacy fields referenced in biocache-service code
       indexRecord.setTaxonID(atxr.getTaxonConceptID());
       indexRecord
