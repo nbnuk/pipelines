@@ -9,6 +9,7 @@ import com.google.common.primitives.Ints;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.common.collect.Tuple;
 import org.gbif.dwc.terms.DwcTerm;
 import org.gbif.pipelines.io.avro.ExtendedRecord;
@@ -19,6 +20,7 @@ import uk.org.nbn.term.OSGridTerm;
 import uk.org.nbn.util.GISPoint;
 import uk.org.nbn.util.GridUtil;
 
+@Slf4j
 public class OSGridInterpreter {
 
   //    public static void interpretCoordinateUncertaintyInMetersFromGridSize(ExtendedRecord er,
@@ -210,6 +212,20 @@ public class OSGridInterpreter {
         if (!suppliedWithGridReference(extendedRecord)) {
           addIssue(osGridRecord, NBNOccurrenceIssue.GRID_REF_CALCULATED_FROM_LAT_LONG.name());
         }
+      } else {
+        log.warn(
+            "Could not calculate grid reference for "
+                + extractNullAwareValue(extendedRecord, DwcTerm.occurrenceID)
+                + " lat:"
+                + locationRecord.getDecimalLatitude()
+                + " lon:"
+                + locationRecord.getDecimalLongitude()
+                + " grid size:"
+                + osGridRecord.getGridSizeInMeters()
+                + " uncertainty:"
+                + locationRecord.getCoordinateUncertaintyInMeters()
+                + " state:"
+                + locationRecord.getStateProvince());
       }
     }
   }
