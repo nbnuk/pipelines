@@ -21,6 +21,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.gbif.api.model.pipelines.StepType;
+import org.gbif.dwc.terms.TermFactory;
 import org.gbif.pipelines.common.beam.DwcaExtendedRecordIO;
 import org.gbif.pipelines.common.beam.options.InterpretationPipelineOptions;
 import org.gbif.pipelines.common.beam.options.PipelinesOptionsFactory;
@@ -30,6 +31,7 @@ import org.gbif.pipelines.core.pojo.HdfsConfigs;
 import org.gbif.pipelines.core.utils.FsUtils;
 import org.gbif.pipelines.transforms.core.VerbatimTransform;
 import org.slf4j.MDC;
+import uk.org.nbn.term.OSGridTerm;
 
 /** Wrapper around DwcaToVerbatimPipeline to allow for Yaml config setup. */
 @Slf4j
@@ -46,6 +48,8 @@ public class ALADwcaToVerbatimPipeline {
   }
 
   public static void run(DwcaToVerbatimPipelineOptions options) throws Exception {
+
+    OSGridTerm.RegisterTerms(TermFactory.instance());
 
     MDC.put("datasetKey", options.getDatasetId());
     MDC.put("attempt", options.getAttempt().toString());
