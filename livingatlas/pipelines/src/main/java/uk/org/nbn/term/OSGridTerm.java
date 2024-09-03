@@ -2,6 +2,7 @@ package uk.org.nbn.term;
 
 import java.net.URI;
 import org.gbif.dwc.terms.Term;
+import org.gbif.dwc.terms.TermFactory;
 
 /** Set of terms in use by seedbank */
 public enum OSGridTerm implements Term {
@@ -41,5 +42,10 @@ public enum OSGridTerm implements Term {
 
   public URI namespace() {
     return NS_URI;
+  }
+
+  public static void RegisterTerms(TermFactory termFactory) {
+    termFactory.registerTerm(OSGridTerm.gridReference);
+    termFactory.registerTerm(OSGridTerm.gridSizeInMeters);
   }
 }

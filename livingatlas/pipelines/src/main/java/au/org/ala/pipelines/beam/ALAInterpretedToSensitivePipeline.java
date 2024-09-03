@@ -63,8 +63,7 @@ public class ALAInterpretedToSensitivePipeline {
 
   public static void run(InterpretationPipelineOptions options) {
 
-    TermFactory.instance().registerTerm(OSGridTerm.gridReference);
-    TermFactory.instance().registerTerm(OSGridTerm.gridSizeInMeters);
+    OSGridTerm.RegisterTerms(TermFactory.instance());
 
     ALAPipelinesConfig config =
         ALAPipelinesConfigFactory.getInstance(

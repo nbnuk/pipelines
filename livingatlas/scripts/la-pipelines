@@ -85,6 +85,7 @@ dwca-avro --> interpret --> validate --> uuid --> sds --> image-load ... │
 -  'validate' validates the identifiers for a dataset, checking for duplicate and empty keys;
 -  'uuid' mints UUID on new records and rematches to existing UUIDs for records loaded before;
 -  'sds' runs the sensitive data checks;
+-  'access-controls' applies access controls;
 -  'image-load' pushes an export of multimedia AVRO files to the image service;
 -  'image-sync' retrieves details of images stored in image service for indexing purposes;
 -  'index' generates a AVRO records ready to be index to SOLR;
@@ -114,6 +115,7 @@ Usage:
   $CMD [options] validate            (<dr>...|all)    $WHERE
   $CMD [options] uuid                (<dr>...|all)    $WHERE
   $CMD [options] sds                 (<dr>...|all)    $WHEREL
+  $CMD [options] access-controls     (<dr>...|all)    $WHEREL
   $CMD [options] image-load          (<dr>...|all)    $WHERE
   $CMD [options] image-sync          (<dr>...|all)    $WHERE
   $CMD [options] index               (<dr>...|all)    $WHEREL
@@ -750,6 +752,27 @@ function sds () {
     logStepEnd "SDS" $dr $ltype $SECONDS
 }
 
+function access_controls () {
+    local dr="$1" ltype="$2"
+
+    logStepStart "AccessControls" $dr
+    SECONDS=0
+
+    SH_ARGS=index-sh-args.local
+    CLASS=uk.org.nbn.pipelines.beam.NBNInterpretedToAccessControlledPipeline
+    java-pipeline $ltype $SH_ARGS $CLASS $dr
+
+    SH_ARGS=index-sh-args.spark-embedded
+    CLASS=uk.org.nbn.pipelines.beam.NBNInterpretedToAccessControlledPipeline
+    spark-embed-pipeline $ltype $SH_ARGS $CLASS $dr
+
+    SH_ARGS=index-sh-args.spark-cluster
+    CLASS=uk.org.nbn.pipelines.beam.NBNInterpretedToAccessControlledPipeline
+    spark-cluster-pipeline $ltype $SH_ARGS $CLASS $dr "AccessControls for $dr"
+
+    logStepEnd "AccessControls" $dr $ltype $SECONDS
+}
+
 function jackknife () {
     local dr="*" ltype="$TYPE"
     CLASS=au.org.ala.pipelines.beam.ALAReverseJackKnifePipeline
@@ -992,6 +1015,10 @@ fi
 
 if ($sds || $do_all); then
     do_step sds
+fi
+
+if ($access_controls || $do_all); then
+    do_step access_controls
 fi
 
 if ($image_load || $do_all); then
