@@ -247,7 +247,11 @@ public class NBNAccessControlledDataInterpreter {
               ? locationRecord.getCoordinateUncertaintyInMeters().toString()
               : null);
       original.put("gridReference", osGridRecord.getGridReference());
-      original.put("gridSizeInMeters", osGridRecord.getGridSizeInMeters().toString());
+      original.put(
+          "gridSizeInMeters",
+          osGridRecord.getGridSizeInMeters() != null
+              ? osGridRecord.getGridSizeInMeters().toString()
+              : null);
 
       original.put("locality", locationRecord.getLocality());
       original.put(
