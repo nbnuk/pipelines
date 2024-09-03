@@ -7,6 +7,7 @@ import au.org.ala.names.ws.api.NameSearch;
 import au.org.ala.names.ws.api.NameUsageMatch;
 import au.org.ala.pipelines.vocabulary.ALAOccurrenceIssue;
 import com.google.common.base.Enums;
+import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -219,7 +220,10 @@ public class ALATaxonomyInterpreter {
         }
         // NBN added fields
         atr.setEstablishmentMeansTaxon(usageMatch.getEstablishmentMeans());
-        atr.setHabitatsTaxon(Arrays.asList(usageMatch.getHabitat().split("/")));
+        atr.setHabitatsTaxon(
+            Strings.isNullOrEmpty(usageMatch.getHabitat())
+                ? new ArrayList<>()
+                : Arrays.asList(usageMatch.getHabitat().split("/")));
         atr.setNomenclaturalStatus(usageMatch.getNomenclaturalStatus());
       }
     };
