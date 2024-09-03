@@ -368,7 +368,9 @@ public class IndexRecordPipeline {
     Map<String, ImageRecord> imageServiceMap =
         options.getIncludeImages() ? imageServiceMapFeature.get() : Collections.emptyMap();
     Map<String, NBNAccessControlledRecord> nbnAccessControlledMap =
-        nbnAccessControlledMapFeature.get();
+        options.getApplyAccessControl()
+            ? nbnAccessControlledMapFeature.get()
+            : Collections.emptyMap();
     Map<String, OSGridRecord> osGridMap = osGridMapFeature.get();
     Map<String, TaxonProfile> taxonProfileMap =
         options.getIncludeSpeciesLists() ? taxonProfileMapFeature.get() : Collections.emptyMap();
