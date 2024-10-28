@@ -11,7 +11,8 @@ import org.gbif.dwc.terms.Term;
 import org.gbif.dwc.terms.TermFactory;
 import org.gbif.pipelines.core.utils.ModelUtils;
 import org.gbif.pipelines.io.avro.*;
-import uk.org.nbn.pipelines.io.avro.NBNAccessControlledRecord;
+import org.gbif.pipelines.io.avro.NBNAccessControlledRecord;
+import uk.org.nbn.term.OSGridTerm;
 import uk.org.nbn.util.GeneralisedLocation;
 import uk.org.nbn.util.GridUtil;
 import uk.org.nbn.util.ScalaToJavaUtil;
@@ -52,27 +53,27 @@ public class NBNAccessControlledDataInterpreter {
     if (altered == null || altered.isEmpty()) {
       return;
     }
-    if (altered.containsKey("decimalLatitude")) {
-      locationRecord.setDecimalLatitude(Double.parseDouble(altered.get("decimalLatitude")));
+    if (altered.containsKey(DwcTerm.decimalLatitude.simpleName())) {
+      locationRecord.setDecimalLatitude(
+          Double.parseDouble(altered.get(DwcTerm.decimalLatitude.simpleName())));
     }
-    if (altered.containsKey("decimalLongitude")) {
-      locationRecord.setDecimalLongitude(Double.parseDouble(altered.get("decimalLongitude")));
+    if (altered.containsKey(DwcTerm.decimalLongitude.simpleName())) {
+      locationRecord.setDecimalLongitude(
+          Double.parseDouble(altered.get(DwcTerm.decimalLongitude.simpleName())));
     }
-    if (altered.containsKey("coordinateUncertaintyInMeters")) {
+    if (altered.containsKey(DwcTerm.coordinateUncertaintyInMeters.simpleName())) {
       locationRecord.setCoordinateUncertaintyInMeters(
-          Double.parseDouble(altered.get("coordinateUncertaintyInMeters")));
+          Double.parseDouble(altered.get(DwcTerm.coordinateUncertaintyInMeters.simpleName())));
     }
-    if (altered.containsKey("locality")) {
-      locationRecord.setLocality(altered.get("locality"));
+    if (altered.containsKey(DwcTerm.locality.simpleName())) {
+      locationRecord.setLocality(altered.get(DwcTerm.locality.simpleName()));
     }
-    if (altered.containsKey("footprintWKT")) {
-      locationRecord.setFootprintWKT(altered.get("footprintWKT"));
+    if (altered.containsKey(DwcTerm.footprintWKT.simpleName())) {
+      locationRecord.setFootprintWKT(altered.get(DwcTerm.footprintWKT.simpleName()));
     }
   }
 
   /**
-   * TODO HMJ Apply access control data changes to an AVRO location record.
-   *
    * @param sr The access controlled record
    * @param osGridRecord An OS grid record
    */
@@ -82,8 +83,13 @@ public class NBNAccessControlledDataInterpreter {
     if (altered == null || altered.isEmpty()) {
       return;
     }
-    osGridRecord.setGridReference(altered.get("gridReference"));
-    osGridRecord.setGridSizeInMeters(Integer.parseInt(altered.get("gridSizeInMeters")));
+    if (altered.containsKey(OSGridTerm.gridReference.simpleName())) {
+      osGridRecord.setGridReference(altered.get(OSGridTerm.gridReference.simpleName()));
+    }
+    if (altered.containsKey(OSGridTerm.gridSizeInMeters.simpleName())) {
+      osGridRecord.setGridSizeInMeters(
+          Integer.parseInt(altered.get(OSGridTerm.gridSizeInMeters.simpleName())));
+    }
   }
 
   private static void replaceOrRemove(Map<String, String> coreTerms, String key, String value) {
@@ -94,7 +100,7 @@ public class NBNAccessControlledDataInterpreter {
     }
   }
   /**
-   * Apply access control data changes to an AVRO location record.
+   * Apply access control data changes to an AVRO extended record.
    *
    * @param sr The access controlled record
    * @param extendedRecord An extended record
@@ -106,54 +112,58 @@ public class NBNAccessControlledDataInterpreter {
     if (altered == null || altered.isEmpty()) {
       return;
     }
-    //    if null, delete from extendedrecord
+    // if null, delete from extendedrecord otherwise the extended record value will get written
+    // to the index
     replaceOrRemove(
         extendedRecord.getCoreTerms(),
         DwcTerm.decimalLatitude.qualifiedName(),
-        altered.get("decimalLatitude"));
+        altered.get(DwcTerm.decimalLatitude.simpleName()));
     replaceOrRemove(
         extendedRecord.getCoreTerms(),
         DwcTerm.decimalLongitude.qualifiedName(),
-        altered.get("decimalLongitude"));
+        altered.get(DwcTerm.decimalLongitude.simpleName()));
     replaceOrRemove(
         extendedRecord.getCoreTerms(),
         DwcTerm.coordinateUncertaintyInMeters.qualifiedName(),
-        altered.get("coordinateUncertaintyInMeters"));
-
-    //    extendedRecord.getCoreTerms().put(DwcTerm.gridReference.qualifiedName(),
-    // altered.get("gridReference"));
-    //    extendedRecord.getCoreTerms().put(DwcTerm.gridSizeInMeters.qualifiedName(),
-    // altered.get("gridSizeInMeters"));
+        altered.get(DwcTerm.coordinateUncertaintyInMeters.simpleName()));
+    replaceOrRemove(
+        extendedRecord.getCoreTerms(),
+        OSGridTerm.gridReference.qualifiedName(),
+        altered.get(OSGridTerm.gridReference.simpleName()));
+    replaceOrRemove(
+        extendedRecord.getCoreTerms(),
+        OSGridTerm.gridSizeInMeters.qualifiedName(),
+        altered.get(OSGridTerm.gridSizeInMeters.simpleName()));
     replaceOrRemove(
         extendedRecord.getCoreTerms(), DwcTerm.locality.qualifiedName(), altered.get("locality"));
     replaceOrRemove(
         extendedRecord.getCoreTerms(),
         DwcTerm.verbatimLatitude.qualifiedName(),
-        altered.get("verbatimLatitude"));
+        altered.get(DwcTerm.verbatimLatitude.simpleName()));
     replaceOrRemove(
         extendedRecord.getCoreTerms(),
         DwcTerm.verbatimLongitude.qualifiedName(),
-        altered.get("verbatimLongitude"));
+        altered.get(DwcTerm.verbatimLongitude.simpleName()));
     replaceOrRemove(
         extendedRecord.getCoreTerms(),
         DwcTerm.verbatimLocality.qualifiedName(),
-        altered.get("verbatimLocality"));
+        altered.get(DwcTerm.verbatimLocality.simpleName()));
     replaceOrRemove(
         extendedRecord.getCoreTerms(),
         DwcTerm.verbatimCoordinates.qualifiedName(),
-        altered.get("verbatimCoordinates"));
+        altered.get(DwcTerm.verbatimCoordinates.simpleName()));
     replaceOrRemove(
         extendedRecord.getCoreTerms(),
         DwcTerm.footprintWKT.qualifiedName(),
-        altered.get("footprintWKT"));
+        altered.get(DwcTerm.footprintWKT.simpleName()));
     replaceOrRemove(
         extendedRecord.getCoreTerms(),
         DwcTerm.locationRemarks.qualifiedName(),
-        altered.get("locationRemarks"));
+        altered.get(DwcTerm.locationRemarks.simpleName()));
     replaceOrRemove(
         extendedRecord.getCoreTerms(),
         DwcTerm.occurrenceRemarks.qualifiedName(),
-        altered.get("occurrenceRemarks"));
+        altered.get(DwcTerm.occurrenceRemarks.simpleName()));
   }
 
   private static Map<String, String> blur(
@@ -182,14 +192,15 @@ public class NBNAccessControlledDataInterpreter {
     String blurredCoordinateUncertainty =
         GridUtil.gridToCoordinateUncertaintyString(publicResolutionToBeApplied);
 
-    if (original.get("coordinateUncertaintyInMeters") != null
-        && !original.get("coordinateUncertaintyInMeters").isEmpty()
-        && (java.lang.Double.parseDouble(original.get("coordinateUncertaintyInMeters"))
-            < java.lang.Double.parseDouble(blurredCoordinateUncertainty))) {
+    if ((original.get("coordinateUncertaintyInMeters") != null
+            && !original.get("coordinateUncertaintyInMeters").isEmpty()
+            && (java.lang.Double.parseDouble(original.get("coordinateUncertaintyInMeters"))
+                < java.lang.Double.parseDouble(blurredCoordinateUncertainty)))
+        || (original.get("coordinateUncertaintyInMeters") == null
+            || original.get("coordinateUncertaintyInMeters").isEmpty())) {
       blurred.put("coordinateUncertaintyInMeters", blurredCoordinateUncertainty);
     }
 
-    // todo - should this be retained as an int?
     if (original.get("gridSizeInMeters") != null
         && !original.get("gridSizeInMeters").isEmpty()
         && java.lang.Integer.parseInt(original.get("gridSizeInMeters"))
@@ -205,7 +216,7 @@ public class NBNAccessControlledDataInterpreter {
     blurred.put("verbatimCoordinates", "");
     blurred.put("footprintWKT", "");
     blurred.put("locationRemarks", "");
-    blurred.put("occurrenceRemarks", "");
+    //    blurred.put("occurrenceRemarks", "");
 
     return blurred;
   }
@@ -219,7 +230,6 @@ public class NBNAccessControlledDataInterpreter {
   public static void accessControlledDataInterpreter(
       String dataResourceUid,
       Integer publicResolutionToApplyInMeters,
-      // NBNDataResourceService
       ExtendedRecord extendedRecord,
       LocationRecord locationRecord,
       OSGridRecord osGridRecord,
@@ -246,13 +256,14 @@ public class NBNAccessControlledDataInterpreter {
           locationRecord.getCoordinateUncertaintyInMeters() != null
               ? locationRecord.getCoordinateUncertaintyInMeters().toString()
               : null);
+      original.put("footprintWKT", locationRecord.getFootprintWKT());
+
       original.put("gridReference", osGridRecord.getGridReference());
       original.put(
           "gridSizeInMeters",
           osGridRecord.getGridSizeInMeters() != null
               ? osGridRecord.getGridSizeInMeters().toString()
               : null);
-
       original.put("locality", locationRecord.getLocality());
       original.put(
           "verbatimLatitude",
@@ -266,13 +277,13 @@ public class NBNAccessControlledDataInterpreter {
       original.put(
           "verbatimCoordinates",
           extendedRecord.getCoreTerms().get(DwcTerm.verbatimCoordinates.qualifiedName()));
-      original.put("footprintWKT", locationRecord.getFootprintWKT());
+
       original.put(
           "locationRemarks",
           extendedRecord.getCoreTerms().get(DwcTerm.locationRemarks.qualifiedName()));
-      original.put(
-          "occurrenceRemarks",
-          extendedRecord.getCoreTerms().get(DwcTerm.occurrenceRemarks.qualifiedName()));
+      //      original.put(
+      //          "occurrenceRemarks",
+      //          extendedRecord.getCoreTerms().get(DwcTerm.occurrenceRemarks.qualifiedName()));
 
       Map<String, String> blurred = blur(original, publicResolutionToApplyInMeters);
 

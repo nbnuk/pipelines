@@ -1,6 +1,6 @@
 {
   "name":"NBNAccessControlledRecord",
-  "namespace":"uk.org.nbn.pipelines.io.avro",
+  "namespace":"org.gbif.pipelines.io.avro",
   "type":"record",
   "doc":"NBN Access Controlled data information",
   "fields":[
@@ -9,10 +9,9 @@
       {"name" : "accessControlled", "type" : [ "null", "boolean" ], "default" : null, "doc" : "Does this record have any access controlled data features" },
       {"name" : "dataGeneralizations", "type" : ["null", "string"], "default" : null, "doc" : "Description of any generalisations that have been applied"},
       {"name" : "informationWithheld", "type" : ["null", "string"], "default" : null, "doc" : "Description of any information that has been removed"},
-      {"name" : "publicResolutionInMetres", "type" : ["null", "string"], "default" : null, "doc" : "Coordinate generalisation radius"},
+      {"name" : "publicResolutionInMetres", "type" : ["null", "string"], "default" : null, "doc" : "The public resolution in metres"},
       {"name" : "original", "type" : { "type": "map", "values": [ "null", "string" ] }, "default": { }, "doc" : "The original values that have been altered" },
       {"name" : "altered", "type" : { "type": "map", "values": [ "null", "string" ] }, "default": { }, "doc" : "Values that have been altered to meet access control requirements" },
-      {"name": "issues", "type": "IssueRecord", "default":{}},
-
+      {"name" : "issues", "type": "org.gbif.pipelines.io.avro.IssueRecord", "default":{}}
   ]
 }

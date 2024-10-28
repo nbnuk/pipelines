@@ -42,6 +42,7 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.gbif.api.model.pipelines.StepType;
 import org.gbif.dwc.terms.DwcTerm;
+import org.gbif.dwc.terms.TermFactory;
 import org.gbif.pipelines.common.beam.metrics.IngestMetrics;
 import org.gbif.pipelines.common.beam.metrics.MetricsHandler;
 import org.gbif.pipelines.common.beam.options.PipelinesOptionsFactory;
@@ -50,12 +51,13 @@ import org.gbif.pipelines.core.io.AvroReader;
 import org.gbif.pipelines.core.pojo.HdfsConfigs;
 import org.gbif.pipelines.core.utils.FsUtils;
 import org.gbif.pipelines.io.avro.*;
+import org.gbif.pipelines.io.avro.NBNAccessControlledRecord;
 import org.gbif.pipelines.transforms.core.*;
 import org.gbif.pipelines.transforms.extension.MultimediaTransform;
 import org.slf4j.MDC;
-import uk.org.nbn.pipelines.io.avro.NBNAccessControlledRecord;
 import uk.org.nbn.pipelines.transforms.NBNAccessControlRecordTransform;
 import uk.org.nbn.pipelines.transforms.OSGridTransform;
+import uk.org.nbn.term.OSGridTerm;
 
 /**
  * Pipeline sequence:
@@ -106,6 +108,9 @@ public class IndexRecordPipeline {
 
   @SneakyThrows
   public static void run(IndexingPipelineOptions options, ExecutorService executor) {
+
+    TermFactory.instance().registerTerm(OSGridTerm.gridReference);
+    TermFactory.instance().registerTerm(OSGridTerm.gridSizeInMeters);
 
     MDC.put("datasetId", options.getDatasetId());
     MDC.put("attempt", options.getAttempt().toString());

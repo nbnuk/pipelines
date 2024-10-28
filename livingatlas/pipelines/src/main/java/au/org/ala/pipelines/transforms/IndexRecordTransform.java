@@ -42,9 +42,9 @@ import org.gbif.dwc.terms.Term;
 import org.gbif.dwc.terms.TermFactory;
 import org.gbif.pipelines.common.PipelinesException;
 import org.gbif.pipelines.io.avro.*;
+import org.gbif.pipelines.io.avro.NBNAccessControlledRecord;
 import org.jetbrains.annotations.NotNull;
 import uk.org.nbn.pipelines.interpreters.NBNAccessControlledDataInterpreter;
-import uk.org.nbn.pipelines.io.avro.NBNAccessControlledRecord;
 import uk.org.nbn.pipelines.vocabulary.NBNOccurrenceIssue;
 
 /**
@@ -245,10 +245,11 @@ public class IndexRecordTransform implements Serializable, IndexFields {
         br = BasicRecord.newBuilder(br).build();
         SensitiveDataInterpreter.applySensitivity(sensitiveTerms, sr, br);
       }
-      if (tr != null) { // TODO HMJ NBN does not wipe temporal records with sensitive species
-        tr = TemporalRecord.newBuilder(tr).build();
-        SensitiveDataInterpreter.applySensitivity(sensitiveTerms, sr, tr);
-      }
+      // NBN does not wipe temporal data for sensitive species
+      //      if (tr != null) {
+      //        tr = TemporalRecord.newBuilder(tr).build();
+      //        SensitiveDataInterpreter.applySensitivity(sensitiveTerms, sr, tr);
+      //      }
       if (lr != null) {
         lr = LocationRecord.newBuilder(lr).build();
         SensitiveDataInterpreter.applySensitivity(sensitiveTerms, sr, lr);
@@ -278,30 +279,42 @@ public class IndexRecordTransform implements Serializable, IndexFields {
 
     boolean isAccessControlled =
         accessControlledRecord != null
-            && accessControlledRecord.isAccessControlled() != null
-            && accessControlledRecord.isAccessControlled();
+            && accessControlledRecord.getAccessControlled() != null
+            && accessControlledRecord.getAccessControlled();
 
     if (isAccessControlled) {
-      if (!isSensitive
-          || (Integer.parseInt(accessControlledRecord.getPublicResolutionInMetres())
-              < Integer.parseInt(sr.getGeneralisationInMetres()))) {
-        NBNAccessControlledDataInterpreter.applyAccessControls(accessControlledRecord, lr);
+      if (lr != null) {
+        String alteredValue =
+            accessControlledRecord
+                .getAltered()
+                .get(DwcTerm.coordinateUncertaintyInMeters.simpleName());
+
+        if (lr.getCoordinateUncertaintyInMeters() == null
+            || (alteredValue != null
+                && Double.parseDouble(alteredValue) >= lr.getCoordinateUncertaintyInMeters())) {
+          // access control location generalisation is the lowest resolution so apply it. Also apply
+          // it if it is the same
+          // because the access control version, the number of decimal points in the lat/long is
+          // reflective of the resolution
+          lr = LocationRecord.newBuilder(lr).build();
+          NBNAccessControlledDataInterpreter.applyAccessControls(accessControlledRecord, lr);
+
+          if (osGridRecord != null) {
+            osGridRecord = OSGridRecord.newBuilder(osGridRecord).build();
+            NBNAccessControlledDataInterpreter.applyAccessControls(
+                accessControlledRecord, osGridRecord);
+          }
+        }
       }
 
       if (er != null) {
         er = ExtendedRecord.newBuilder(er).build();
+        // access controls may clear more fields than sensitive data does, so overlay here
+        // even if isSensitive is true
         NBNAccessControlledDataInterpreter.applyAccessControls(accessControlledRecord, er);
-      }
-
-      // TODO HMJ - need to implement this
-      if (osGridRecord != null) {
-        osGridRecord = OSGridRecord.newBuilder(osGridRecord).build();
-        NBNAccessControlledDataInterpreter.applyAccessControls(
-            accessControlledRecord, osGridRecord);
       }
     }
 
-    // TODO HMJ addToIndexRecord(osgridRecord, indexRecord, skipKeys);
     addToIndexRecord(osGridRecord, indexRecord, skipKeys);
     addToIndexRecord(lr, indexRecord, skipKeys);
     addToIndexRecord(tr, indexRecord, skipKeys);
@@ -342,6 +355,8 @@ public class IndexRecordTransform implements Serializable, IndexFields {
     }
 
     if (isAccessControlled) {
+      // What is written into dataGeneralizations and informationWithheld will be determined in a
+      // future iteration
       //       if (accessControlledRecord.getDataGeneralizations() != null)
       //        indexRecord
       //                .getStrings()
@@ -1255,7 +1270,7 @@ public class IndexRecordTransform implements Serializable, IndexFields {
 
     if (record.getClass() == OSGridRecord.class) {
       OSGridRecord osg = (OSGridRecord) record;
-
+      // adds these to the index: grid_ref_100 grid_ref_1000 etc
       if (!Strings.isNullOrEmpty(osg.getGridReference())) {
         Map<String, String> gridAtResolutions =
             uk.org.nbn.util.GridUtil.getGridRefAsResolutions(osg.getGridReference());

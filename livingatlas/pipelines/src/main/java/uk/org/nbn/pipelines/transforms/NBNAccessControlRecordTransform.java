@@ -21,11 +21,11 @@ import org.gbif.pipelines.core.functions.SerializableConsumer;
 import org.gbif.pipelines.core.interpreters.core.TaxonomyInterpreter;
 import org.gbif.pipelines.io.avro.ExtendedRecord;
 import org.gbif.pipelines.io.avro.LocationRecord;
+import org.gbif.pipelines.io.avro.NBNAccessControlledRecord;
 import org.gbif.pipelines.io.avro.OSGridRecord;
 import org.gbif.pipelines.io.avro.TaxonRecord;
 import org.gbif.pipelines.transforms.Transform;
 import uk.org.nbn.pipelines.interpreters.NBNAccessControlledDataInterpreter;
-import uk.org.nbn.pipelines.io.avro.NBNAccessControlledRecord;
 
 /**
  * Perform transformations on sensitive data.

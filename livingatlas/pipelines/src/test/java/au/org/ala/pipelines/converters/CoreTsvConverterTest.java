@@ -14,7 +14,6 @@ import org.gbif.dwc.terms.Term;
 import org.gbif.pipelines.io.avro.*;
 import org.junit.Assert;
 import org.junit.Test;
-import uk.org.nbn.pipelines.io.avro.NBNAccessControlledRecord;
 
 public class CoreTsvConverterTest {
 

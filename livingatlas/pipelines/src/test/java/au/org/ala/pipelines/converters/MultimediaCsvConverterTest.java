@@ -10,9 +10,9 @@ import java.util.Map;
 import org.gbif.dwc.terms.DcTerm;
 import org.gbif.dwc.terms.DwcTerm;
 import org.gbif.pipelines.io.avro.*;
+import org.gbif.pipelines.io.avro.NBNAccessControlledRecord;
 import org.junit.Assert;
 import org.junit.Test;
-import uk.org.nbn.pipelines.io.avro.NBNAccessControlledRecord;
 
 public class MultimediaCsvConverterTest {
 
