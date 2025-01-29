@@ -118,7 +118,7 @@ public class MigrateUUIDPipeline implements Serializable {
 
     Dataset<Tuple2<String, Long>> firstLoadedDataset =
         occFirstLoadedDataset
-            .filter(row -> StringUtils.isNotEmpty(row.getString(1)))
+            //.filter(row -> StringUtils.isNotEmpty(row.getString(1)))
             .map(
                 row -> {
                   return Tuple2.apply(
