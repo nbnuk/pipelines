@@ -19,6 +19,7 @@ import uk.org.nbn.pipelines.vocabulary.NBNOccurrenceIssue;
 import uk.org.nbn.term.OSGridTerm;
 import uk.org.nbn.util.GISPoint;
 import uk.org.nbn.util.GridUtil;
+import uk.org.nbn.util.ScalaToJavaUtil;
 
 @Slf4j
 public class OSGridInterpreter {
@@ -72,12 +73,13 @@ public class OSGridInterpreter {
         // I think this will only ever be hit for records supplied with lat lon on the second call
         // and the other two only on the first call
         Integer computedGridSizeInMeters =
-            (Integer) GridUtil.getGridSizeInMeters(osGridRecord.getGridReference()).getOrElse(null);
+            ScalaToJavaUtil.scalaOptionToJavaInteger(
+                GridUtil.getGridSizeInMeters(osGridRecord.getGridReference()));
         osGridRecord.setGridSizeInMeters(computedGridSizeInMeters);
 
       } else if (!Strings.isNullOrEmpty(gridReference)) {
         Integer computedGridSizeInMeters =
-            (Integer) GridUtil.getGridSizeInMeters(gridReference).getOrElse(null);
+            ScalaToJavaUtil.scalaOptionToJavaInteger(GridUtil.getGridSizeInMeters(gridReference));
         osGridRecord.setGridSizeInMeters(computedGridSizeInMeters);
 
       } else if (!Strings.isNullOrEmpty(gridSizeInMeters)) {
@@ -259,7 +261,8 @@ public class OSGridInterpreter {
     ExtendedRecord extendedRecord = source.v1();
     if (suppliedWithGridReference(extendedRecord)) {
       GISPoint gisPoint =
-          GridUtil.processGridReference(osGridRecord.getGridReference()).getOrElse(null);
+          ScalaToJavaUtil.scalaOptionToJavaGISPoint(
+              GridUtil.processGridReference(osGridRecord.getGridReference()));
 
       if (gisPoint != null) {
         osGridRecord.setEasting(Ints.tryParse(gisPoint.easting()));
