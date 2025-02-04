@@ -20,8 +20,8 @@ echo 'Running spark uuid migration job'
 --class au.org.ala.pipelines.spark.MigrateUUIDPipeline \
 --driver-java-options "-Dlog4j.configuration=file:/data/la-pipelines/config/log4j.properties" \
 $MIGRATION_JAR \
---occUuidExportPath=$FS_PATH/migration/occ_uuid.csv \
---occFirstLoadedExportPath=$FS_PATH/migration/occ_first_loaded_date.csv \
+--occUuidExportPath=$FS_PATH/migration/occ_uuid.csv.gz \
+--occFirstLoadedExportPath=$FS_PATH/migration/occ_first_loaded_date.csv.gz \
 --targetPath=$FS_PATH/$DATA_PATH \
 
 echo 'List HDFS /$DATA_PATH'
