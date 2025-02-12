@@ -37,7 +37,8 @@ public class OSGridParser {
       }
       issues.addAll(result.getIssues());
     }
-    issues.add(ALAOccurrenceIssue.LOCATION_NOT_SUPPLIED.name());
+    //we can't determine this here
+    //issues.add(ALAOccurrenceIssue.LOCATION_NOT_SUPPLIED.name());
     return ParsedField.fail(issues);
   }
 

@@ -73,10 +73,14 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
 
     if(!Strings.isNullOrEmpty(gridReferenceValue)) {
       ParsedField<LatLng> result = OSGridParser.parseCoords(er);
-      issues.addAll(result.getIssues());
 
       if (result.isSuccessful() && !hasSuppliedLatLon) {
         setLatLonFromOSGridParseResult(result, alteredEr);
+        // Apply the issues relating to the result only if we're applying the result
+        issues.addAll(result.getIssues());
+      } else if (!result.isSuccessful()) {
+        // Apply this issues if we failed to parse the grid reference in order to flag it
+        issues.addAll(result.getIssues());
       }
     }
 
