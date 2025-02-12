@@ -37,9 +37,11 @@ public class OSGridExtensionTransformTests extends OSGridTestBase {
 
     List<String> osGridIssues = getListFromString(osGridIssuesTerm);
     Assert.assertTrue(
+            "Check DECIMAL_LAT_LONG_CALCULATED_FROM_GRID_REF issue added",
         osGridIssues.contains(NBNOccurrenceIssue.DECIMAL_LAT_LONG_CALCULATED_FROM_GRID_REF.name()));
 
     Assert.assertFalse(
+            "Check GRID_REF_INVALID issue not added",
         osGridIssues.contains(NBNOccurrenceIssue.GRID_REF_INVALID.name()));
   }
 
@@ -117,6 +119,7 @@ public class OSGridExtensionTransformTests extends OSGridTestBase {
 
     List<String> osGridIssues = getListFromString(osGridIssuesTerm);
     Assert.assertTrue(
+            "Check GRID_REF_INVALID issue set",
             osGridIssues.contains(NBNOccurrenceIssue.GRID_REF_INVALID.name()));
   }
 }

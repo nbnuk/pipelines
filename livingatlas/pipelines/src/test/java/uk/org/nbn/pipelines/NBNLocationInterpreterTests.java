@@ -114,7 +114,7 @@ public class NBNLocationInterpreterTests extends OSGridTestBase {
 
     Assert.assertNull(lr.getCoordinateUncertaintyInMeters());
     Assert.assertTrue(
-        "Check uncertainty issue removed",
+        "Check uncertainty issue not removed",
         lr.getIssues()
             .getIssueList()
             .contains(OccurrenceIssue.COORDINATE_UNCERTAINTY_METERS_INVALID.name()));
