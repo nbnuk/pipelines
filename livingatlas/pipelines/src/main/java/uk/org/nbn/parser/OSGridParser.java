@@ -49,7 +49,7 @@ public class OSGridParser {
     Option<GISPoint> result = GridUtil.processGridReference(gridReference);
 
     if (result.isEmpty()) {
-      return ParsedField.fail();
+      return ParsedField.fail(NBNOccurrenceIssue.GRID_REF_INVALID.name());
     }
 
     GISPoint gisPoint = result.get();

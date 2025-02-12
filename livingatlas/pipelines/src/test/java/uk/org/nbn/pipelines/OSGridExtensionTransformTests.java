@@ -38,6 +38,9 @@ public class OSGridExtensionTransformTests extends OSGridTestBase {
     List<String> osGridIssues = getListFromString(osGridIssuesTerm);
     Assert.assertTrue(
         osGridIssues.contains(NBNOccurrenceIssue.DECIMAL_LAT_LONG_CALCULATED_FROM_GRID_REF.name()));
+
+    Assert.assertFalse(
+        osGridIssues.contains(NBNOccurrenceIssue.GRID_REF_INVALID.name()));
   }
 
   @Test
@@ -96,5 +99,24 @@ public class OSGridExtensionTransformTests extends OSGridTestBase {
     ExtendedRecord result = transform.process(er);
 
     Assert.assertNotSame(er, result);
+  }
+
+
+  @Test
+  public void issueSetWhenGridReferenceInvalid() {
+    ExtendedRecord er = createTestRecord();
+    Map<String, String> coreTerms = er.getCoreTerms();
+
+    coreTerms.put(OSGridTerm.gridReference.qualifiedName(), "XXXX");
+
+    OSGridExtensionTransform transform = new OSGridExtensionTransform();
+    ExtendedRecord result = transform.process(er);
+
+    String osGridIssuesTerm = extractNullAwareValue(result, OSGridTerm.issues);
+    Assert.assertNotNull(osGridIssuesTerm);
+
+    List<String> osGridIssues = getListFromString(osGridIssuesTerm);
+    Assert.assertTrue(
+            osGridIssues.contains(NBNOccurrenceIssue.GRID_REF_INVALID.name()));
   }
 }

@@ -21,6 +21,7 @@ import org.gbif.pipelines.core.parsers.common.ParsedField;
 import org.gbif.pipelines.io.avro.ExtendedRecord;
 import org.gbif.pipelines.transforms.converters.OccurrenceJsonTransform;
 import uk.org.nbn.parser.OSGridParser;
+import uk.org.nbn.pipelines.vocabulary.NBNOccurrenceIssue;
 import uk.org.nbn.term.OSGridTerm;
 
 /** Transform to augment the core location terms from osGrid extension terms */
@@ -69,8 +70,14 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
         !Strings.isNullOrEmpty(decimalLatitudeValue)
             && !Strings.isNullOrEmpty(decimalLongitudeValue);
 
-    if (!hasSuppliedLatLon && !Strings.isNullOrEmpty(gridReferenceValue)) {
-      setLatLonFromOSGrid(er, alteredEr, issues);
+
+    if(!Strings.isNullOrEmpty(gridReferenceValue)) {
+      ParsedField<LatLng> result = OSGridParser.parseCoords(er);
+      issues.addAll(result.getIssues());
+
+      if (result.isSuccessful() && !hasSuppliedLatLon) {
+        setLatLonFromOSGridParseResult(result, alteredEr);
+      }
     }
 
     // put the issues in the extension so that we can retrieve and apply them in OSGridTransform
@@ -80,9 +87,7 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
     return alteredEr;
   }
 
-  private void setLatLonFromOSGrid(
-      ExtendedRecord er, ExtendedRecord alteredEr, List<String> issues) {
-    ParsedField<LatLng> result = OSGridParser.parseCoords(er);
+  private void setLatLonFromOSGridParseResult(ParsedField<LatLng> result, ExtendedRecord alteredEr) {
     if (result.isSuccessful()) {
       alteredEr
           .getCoreTerms()
@@ -95,7 +100,6 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
               result.getResult().getLongitude().toString());
       // grid util projects all coordinates to WGS84
       alteredEr.getCoreTerms().put(DwcTerm.geodeticDatum.qualifiedName(), PIPELINES_GEODETIC_DATUM);
-      issues.addAll(result.getIssues());
     }
   }
 }

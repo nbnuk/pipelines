@@ -259,7 +259,9 @@ public class OSGridInterpreter {
     // In biocache-store only records grid reference produces easting and northing.
     // todo -should we be using the processed value
     ExtendedRecord extendedRecord = source.v1();
-    if (suppliedWithGridReference(extendedRecord)) {
+
+    // We could simply check for Invalid Grid reference issue however there could have been an issue in converting latlon back to OSGrid so null check
+    if (suppliedWithGridReference(extendedRecord) && !Strings.isNullOrEmpty(osGridRecord.getGridReference())) {
       GISPoint gisPoint =
           ScalaToJavaUtil.scalaOptionToJavaGISPoint(
               GridUtil.processGridReference(osGridRecord.getGridReference()));
