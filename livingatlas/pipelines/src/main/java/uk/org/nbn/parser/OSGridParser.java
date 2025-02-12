@@ -2,7 +2,6 @@ package uk.org.nbn.parser;
 
 import static org.gbif.pipelines.core.utils.ModelUtils.extractNullAwareValue;
 
-import au.org.ala.pipelines.vocabulary.ALAOccurrenceIssue;
 import com.google.common.base.Strings;
 import java.util.*;
 import java.util.function.Function;
@@ -37,8 +36,8 @@ public class OSGridParser {
       }
       issues.addAll(result.getIssues());
     }
-    //we can't determine this here
-    //issues.add(ALAOccurrenceIssue.LOCATION_NOT_SUPPLIED.name());
+    // we can't determine this here
+    // issues.add(ALAOccurrenceIssue.LOCATION_NOT_SUPPLIED.name());
     return ParsedField.fail(issues);
   }
 

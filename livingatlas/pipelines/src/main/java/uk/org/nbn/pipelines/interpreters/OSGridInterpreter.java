@@ -260,8 +260,10 @@ public class OSGridInterpreter {
     // todo -should we be using the processed value
     ExtendedRecord extendedRecord = source.v1();
 
-    // We could simply check for Invalid Grid reference issue however there could have been an issue in converting latlon back to OSGrid so null check
-    if (suppliedWithGridReference(extendedRecord) && !Strings.isNullOrEmpty(osGridRecord.getGridReference())) {
+    // We could simply check for Invalid Grid reference issue however there could have been an issue
+    // in converting latlon back to OSGrid so null check
+    if (suppliedWithGridReference(extendedRecord)
+        && !Strings.isNullOrEmpty(osGridRecord.getGridReference())) {
       GISPoint gisPoint =
           ScalaToJavaUtil.scalaOptionToJavaGISPoint(
               GridUtil.processGridReference(osGridRecord.getGridReference()));

@@ -21,7 +21,6 @@ import org.gbif.pipelines.core.parsers.common.ParsedField;
 import org.gbif.pipelines.io.avro.ExtendedRecord;
 import org.gbif.pipelines.transforms.converters.OccurrenceJsonTransform;
 import uk.org.nbn.parser.OSGridParser;
-import uk.org.nbn.pipelines.vocabulary.NBNOccurrenceIssue;
 import uk.org.nbn.term.OSGridTerm;
 
 /** Transform to augment the core location terms from osGrid extension terms */
@@ -70,8 +69,7 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
         !Strings.isNullOrEmpty(decimalLatitudeValue)
             && !Strings.isNullOrEmpty(decimalLongitudeValue);
 
-
-    if(!Strings.isNullOrEmpty(gridReferenceValue)) {
+    if (!Strings.isNullOrEmpty(gridReferenceValue)) {
       ParsedField<LatLng> result = OSGridParser.parseCoords(er);
 
       if (result.isSuccessful() && !hasSuppliedLatLon) {
@@ -91,7 +89,8 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
     return alteredEr;
   }
 
-  private void setLatLonFromOSGridParseResult(ParsedField<LatLng> result, ExtendedRecord alteredEr) {
+  private void setLatLonFromOSGridParseResult(
+      ParsedField<LatLng> result, ExtendedRecord alteredEr) {
     if (result.isSuccessful()) {
       alteredEr
           .getCoreTerms()
