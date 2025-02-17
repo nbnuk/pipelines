@@ -99,4 +99,24 @@ public class NBNLocationInterpreterTests extends OSGridTestBase {
     Double expectedCoordinateUncertainty = 7071.1;
     Assert.assertEquals(expectedCoordinateUncertainty, lr.getCoordinateUncertaintyInMeters());
   }
+
+  @Test
+  public void coordinateUncertaintyNullWhenSetFromInvalidGridReference() {
+    ExtendedRecord er = createTestRecord();
+    Map<String, String> coreTerms = er.getCoreTerms();
+
+    coreTerms.put(OSGridTerm.gridReference.qualifiedName(), "XXXX");
+
+    LocationRecord lr = LocationRecord.newBuilder().setId(ID).build();
+    lr.getIssues().getIssueList().add(OccurrenceIssue.COORDINATE_UNCERTAINTY_METERS_INVALID.name());
+
+    NBNLocationInterpreter.interpretCoordinateUncertaintyInMeters(er, lr);
+
+    Assert.assertNull(lr.getCoordinateUncertaintyInMeters());
+    Assert.assertTrue(
+        "Check uncertainty issue not removed",
+        lr.getIssues()
+            .getIssueList()
+            .contains(OccurrenceIssue.COORDINATE_UNCERTAINTY_METERS_INVALID.name()));
+  }
 }

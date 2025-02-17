@@ -18,6 +18,7 @@ import org.spark_project.guava.primitives.Ints;
 import uk.org.nbn.term.OSGridTerm;
 import uk.org.nbn.util.GridUtil;
 import uk.org.nbn.util.OSGridHelpers;
+import uk.org.nbn.util.ScalaToJavaUtil;
 
 public class NBNLocationInterpreter {
   public static void interpretCoordinateUncertaintyInMetersFromPrecisionFormat(
@@ -110,7 +111,9 @@ public class NBNLocationInterpreter {
     Integer gridSizeInMeters = null;
 
     if (!Strings.isNullOrEmpty(gridReferenceValue)) {
-      gridSizeInMeters = GridUtil.getGridSizeInMeters(gridReferenceValue).getOrElse(null);
+      gridSizeInMeters =
+          ScalaToJavaUtil.scalaOptionToJavaInteger(
+              GridUtil.getGridSizeInMeters(gridReferenceValue));
     } else {
       gridSizeInMeters = Ints.tryParse(gridSizeInMetersValue);
     }

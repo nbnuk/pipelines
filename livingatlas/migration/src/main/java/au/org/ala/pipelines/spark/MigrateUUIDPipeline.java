@@ -118,18 +118,17 @@ public class MigrateUUIDPipeline implements Serializable {
 
     Dataset<Tuple2<String, Long>> firstLoadedDataset =
         occFirstLoadedDataset
-            //.filter(row -> StringUtils.isNotEmpty(row.getString(1)))
+            // .filter(row -> StringUtils.isNotEmpty(row.getString(1)))
             .map(
-                row -> {
-                  return Tuple2.apply(
-                      row.getString(0), // UUID
-                      row.getString(1) == null
-                              || "firstLoaded".equals(row.getString(1)) // skip header
-                          ? null
-                          : LocalDateTime.parse(row.getString(1), DateTimeFormatter.ISO_DATE_TIME)
-                              .toEpochSecond(ZoneOffset.UTC)); // firstLoaded
-                },
-                Encoders.tuple(Encoders.STRING(), Encoders.LONG()));
+            row -> {
+              return Tuple2.apply(
+                  row.getString(0), // UUID
+                  row.getString(1) == null || "firstLoaded".equals(row.getString(1)) // skip header
+                      ? null
+                      : LocalDateTime.parse(row.getString(1), DateTimeFormatter.ISO_DATE_TIME)
+                          .toEpochSecond(ZoneOffset.UTC)); // firstLoaded
+            },
+            Encoders.tuple(Encoders.STRING(), Encoders.LONG()));
 
     Dataset<Row> combined =
         uuidRecords.join(

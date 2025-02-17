@@ -372,6 +372,11 @@ public class TestUtils {
               // read src
               File absolutePath = new File("src/test/resources/collectory/" + datasetID + ".json");
 
+              if (request.getPath().startsWith("/accessControl/dataResourceNbn")) {
+                absolutePath =
+                    new File("src/test/resources/collectory/" + datasetID + "-accesscontrols.json");
+              }
+
               if (!absolutePath.exists()) {
                 return new MockResponse().setResponseCode(404);
               }

@@ -69,8 +69,17 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
         !Strings.isNullOrEmpty(decimalLatitudeValue)
             && !Strings.isNullOrEmpty(decimalLongitudeValue);
 
-    if (!hasSuppliedLatLon && !Strings.isNullOrEmpty(gridReferenceValue)) {
-      setLatLonFromOSGrid(er, alteredEr, issues);
+    if (!Strings.isNullOrEmpty(gridReferenceValue)) {
+      ParsedField<LatLng> result = OSGridParser.parseCoords(er);
+
+      if (result.isSuccessful() && !hasSuppliedLatLon) {
+        setLatLonFromOSGridParseResult(result, alteredEr);
+        // Apply the issues relating to the result only if we're applying the result
+        issues.addAll(result.getIssues());
+      } else if (!result.isSuccessful()) {
+        // Apply this issues if we failed to parse the grid reference in order to flag it
+        issues.addAll(result.getIssues());
+      }
     }
 
     // put the issues in the extension so that we can retrieve and apply them in OSGridTransform
@@ -80,9 +89,8 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
     return alteredEr;
   }
 
-  private void setLatLonFromOSGrid(
-      ExtendedRecord er, ExtendedRecord alteredEr, List<String> issues) {
-    ParsedField<LatLng> result = OSGridParser.parseCoords(er);
+  private void setLatLonFromOSGridParseResult(
+      ParsedField<LatLng> result, ExtendedRecord alteredEr) {
     if (result.isSuccessful()) {
       alteredEr
           .getCoreTerms()
@@ -95,7 +103,6 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
               result.getResult().getLongitude().toString());
       // grid util projects all coordinates to WGS84
       alteredEr.getCoreTerms().put(DwcTerm.geodeticDatum.qualifiedName(), PIPELINES_GEODETIC_DATUM);
-      issues.addAll(result.getIssues());
     }
   }
 }
