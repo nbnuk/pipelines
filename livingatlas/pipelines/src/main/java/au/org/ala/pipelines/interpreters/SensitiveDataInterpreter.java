@@ -26,6 +26,7 @@ import org.gbif.pipelines.io.avro.*;
 import uk.org.nbn.term.OSGridTerm;
 import uk.org.nbn.util.GridUtil;
 import uk.org.nbn.util.OSGridHelpers;
+import uk.org.nbn.util.ScalaToJavaUtil;
 
 /** Sensitive data interpretation methods. */
 @Slf4j
@@ -722,16 +723,17 @@ public class SensitiveDataInterpreter {
     }
 
     String generalisedGridReference =
-        GridUtil.convertReferenceToResolution(
-                originalGridReference, generalisationToApplyInMetres.get())
-            .getOrElse(null);
+        ScalaToJavaUtil.scalaOptionToString(
+            GridUtil.convertReferenceToResolution(
+                originalGridReference, generalisationToApplyInMetres.get()));
     if (!Strings.isNullOrEmpty(generalisedGridReference)) {
 
       GRID_REFERENCE.get(properties).set(Optional.of(generalisedGridReference), original, updated);
 
       Optional<Integer> generalisedGridSizeInMeters =
           Optional.ofNullable(
-              GridUtil.getGridSizeInMeters(generalisedGridReference).getOrElse(null));
+              ScalaToJavaUtil.scalaOptionToJavaInteger(
+                  GridUtil.getGridSizeInMeters(generalisedGridReference)));
       if (generalisedGridSizeInMeters.isPresent()) {
         GRID_SIZE_IN_METERS
             .get(properties)

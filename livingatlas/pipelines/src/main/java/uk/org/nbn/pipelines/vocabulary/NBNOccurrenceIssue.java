@@ -30,7 +30,9 @@ public enum NBNOccurrenceIssue implements InterpretationRemark {
       InterpretationRemarkSeverity.ERROR, new Term[] {DwcTerm.identificationVerificationStatus}),
 
   UNRECOGNISED_IDENTIFICATIONVERIFICATIONSTATUS(
-      InterpretationRemarkSeverity.ERROR, new Term[] {DwcTerm.identificationVerificationStatus});
+      InterpretationRemarkSeverity.ERROR, new Term[] {DwcTerm.identificationVerificationStatus}),
+
+  GRID_REF_INVALID(InterpretationRemarkSeverity.ERROR, new Term[] {OSGridTerm.gridReference});
 
   private final Set<Term> relatedTerms;
   private final InterpretationRemarkSeverity severity;
