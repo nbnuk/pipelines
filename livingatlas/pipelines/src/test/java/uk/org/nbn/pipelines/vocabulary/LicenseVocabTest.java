@@ -41,6 +41,7 @@ public class LicenseVocabTest {
     assertEquals(Optional.of("CC-BY-NC"), vocab.matchTerm("CC BY NC"));
     assertEquals(Optional.of("CC-BY-NC"), vocab.matchTerm("CC-BY NC"));
     assertEquals(Optional.of("CC-BY-NC"), vocab.matchTerm("CC-NY-NC"));
+    assertEquals(Optional.of("CC-BY-NC"), vocab.matchTerm("CC-BY_NC"));
   }
 
   @Test
