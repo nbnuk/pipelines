@@ -737,6 +737,7 @@
   <field name="establishmentMeansTaxon" type="string" docValues="true" multiValued="false" indexed="true"/>
   <field name="publicResolutionInMeters" type="int" docValues="true" multiValued="false" indexed="true"/>
   <field name="vitality" type="string" docValues="true" multiValued="false" indexed="true"/>
+  <field name="raw_identificationVerificationStatus" type="string"  docValues="true" indexed="true" />
 
   <!-- Do we need this -->
   <copyField source="basisOfRecord" dest="text"/>
