@@ -1,9 +1,5 @@
 # Living Atlas Pipelines extensions 
-| | |
-| ---- | ----|
-| [![Build Status](https://api.travis-ci.org/gbif/pipelines.svg?branch=ala-dev)](http://travis-ci.org/gbif/pipelines) | Travis build for ala-dev branch |
-| [![Build Status](https://builds.gbif.org/job/pipelines/badge/icon?subject=DEV%20-%20Build%20Status&style=flat-square)](https://builds.gbif.org/job/pipelines/)| GBIF Jenkins build for dev branch |
-| [![Coverage](https://sonar.gbif.org/api/project_badges/measure?project=org.gbif.pipelines%3Apipelines-parent&metric=coverage)](https://sonar.gbif.org/dashboard?id=org.gbif.pipelines%3Apipelines-parent) |  Sonar  |
+###    [![Build Status](https://travis-ci.com/nbnuk/pipelines.svg?branch=master-nbn)](https://travis-ci.com/github/nbnuk/pipelines)
 
 This module is to add functionality required by the Living Atlases to facilitate the replacement to [biocache-store](https://github.com/AtlasOfLivingAustralia/biocache-store) for data ingress. 
 

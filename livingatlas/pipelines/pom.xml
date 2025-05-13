@@ -16,10 +16,10 @@
   <description>Extensions to GBIF pipelines to support ALA and the Living Atlas community</description>
 
   <scm>
-    <connection>scm:git:git@github.com:gbif/pipelines.git</connection>
-    <url>https://github.com/gbif/pipelines</url>
-    <developerConnection>scm:git:git@github.com:gbif/pipelines.git</developerConnection>
-    <tag>pipelines-parent-2.18.4</tag>
+<!--    <connection>scm:git:git@github.com:gbif/pipelines.git</connection>-->
+<!--    <url>https://github.com/gbif/pipelines</url>-->
+<!--    <developerConnection>scm:git:git@github.com:gbif/pipelines.git</developerConnection>-->
+<!--    <tag>pipelines-parent-2.18.4</tag>-->
   </scm>
 
   <properties>

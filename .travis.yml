@@ -6,7 +6,21 @@ jdk:
   - openjdk8
 branches:
   only:
-  - master
-  - ala-dev
-  - gbif-dev
-script: "mvn verify  -U"
+  - master-nbn
+before_install:
+  - mkdir -p ~/.m2; wget -q -O ~/.m2/settings.xml https://raw.githubusercontent.com/nbnuk/travis-build-configuration/master/travis_maven_settings.xml
+  - cd $TRAVIS_BUILD_DIR
+install: true
+script: >
+  [ "${TRAVIS_PULL_REQUEST}" = "false" ] &&
+  mvn deploy -B -Dmaven.test.skip=true
+  -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+  -pl livingatlas/pipelines -am -P livingatlas-artifacts
+  ||
+  mvn install -B -Dmaven.test.skip=true
+  -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+  -pl livingatlas/pipelines -am -P livingatlas-artifacts
+env:
+  global:
+  - secure: MVxuajHMh/w1nshpvKeDZizUxDsT2Hwxq7T5GPmepMo/IZDYislJteGQ/qZf2pE4TW5XoUhxXCvvVe+unagk7J5DE2idZSHiOaqnpx+JExP0UJTzljNkdGE6IyanTKySmFYZNNzXKVAo54eJ9QbV6JtW0WRHDvy/kJdY/XjBl0MfawgOpZ9gObTiDFibHgR19LVSMBzhXZw2mvxSYfxSMSYOzJO0cpsQyHRxgLro87xxBKIR8jMbu8ufxvwIXW0XqL+AGi69wzic66shDkPkTNrxKMGedV6BVmE6twyB2dGEB/An1a0f7DoPDLO7U48zkqHybYo4J0/ABcOQ6js9zdqDNE/1FbOCQJ0sSjUbhCZzTrDBqFznxhvbkrZzgDWdh68qynY0UC5iG+lORJFyHnSbbfYaGX59WNMuhTubFDE55JyjpOIPlJAhux/JY+ggHWkLQoLYKMdzMpyO+8xirdAtRrfKqpaCWk07ZNop01ulJyFK6P5nFuAm4LicdPGNtg+RjYTBB5Pz/NKlvXl5eLVK7TQpRMKSxj/uLtGGgxbjzLVR5egh7YqPwy0b8SuWN6pMa3MBMoZol912AdJyEIa8o2CcwwbuW1N6dOzO8sfcPBOxwSLy27CvJZkHm2iQnbW2qJ1Ekm+4Q3MITlC4YsewBGdnCnxz/mQ1eVQ/ry0=
+  - secure: iEY/UUYJdskT4EYR9HXT6JvgE5UvwfZC4bzulygMeT0V3Dil0cXt7UAsDPz2acYORNfibas7/R7FpfDzkjrWXNMw4Gn7+ztNxqVfikxBCpq93uZAt0arqiaZ1QHEYhLejA+9Pn2jyTTGMtCU4hYA9jyOzr2Rew3uwKpNWf8XLOisQSEQkxc2oPNGNg4p1PhsGDftmCgs45su5rG3T87E0+JjZ2JC0GkrPUXZi98+UQ8SjpkdC2bedkiJas05mXAf1rGglwReEoynuON5mRuXOhDwVhkZ2pnyRLQcjyx5xiIWrlykL2NLGVjEilVl8571qHPIpBDl9Q5/uVLqfQzqyusUXfuXrEFbZev74oLnvKJDWAXskyJj0jLisQbPGctujkMpMT4UoI9dASTJP00CpjJg0niKIaNH+nKeBxjq9bDw72EoSstHb0WQ0vwmmc8InTGOc3AKD6hV5Rctj538EmUkGj+dB2gWqXbrD1+mdRNDlinNMLxNRO3Hk/KdRgOY0TgecbUe9QG6NIs/BY3QUHfKb/xR31TEwoopbq12lFxXIM+yV7nnOAW6jgqdrsSjsABmg7Cue893o+Y1UImDGaJpKSVBPLpX6l70FFjHbSqMcBM4MIJInUFRU6yOp5zbpakpWJ8b6D+qD36XwjmAtPWH4nJjXpfMwSqTQ4TmdjU=

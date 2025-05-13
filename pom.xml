@@ -24,24 +24,25 @@
   <url>https://github.com/gbif/pipelines</url>
 
   <scm>
-    <connection>scm:git:git@github.com:gbif/pipelines.git</connection>
-    <url>https://github.com/gbif/pipelines</url>
-    <developerConnection>scm:git:git@github.com:gbif/pipelines.git</developerConnection>
-    <tag>pipelines-parent-2.18.4</tag>
+<!--    <connection>scm:git:git@github.com:gbif/pipelines.git</connection>-->
+<!--    <url>https://github.com/gbif/pipelines</url>-->
+<!--    <developerConnection>scm:git:git@github.com:gbif/pipelines.git</developerConnection>-->
+<!--    <tag>pipelines-parent-2.18.4</tag>-->
   </scm>
 
   <distributionManagement>
     <site>
-      <id>gh-pages</id>
-      <url>https://gbif.github.io/pipelines/</url>
+      <url></url>
     </site>
     <repository>
-      <id>gbif-release</id>
-      <url>https://repository.gbif.org/content/repositories/releases</url>
+      <id>uk-nbn-releases</id>
+      <name>Internal Releases</name>
+      <url>https://repository.gbif.org/repository/uk-nbn-releases/</url>
     </repository>
     <snapshotRepository>
-      <id>gbif-snapshot</id>
-      <url>https://repository.gbif.org/content/repositories/snapshots</url>
+      <id>uk-nbn-snapshots</id>
+      <name>Internal Releases</name>
+      <url>https://repository.gbif.org/repository/uk-nbn-snapshots/</url>
     </snapshotRepository>
   </distributionManagement>
 
