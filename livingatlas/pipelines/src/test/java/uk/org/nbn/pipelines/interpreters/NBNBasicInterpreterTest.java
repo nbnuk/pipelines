@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import org.gbif.api.vocabulary.BasisOfRecord;
+import org.gbif.dwc.terms.DcTerm;
 import org.gbif.dwc.terms.DwcTerm;
 import org.gbif.pipelines.io.avro.BasicRecord;
 import org.gbif.pipelines.io.avro.ExtendedRecord;
@@ -23,7 +24,7 @@ public class NBNBasicInterpreterTest {
   public void interpretLicenseEmptyTest() throws FileNotFoundException {
     // State
     Map<String, String> coreMap = new HashMap<>();
-    coreMap.put("http://rs.tdwg.org/dwc/terms/license", "");
+    coreMap.put(DcTerm.license.qualifiedName(), "");
     ExtendedRecord er = ExtendedRecord.newBuilder().setId(ID).setCoreTerms(coreMap).build();
     BasicRecord br = BasicRecord.newBuilder().setId(ID).build();
     Vocab vocab = NBNLicense.getInstance(null);
@@ -41,7 +42,7 @@ public class NBNBasicInterpreterTest {
   public void interpretLicenseNullTest() throws FileNotFoundException {
     // State
     Map<String, String> coreMap = new HashMap<>();
-    coreMap.put("http://rs.tdwg.org/dwc/terms/license", null);
+    coreMap.put(DcTerm.license.qualifiedName(), null);
     ExtendedRecord er = ExtendedRecord.newBuilder().setId(ID).setCoreTerms(coreMap).build();
     BasicRecord br = BasicRecord.newBuilder().setId(ID).build();
     Vocab vocab = NBNLicense.getInstance(null);
@@ -59,7 +60,7 @@ public class NBNBasicInterpreterTest {
   public void interpretLicenseMatchingTest() throws FileNotFoundException {
     // State
     Map<String, String> coreMap = new HashMap<>();
-    coreMap.put("http://rs.tdwg.org/dwc/terms/license", "CC-BY NC");
+    coreMap.put(DcTerm.license.qualifiedName(), "CC-BY NC");
     ExtendedRecord er = ExtendedRecord.newBuilder().setId(ID).setCoreTerms(coreMap).build();
     BasicRecord br = BasicRecord.newBuilder().setId(ID).build();
     Vocab vocab = NBNLicense.getInstance(null);
@@ -77,7 +78,7 @@ public class NBNBasicInterpreterTest {
   public void interpretLicenseNonMatchingTest() throws FileNotFoundException {
     // State
     Map<String, String> coreMap = new HashMap<>();
-    coreMap.put("http://rs.tdwg.org/dwc/terms/license", "not a license");
+    coreMap.put(DcTerm.license.qualifiedName(), "not a license");
     ExtendedRecord er = ExtendedRecord.newBuilder().setId(ID).setCoreTerms(coreMap).build();
     BasicRecord br = BasicRecord.newBuilder().setId(ID).build();
     Vocab vocab = NBNLicense.getInstance(null);
@@ -87,7 +88,7 @@ public class NBNBasicInterpreterTest {
     consumer.accept(er, br);
 
     // Should
-    assertEquals("UNSPECIFIED", br.getLicense());
+    assertEquals("UNSUPPORTED", br.getLicense());
     assertTrue(br.getIssues().getIssueList().isEmpty());
   }
 
