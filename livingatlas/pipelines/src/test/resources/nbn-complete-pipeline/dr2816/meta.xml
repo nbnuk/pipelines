@@ -14,12 +14,12 @@
     <field index="7" term="http://purl.org/dc/terms/license"/>
     <field index="8" term="http://rs.tdwg.org/dwc/terms/basisOfRecord"/>
     <field index="9" term="http://purl.org/dc/terms/rightsHolder"/>
-    <field index="10" term="http://nbn.org.uk/dwc/terms/osgrid/gridReference"/>
+    <field index="10" term="http://data.nbn.org/nbn/terms/gridReference"/>
     <field index="11" term="http://rs.tdwg.org/dwc/terms/coordinateUncertaintyInMeters"/>
     <field index="12" term="http://rs.tdwg.org/dwc/terms/decimalLatitude"/>
     <field index="13" term="http://rs.tdwg.org/dwc/terms/decimalLongitude"/>
     <field index="14" term="http://rs.tdwg.org/dwc/terms/geodeticDatum"/>
-    <field index="15" term="http://nbn.org.uk/dwc/terms/osgrid/gridSizeInMeters"/>
+    <field index="15" term="http://data.nbn.org/nbn/terms/gridSizeInMeters"/>
     <field index="16" term="http://rs.tdwg.org/dwc/terms/locality"/>
     <field index="17" term="http://rs.tdwg.org/dwc/terms/locationRemarks"/>
     <field index="18" term="http://rs.tdwg.org/dwc/terms/occurrenceRemarks"/>

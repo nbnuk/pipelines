@@ -9,11 +9,11 @@
   "fields": [
     {"name": "id","type":"string" },
     {"name": "coreId","type":["null","string"],"default": null },
-    {"name": "gridReference", "type":["null","string"], "default":null, "doc":"http://nbn.org.uk/dwc/terms/osgrid/gridReference"},
-    {"name": "gridSizeInMeters", "type": ["null","int"], "default":null, "doc":"http://nbn.org.uk/dwc/terms/osgrid/gridSizeInMeters"},
-    {"name": "easting", "type":["null","int"], "default":null, "doc":"http://nbn.org.uk/easting"},
-    {"name": "northing", "type":["null","int"], "default":null, "doc":"http://nbn.org.uk/northing"},
+    {"name": "gridReference", "type":["null","string"], "default":null, "doc":"http://data.nbn.org/nbn/terms/gridReference"},
+    {"name": "gridSizeInMeters", "type": ["null","int"], "default":null, "doc":"http://data.nbn.org/nbn/terms/gridSizeInMeters"},
+    {"name": "easting", "type":["null","int"], "default":null, "doc":"http://data.nbn.org/nbn/terms/easting"},
+    {"name": "northing", "type":["null","int"], "default":null, "doc":"http://data.nbn.org/nbn/terms/northing"},
     {"name": "created", "type": ["null", "long"], "default": null },
-    {"name": "issues", "type": "IssueRecord", "default":{}, "doc":"http://nbn.org.uk/dwc/terms/osgrid/issues"}
+    {"name": "issues", "type": "IssueRecord", "default":{}, "doc":"http://data.nbn.org/nbn/terms/issues"}
   ]
 }

@@ -9,7 +9,7 @@ public enum OSGridTerm implements Term {
   gridReference,
   gridSizeInMeters,
   issues;
-  private static final URI NS_URI = URI.create("http://nbn.org.uk/dwc/terms/osgrid/");
+  private static final URI NS_URI = URI.create("http://data.nbn.org/nbn/terms/");
 
   OSGridTerm() {}
 
@@ -37,7 +37,7 @@ public enum OSGridTerm implements Term {
   }
 
   public String prefix() {
-    return "osgrid";
+    return "nbn";
   }
 
   public URI namespace() {
