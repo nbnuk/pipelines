@@ -696,7 +696,7 @@
   <field name="easting" type="int" docValues="true" indexed="true"/>
   <field name="northing" type="int" docValues="true" indexed="true"/>
   <field name="raw_gridReference" type="string" docValues="true" indexed="true" />
-  <field name="raw_gridSizeInMeters" type="int" docValues="true" indexed="true" />
+  <field name="raw_gridSizeInMeters" type="string" docValues="true" indexed="true" />
 
   <field name="grid_ref_100000" type="string" indexed="true" docValues="true"/>
   <field name="grid_ref_50000" type="string" indexed="true" docValues="true"/>
