@@ -160,10 +160,10 @@ public class NBNAccessControlledDataInterpreter {
         extendedRecord.getCoreTerms(),
         DwcTerm.locationRemarks.qualifiedName(),
         altered.get(DwcTerm.locationRemarks.simpleName()));
-    replaceOrRemove(
-        extendedRecord.getCoreTerms(),
-        DwcTerm.occurrenceRemarks.qualifiedName(),
-        altered.get(DwcTerm.occurrenceRemarks.simpleName()));
+//    replaceOrRemove(
+//        extendedRecord.getCoreTerms(),
+//        DwcTerm.occurrenceRemarks.qualifiedName(),
+//        altered.get(DwcTerm.occurrenceRemarks.simpleName()));
   }
 
   private static Map<String, String> blur(
