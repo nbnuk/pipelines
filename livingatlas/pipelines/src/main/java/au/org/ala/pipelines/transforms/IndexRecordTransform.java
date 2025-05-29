@@ -283,11 +283,23 @@ public class IndexRecordTransform implements Serializable, IndexFields {
             && accessControlledRecord.getAccessControlled();
 
     if (isAccessControlled) {
+      //TODO this needs refactoring
       if (lr != null) {
+
+        lr = LocationRecord.newBuilder(lr).build();
+
+        Map<String, String> altered = accessControlledRecord.getAltered();
+        if (accessControlledRecord
+                .getAltered().containsKey(DwcTerm.locality.simpleName())) {
+          lr.setLocality(altered.get(DwcTerm.locality.simpleName()));
+        }
+        if (accessControlledRecord
+                .getAltered().containsKey(DwcTerm.footprintWKT.simpleName())) {
+          lr.setFootprintWKT(altered.get(DwcTerm.footprintWKT.simpleName()));
+        }
+
         String alteredValue =
-            accessControlledRecord
-                .getAltered()
-                .get(DwcTerm.coordinateUncertaintyInMeters.simpleName());
+            altered.get(DwcTerm.coordinateUncertaintyInMeters.simpleName());
 
         if (lr.getCoordinateUncertaintyInMeters() == null
             || (alteredValue != null
@@ -296,7 +308,7 @@ public class IndexRecordTransform implements Serializable, IndexFields {
           // it if it is the same
           // because the access control version, the number of decimal points in the lat/long is
           // reflective of the resolution
-          lr = LocationRecord.newBuilder(lr).build();
+
           NBNAccessControlledDataInterpreter.applyAccessControls(accessControlledRecord, lr);
 
           if (osGridRecord != null) {
