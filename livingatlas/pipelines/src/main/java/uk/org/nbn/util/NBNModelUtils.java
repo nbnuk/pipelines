@@ -3,7 +3,10 @@ package uk.org.nbn.util;
 import java.util.Arrays;
 import java.util.List;
 import org.gbif.dwc.terms.Term;
+import org.gbif.pipelines.core.utils.ModelUtils;
 import org.gbif.pipelines.io.avro.ExtendedRecord;
+import org.gbif.pipelines.io.avro.Issues;
+import uk.org.nbn.pipelines.vocabulary.NBNOccurrenceIssue;
 
 public class NBNModelUtils {
 
@@ -19,5 +22,9 @@ public class NBNModelUtils {
 
   public static String getStringFromList(List<String> input) {
     return String.join("|", input);
+  }
+
+  public static void addIssue(Issues model, NBNOccurrenceIssue issue) {
+    ModelUtils.addIssue(model, issue.name());
   }
 }

@@ -10,11 +10,16 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.gbif.api.vocabulary.BasisOfRecord;
 import org.gbif.api.vocabulary.License;
+import org.gbif.api.vocabulary.OccurrenceStatus;
 import org.gbif.dwc.terms.DcTerm;
 import org.gbif.dwc.terms.DwcTerm;
+import org.gbif.kvs.KeyValueStore;
+import org.gbif.pipelines.core.parsers.SimpleTypeParser;
+import org.gbif.pipelines.core.utils.ModelUtils;
 import org.gbif.pipelines.io.avro.BasicRecord;
 import org.gbif.pipelines.io.avro.ExtendedRecord;
 import uk.org.nbn.pipelines.vocabulary.NBNOccurrenceIssue;
+import uk.org.nbn.util.NBNModelUtils;
 
 /**
  * Extensions to {@link org.gbif.pipelines.core.interpreters.core.BasicInterpreter} to support NBN
@@ -78,4 +83,46 @@ public class NBNBasicInterpreter {
   //      br.setLicense(License.UNSPECIFIED.name());
   //    }
   //  }
+
+  /** {@link DwcTerm#occurrenceStatus} interpretation. */
+  public static BiConsumer<ExtendedRecord, BasicRecord> interpretOccurrenceStatus(
+      KeyValueStore<String, OccurrenceStatus> occStatusKvStore) {
+    return (er, br) -> {
+      if (occStatusKvStore == null) {
+        return;
+      }
+
+      // Term extraction reflects BasicInterpreter
+      String rawCount = ModelUtils.extractNullAwareValue(er, DwcTerm.individualCount);
+      Integer parsedCount = SimpleTypeParser.parsePositiveIntOpt(rawCount).orElse(null);
+
+      String rawOccStatus = ModelUtils.extractNullAwareValue(er, DwcTerm.occurrenceStatus);
+      OccurrenceStatus parsedOccStatus =
+          rawOccStatus != null ? occStatusKvStore.get(rawOccStatus) : null;
+
+      boolean isCountNull = rawCount == null;
+      boolean isCountRubbish = rawCount != null && parsedCount == null;
+
+      boolean isOccNull = rawOccStatus == null;
+      boolean isOccRubbish = parsedOccStatus == null;
+
+      // Structure of conditional clauses reflects BasicInterpreter
+      // rawCount === null
+      if (isCountNull) {
+        if (isOccNull) {
+          NBNModelUtils.addIssue(br, NBNOccurrenceIssue.OCCURRENCE_STATUS_ASSUMED_PRESENT);
+        } else if (isOccRubbish) {
+          // OCCURRENCE_STATUS_UNPARSABLE already added in BasicInterpreter
+          NBNModelUtils.addIssue(br, NBNOccurrenceIssue.OCCURRENCE_STATUS_ASSUMED_PRESENT);
+        }
+      } else if (isCountRubbish) {
+        if (isOccNull) {
+          NBNModelUtils.addIssue(br, NBNOccurrenceIssue.OCCURRENCE_STATUS_ASSUMED_PRESENT);
+        } else if (isOccRubbish) {
+          // OCCURRENCE_STATUS_UNPARSABLE already added in BasicInterpreter
+          NBNModelUtils.addIssue(br, NBNOccurrenceIssue.OCCURRENCE_STATUS_ASSUMED_PRESENT);
+        }
+      }
+    };
+  }
 }
