@@ -3,13 +3,23 @@ package uk.org.nbn.pipelines.interpreters;
 import static org.junit.Assert.*;
 
 import au.org.ala.pipelines.vocabulary.Vocab;
+import au.org.ala.util.TestUtils;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.gbif.api.vocabulary.BasisOfRecord;
+import org.gbif.api.vocabulary.OccurrenceIssue;
+import org.gbif.api.vocabulary.OccurrenceStatus;
 import org.gbif.dwc.terms.DcTerm;
 import org.gbif.dwc.terms.DwcTerm;
+import org.gbif.kvs.KeyValueStore;
+import org.gbif.pipelines.core.interpreters.core.BasicInterpreter;
+import org.gbif.pipelines.factory.OccurrenceStatusKvStoreFactory;
 import org.gbif.pipelines.io.avro.BasicRecord;
 import org.gbif.pipelines.io.avro.ExtendedRecord;
 import org.junit.Test;
@@ -247,5 +257,220 @@ public class NBNBasicInterpreterTest {
 
     // Should
     assertEquals("Accepted - considered correct", br.getIdentificationVerificationStatus());
+  }
+
+  @Test
+  public void givenOccurrenceStatusValid_whenNBNInterpretOccurrenceStatus_shouldAddNoIssues()
+      throws FileNotFoundException {
+    // State
+    Map<String, String> coreMap = new HashMap<>();
+    coreMap.put(DwcTerm.occurrenceStatus.qualifiedName(), OccurrenceStatus.PRESENT.name());
+
+    ExtendedRecord er = ExtendedRecord.newBuilder().setId(ID).setCoreTerms(coreMap).build();
+    BasicRecord br = BasicRecord.newBuilder().setId(ID).build();
+
+    KeyValueStore<String, OccurrenceStatus> vocab =
+        OccurrenceStatusKvStoreFactory.getInstanceSupplier(TestUtils.getConfig().getGbifConfig())
+            .get();
+    // When
+    BiConsumer<ExtendedRecord, BasicRecord> consumer =
+        BasicInterpreter.interpretOccurrenceStatus(vocab);
+    consumer.accept(er, br);
+
+    BiConsumer<ExtendedRecord, BasicRecord> NBNconsumer =
+        NBNBasicInterpreter.interpretOccurrenceStatus(vocab);
+    NBNconsumer.accept(er, br);
+
+    // Should
+    assertEquals(OccurrenceStatus.PRESENT.name(), br.getOccurrenceStatus());
+    assertTrue(br.getIssues().getIssueList().isEmpty());
+  }
+
+  @Test
+  public void
+      givenOccurrenceStatusMissingAndIndividualCountValid_whenNBNInterpretOccurrenceStatus_shouldAddNoIssues()
+          throws FileNotFoundException {
+    // State
+    Map<String, String> coreMap = new HashMap<>();
+    coreMap.put(DwcTerm.individualCount.qualifiedName(), "1");
+
+    ExtendedRecord er = ExtendedRecord.newBuilder().setId(ID).setCoreTerms(coreMap).build();
+    BasicRecord br = BasicRecord.newBuilder().setId(ID).build();
+
+    final List<String> expectedALAIssues =
+        Arrays.asList(OccurrenceIssue.OCCURRENCE_STATUS_INFERRED_FROM_INDIVIDUAL_COUNT.name());
+
+    KeyValueStore<String, OccurrenceStatus> vocab =
+        OccurrenceStatusKvStoreFactory.getInstanceSupplier(TestUtils.getConfig().getGbifConfig())
+            .get();
+    // When
+    BiConsumer<ExtendedRecord, BasicRecord> consumer =
+        BasicInterpreter.interpretOccurrenceStatus(vocab);
+    consumer.accept(er, br);
+
+    assertEquals(OccurrenceStatus.PRESENT.name(), br.getOccurrenceStatus());
+    assertEquals(expectedALAIssues, br.getIssues().getIssueList());
+
+    BiConsumer<ExtendedRecord, BasicRecord> NBNconsumer =
+        NBNBasicInterpreter.interpretOccurrenceStatus(vocab);
+    NBNconsumer.accept(er, br);
+
+    // Should
+    assertEquals(expectedALAIssues, br.getIssues().getIssueList());
+  }
+
+  @Test
+  public void
+      givenMissingOccurrenceStatusAndMissingCount_whenNBNInterpretOccurrenceStatus_shouldAddAssumedPresentIssue()
+          throws FileNotFoundException {
+    // State
+    Map<String, String> coreMap = new HashMap<>();
+    ExtendedRecord er = ExtendedRecord.newBuilder().setId(ID).setCoreTerms(coreMap).build();
+    BasicRecord br = BasicRecord.newBuilder().setId(ID).build();
+
+    final List<String> expectedNBNIssues =
+        Arrays.asList(NBNOccurrenceIssue.OCCURRENCE_STATUS_ASSUMED_PRESENT.name());
+
+    KeyValueStore<String, OccurrenceStatus> vocab =
+        OccurrenceStatusKvStoreFactory.getInstanceSupplier(TestUtils.getConfig().getGbifConfig())
+            .get();
+    // When
+    BiConsumer<ExtendedRecord, BasicRecord> consumer =
+        BasicInterpreter.interpretOccurrenceStatus(vocab);
+    consumer.accept(er, br);
+
+    assertEquals(OccurrenceStatus.PRESENT.name(), br.getOccurrenceStatus());
+    assertTrue(br.getIssues().getIssueList().isEmpty());
+
+    BiConsumer<ExtendedRecord, BasicRecord> NBNconsumer =
+        NBNBasicInterpreter.interpretOccurrenceStatus(vocab);
+    NBNconsumer.accept(er, br);
+
+    // Should
+    assertEquals(expectedNBNIssues, br.getIssues().getIssueList());
+  }
+
+  @Test
+  public void
+      givenInvalidOccurrenceStatusAndMissingCount_whenNBNInterpretOccurrenceStatus_shouldAddAssumedPresentIssue()
+          throws FileNotFoundException {
+    // State
+    Map<String, String> coreMap = new HashMap<>();
+
+    coreMap.put(DwcTerm.occurrenceStatus.qualifiedName(), "someinvalidvalue");
+
+    ExtendedRecord er = ExtendedRecord.newBuilder().setId(ID).setCoreTerms(coreMap).build();
+    BasicRecord br = BasicRecord.newBuilder().setId(ID).build();
+
+    final List<String> expectedALAIssues =
+        Arrays.asList(OccurrenceIssue.OCCURRENCE_STATUS_UNPARSABLE.name());
+
+    final List<String> expectedNBNIssues =
+        Arrays.asList(NBNOccurrenceIssue.OCCURRENCE_STATUS_ASSUMED_PRESENT.name());
+
+    final List<String> expectedIssues =
+        Stream.concat(expectedALAIssues.stream(), expectedNBNIssues.stream())
+            .collect(Collectors.toList());
+
+    KeyValueStore<String, OccurrenceStatus> vocab =
+        OccurrenceStatusKvStoreFactory.getInstanceSupplier(TestUtils.getConfig().getGbifConfig())
+            .get();
+    // When
+    BiConsumer<ExtendedRecord, BasicRecord> consumer =
+        BasicInterpreter.interpretOccurrenceStatus(vocab);
+    consumer.accept(er, br);
+
+    assertEquals(OccurrenceStatus.PRESENT.name(), br.getOccurrenceStatus());
+    assertEquals(expectedALAIssues, br.getIssues().getIssueList());
+
+    BiConsumer<ExtendedRecord, BasicRecord> NBNconsumer =
+        NBNBasicInterpreter.interpretOccurrenceStatus(vocab);
+    NBNconsumer.accept(er, br);
+
+    // Should
+    assertEquals(expectedIssues, br.getIssues().getIssueList());
+  }
+
+  @Test
+  public void
+      givenMissingOccurrenceStatusAndInvalidCount_whenNBNInterpretOccurrenceStatus_shouldAddAssumedPresentIssue()
+          throws FileNotFoundException {
+    // State
+    Map<String, String> coreMap = new HashMap<>();
+
+    coreMap.put(DwcTerm.individualCount.qualifiedName(), "someinvalidvalue");
+
+    ExtendedRecord er = ExtendedRecord.newBuilder().setId(ID).setCoreTerms(coreMap).build();
+    BasicRecord br = BasicRecord.newBuilder().setId(ID).build();
+
+    final List<String> expectedALAIssues =
+        Arrays.asList(OccurrenceIssue.INDIVIDUAL_COUNT_INVALID.name());
+
+    final List<String> expectedNBNIssues =
+        Arrays.asList(NBNOccurrenceIssue.OCCURRENCE_STATUS_ASSUMED_PRESENT.name());
+
+    final List<String> expectedIssues =
+        Stream.concat(expectedALAIssues.stream(), expectedNBNIssues.stream())
+            .collect(Collectors.toList());
+
+    KeyValueStore<String, OccurrenceStatus> vocab =
+        OccurrenceStatusKvStoreFactory.getInstanceSupplier(TestUtils.getConfig().getGbifConfig())
+            .get();
+    // When
+    BiConsumer<ExtendedRecord, BasicRecord> consumer =
+        BasicInterpreter.interpretOccurrenceStatus(vocab);
+    consumer.accept(er, br);
+
+    assertEquals(OccurrenceStatus.PRESENT.name(), br.getOccurrenceStatus());
+    assertEquals(expectedALAIssues, br.getIssues().getIssueList());
+
+    BiConsumer<ExtendedRecord, BasicRecord> NBNconsumer =
+        NBNBasicInterpreter.interpretOccurrenceStatus(vocab);
+    NBNconsumer.accept(er, br);
+
+    // Should
+    assertEquals(expectedIssues, br.getIssues().getIssueList());
+  }
+
+  @Test
+  public void
+      givenInvalidOccurrenceStatusAndInvalidCount_whenNBNInterpretOccurrenceStatus_shouldAddAssumedPresentIssue()
+          throws FileNotFoundException {
+    // State
+    Map<String, String> coreMap = new HashMap<>();
+
+    coreMap.put(DwcTerm.individualCount.qualifiedName(), "someinvalidvalue");
+    coreMap.put(DwcTerm.occurrenceStatus.qualifiedName(), "someinvalidvalue");
+
+    ExtendedRecord er = ExtendedRecord.newBuilder().setId(ID).setCoreTerms(coreMap).build();
+    BasicRecord br = BasicRecord.newBuilder().setId(ID).build();
+
+    final List<String> expectedALAIssues =
+        Arrays.asList(
+            OccurrenceIssue.OCCURRENCE_STATUS_UNPARSABLE.name(),
+            OccurrenceIssue.INDIVIDUAL_COUNT_INVALID.name());
+
+    final List<String> expectedNBNIssues =
+        Arrays.asList(NBNOccurrenceIssue.OCCURRENCE_STATUS_ASSUMED_PRESENT.name());
+
+    final List<String> expectedIssues =
+        Stream.concat(expectedALAIssues.stream(), expectedNBNIssues.stream())
+            .collect(Collectors.toList());
+
+    KeyValueStore<String, OccurrenceStatus> vocab =
+        OccurrenceStatusKvStoreFactory.getInstanceSupplier(TestUtils.getConfig().getGbifConfig())
+            .get();
+    // When
+    BiConsumer<ExtendedRecord, BasicRecord> consumer =
+        BasicInterpreter.interpretOccurrenceStatus(vocab);
+    consumer.accept(er, br);
+
+    BiConsumer<ExtendedRecord, BasicRecord> NBNconsumer =
+        NBNBasicInterpreter.interpretOccurrenceStatus(vocab);
+    NBNconsumer.accept(er, br);
+
+    // Should
+    assertEquals(OccurrenceStatus.PRESENT.name(), br.getOccurrenceStatus());
+    assertEquals(expectedIssues, br.getIssues().getIssueList());
   }
 }
