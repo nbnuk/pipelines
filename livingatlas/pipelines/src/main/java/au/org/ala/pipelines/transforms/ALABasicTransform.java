@@ -138,6 +138,7 @@ public class ALABasicTransform extends Transform<ExtendedRecord, BasicRecord> {
         .via(VocabularyInterpreter.interpretDegreeOfEstablishment(vocabularyService))
         .via(VocabularyInterpreter.interpretLifeStage(vocabularyService))
         .via(ALABasicInterpreter::interpretLicense)
+        .via(BasicInterpreter::interpretAssociatedSequences)
         .via(NBNBasicInterpreter.interpretLicense(nbnLicenseVocab))
         .via(NBNBasicInterpreter::interpretBasisOfRecord)
         .via(
