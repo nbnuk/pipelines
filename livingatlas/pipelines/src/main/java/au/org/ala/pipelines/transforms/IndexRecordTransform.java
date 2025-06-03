@@ -751,13 +751,13 @@ public class IndexRecordTransform implements Serializable, IndexFields {
   private static void applyTemporalRecord(TemporalRecord tr, IndexRecord.Builder indexRecord) {
     if (tr.getEventDate() != null) {
 
-      Long date = parseInterpretedDate(tr.getEventDate().getGte());
+      Long date = parseInterpretedDate(tr.getEventDate().getGte(), false);
       if (date != null) {
         indexRecord.getDates().put(DwcTerm.eventDate.simpleName(), date);
       }
 
       // eventDateEnd
-      Long endDate = parseInterpretedDate(tr.getEventDate().getLte());
+      Long endDate = parseInterpretedDate(tr.getEventDate().getLte(), true);
       if (endDate != null) {
         indexRecord.getDates().put(EVENT_DATE_END, endDate);
       }
@@ -864,7 +864,7 @@ public class IndexRecordTransform implements Serializable, IndexFields {
    * @return
    * @throws ParseException
    */
-  private static Long parseInterpretedDate(String dateString) {
+  private static Long parseInterpretedDate(String dateString, Boolean useEndOfPeriods) {
 
     if (dateString == null) {
       return null;
@@ -888,6 +888,30 @@ public class IndexRecordTransform implements Serializable, IndexFields {
       } else if (r.getPayload() instanceof ZonedDateTime) {
         ZonedDateTime ldt = ((ZonedDateTime) r.getPayload());
         return ldt.toInstant().toEpochMilli();
+      } else if (r.getPayload() instanceof YearMonth) {
+        YearMonth yearMonth = ((YearMonth) r.getPayload());
+        if (useEndOfPeriods) {
+          return yearMonth
+              .atEndOfMonth()
+              .atTime(23, 59, 59, 999_000_000)
+              .atZone(ZoneId.of("UTC"))
+              .toInstant()
+              .toEpochMilli();
+        } else {
+          return yearMonth.atDay(1).atStartOfDay(ZoneId.of("UTC")).toInstant().toEpochMilli();
+        }
+      } else if (r.getPayload() instanceof Year) {
+        Year year = ((Year) r.getPayload());
+        if (useEndOfPeriods) {
+          return year.atDay(1)
+              .atStartOfDay(ZoneId.of("UTC"))
+              .plusYears(1)
+              .toInstant()
+              .minusMillis(1)
+              .toEpochMilli();
+        } else {
+          return year.atDay(1).atStartOfDay(ZoneId.of("UTC")).toInstant().toEpochMilli();
+        }
       }
     } catch (Exception e) {
       log.error("Un-parsable date produced by downstream interpretation " + dateString);
