@@ -217,7 +217,7 @@ public class IndexRecordTransform implements Serializable, IndexFields {
     skipKeys.add(DwcTerm.preparations.simpleName());
     skipKeys.add(DwcTerm.datasetID.simpleName());
     skipKeys.add(DwcTerm.datasetName.simpleName());
-//    skipKeys.add(DwcTerm.samplingProtocol.simpleName());
+    //    skipKeys.add(DwcTerm.samplingProtocol.simpleName());
     skipKeys.add(DwcTerm.otherCatalogNumbers.simpleName());
     skipKeys.add(DwcTerm.organismQuantity.simpleName());
 
@@ -283,23 +283,20 @@ public class IndexRecordTransform implements Serializable, IndexFields {
             && accessControlledRecord.getAccessControlled();
 
     if (isAccessControlled) {
-      //TODO this needs refactoring
+      // TODO this needs refactoring
       if (lr != null) {
 
         lr = LocationRecord.newBuilder(lr).build();
 
         Map<String, String> altered = accessControlledRecord.getAltered();
-        if (accessControlledRecord
-                .getAltered().containsKey(DwcTerm.locality.simpleName())) {
+        if (accessControlledRecord.getAltered().containsKey(DwcTerm.locality.simpleName())) {
           lr.setLocality(altered.get(DwcTerm.locality.simpleName()));
         }
-        if (accessControlledRecord
-                .getAltered().containsKey(DwcTerm.footprintWKT.simpleName())) {
+        if (accessControlledRecord.getAltered().containsKey(DwcTerm.footprintWKT.simpleName())) {
           lr.setFootprintWKT(altered.get(DwcTerm.footprintWKT.simpleName()));
         }
 
-        String alteredValue =
-            altered.get(DwcTerm.coordinateUncertaintyInMeters.simpleName());
+        String alteredValue = altered.get(DwcTerm.coordinateUncertaintyInMeters.simpleName());
 
         if (lr.getCoordinateUncertaintyInMeters() == null
             || (alteredValue != null
@@ -472,11 +469,9 @@ public class IndexRecordTransform implements Serializable, IndexFields {
       // if we already have an interpreted value, prefix with raw_
       if (interpretedFields.contains(key)) {
         indexRecord.getStrings().put(RAW_PREFIX + key, entry.getValue());
-      }
-      else if (key.equals(DwcTerm.taxonID.simpleName())){
+      } else if (key.equals(DwcTerm.taxonID.simpleName())) {
         indexRecord.getStrings().put(RAW_PREFIX + key, entry.getValue());
-      }
-      else {
+      } else {
         if (key.endsWith(DwcTerm.dynamicProperties.simpleName())) {
           try {
             // index separate properties and the dynamicProperties
