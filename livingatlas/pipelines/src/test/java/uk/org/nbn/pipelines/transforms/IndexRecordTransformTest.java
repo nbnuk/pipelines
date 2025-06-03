@@ -1,21 +1,37 @@
 package uk.org.nbn.pipelines.transforms;
 
 import static au.org.ala.pipelines.transforms.IndexFields.EVENT_DATE_END;
-import static org.gbif.pipelines.common.PipelinesVariables.Pipeline.Indexing.EVENT_DATE;
+import static au.org.ala.pipelines.transforms.IndexRecordTransform.RAW_PREFIX;
+import static org.gbif.pipelines.common.PipelinesVariables.Pipeline.Indexing.*;
 import static org.junit.Assert.*;
 
 import au.org.ala.pipelines.transforms.IndexRecordTransform;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Arrays;
 import java.util.Date;
+import org.gbif.dwc.terms.DwcTerm;
 import org.gbif.pipelines.io.avro.*;
 import org.junit.Test;
+import uk.org.nbn.pipelines.vocabulary.NBNOccurrenceIssue;
+import uk.org.nbn.term.OSGridTerm;
 
 public class IndexRecordTransformTest {
   private static final String ID = "777";
   private static final String UUID = "777";
 
   private IndexRecord getIndexRecord(TemporalRecord tr) {
+    return getIndexRecord(
+        ExtendedRecord.newBuilder().setId(ID).build(),
+        tr,
+        OSGridRecord.newBuilder().setId(ID).build());
+  }
+
+  private IndexRecord getIndexRecord(ExtendedRecord er, OSGridRecord osgr) {
+    return getIndexRecord(er, TemporalRecord.newBuilder().setId(ID).build(), osgr);
+  }
+
+  private IndexRecord getIndexRecord(ExtendedRecord er, TemporalRecord tr, OSGridRecord osgr) {
     ALAUUIDRecord ur = ALAUUIDRecord.newBuilder().setId(ID).setUuid(UUID).build();
     return IndexRecordTransform.createIndexRecord(
         BasicRecord.newBuilder().setId(ID).build(),
@@ -23,20 +39,83 @@ public class IndexRecordTransformTest {
         LocationRecord.newBuilder().setId(ID).build(),
         null,
         ALATaxonRecord.newBuilder().setId(ID).build(),
-        ExtendedRecord.newBuilder().setId(ID).build(),
+        er,
         ALAAttributionRecord.newBuilder().setId(ID).build(),
         ur,
         ImageRecord.newBuilder().setId(ID).build(),
         TaxonProfile.newBuilder().setId(ID).build(),
         ALASensitivityRecord.newBuilder().setId(ID).build(),
         NBNAccessControlledRecord.newBuilder().setId(ID).build(),
-        OSGridRecord.newBuilder().setId(ID).build(),
+        osgr,
         MultimediaRecord.newBuilder().setId(ID).build(),
         EventCoreRecord.newBuilder().setId(ID).build(),
         LocationRecord.newBuilder().setId(ID).build(),
         TemporalRecord.newBuilder().setId(ID).build(),
         null,
         null);
+  }
+
+  @Test
+  public void
+      givenLatLonComputedFromGridRefAndNoGeodeticDatum_whenIndexing_shouldRemoveRawLatLonAndGeodeticDatum() {
+
+    ExtendedRecord er = ExtendedRecord.newBuilder().setId(ID).build();
+
+    er.getCoreTerms().put(DwcTerm.decimalLatitude.qualifiedName(), "0");
+    er.getCoreTerms().put(DwcTerm.decimalLongitude.qualifiedName(), "0");
+    er.getCoreTerms().put(DwcTerm.geodeticDatum.qualifiedName(), "ESPG:4326");
+
+    OSGridRecord osgr =
+        OSGridRecord.newBuilder()
+            .setId(ID)
+            .setGridReference("AA")
+            .setGridSizeInMeters(10000)
+            .setIssuesBuilder(
+                IssueRecord.newBuilder()
+                    .setIssueList(
+                        Arrays.asList(
+                            NBNOccurrenceIssue.DECIMAL_LAT_LONG_CALCULATED_FROM_GRID_REF.name())))
+            .build();
+
+    IndexRecord ir = getIndexRecord(er, osgr);
+
+    assertFalse(ir.getStrings().containsKey(RAW_PREFIX + DECIMAL_LATITUDE));
+    assertFalse(ir.getStrings().containsKey(RAW_PREFIX + DECIMAL_LONGITUDE));
+    assertFalse(ir.getStrings().containsKey(RAW_PREFIX + DwcTerm.geodeticDatum.simpleName()));
+  }
+
+  @Test
+  public void
+      givenLatLonComputedFromGridRefAndGeodeticDatumSupplied_whenIndexing_shouldRemoveRawLatLonAndSuppliedGeodeticDatumSetAsRaw() {
+
+    final String OSGB_GEODETIC_DATUM = "OSGB";
+
+    ExtendedRecord er = ExtendedRecord.newBuilder().setId(ID).build();
+
+    er.getCoreTerms().put(DwcTerm.decimalLatitude.qualifiedName(), "0");
+    er.getCoreTerms().put(DwcTerm.decimalLongitude.qualifiedName(), "0");
+    er.getCoreTerms()
+        .put(OSGridTerm.gridReferenceGeodeticDatum.qualifiedName(), OSGB_GEODETIC_DATUM);
+
+    OSGridRecord osgr =
+        OSGridRecord.newBuilder()
+            .setId(ID)
+            .setGridReference("AA")
+            .setGridSizeInMeters(10000)
+            .setIssuesBuilder(
+                IssueRecord.newBuilder()
+                    .setIssueList(
+                        Arrays.asList(
+                            NBNOccurrenceIssue.DECIMAL_LAT_LONG_CALCULATED_FROM_GRID_REF.name())))
+            .build();
+
+    IndexRecord ir = getIndexRecord(er, osgr);
+
+    assertFalse(ir.getStrings().containsKey(RAW_PREFIX + DECIMAL_LATITUDE));
+    assertFalse(ir.getStrings().containsKey(RAW_PREFIX + DECIMAL_LONGITUDE));
+    assertTrue(ir.getStrings().containsKey(RAW_PREFIX + DwcTerm.geodeticDatum.simpleName()));
+    assertEquals(
+        OSGB_GEODETIC_DATUM, ir.getStrings().get(RAW_PREFIX + DwcTerm.geodeticDatum.simpleName()));
   }
 
   @Test

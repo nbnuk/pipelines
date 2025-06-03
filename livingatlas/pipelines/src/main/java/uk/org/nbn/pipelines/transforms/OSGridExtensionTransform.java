@@ -101,6 +101,16 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
           .put(
               DwcTerm.decimalLongitude.qualifiedName(),
               result.getResult().getLongitude().toString());
+
+      // we must set geodeticDatum to WGS84 so move supplied value to separate term for retrieval during indexing
+      if (alteredEr.getCoreTerms().containsKey(DwcTerm.geodeticDatum.qualifiedName())) {
+        alteredEr
+            .getCoreTerms()
+            .put(
+                OSGridTerm.gridReferenceGeodeticDatum.qualifiedName(),
+                alteredEr.getCoreTerms().get(DwcTerm.geodeticDatum.qualifiedName()));
+      }
+
       // grid util projects all coordinates to WGS84
       alteredEr.getCoreTerms().put(DwcTerm.geodeticDatum.qualifiedName(), PIPELINES_GEODETIC_DATUM);
     }

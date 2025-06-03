@@ -57,6 +57,30 @@ public class OSGridExtensionTransformTests extends OSGridTestBase {
 
     Assert.assertEquals(
         PIPELINES_GEODETIC_DATUM, result.getCoreTerms().get(DwcTerm.geodeticDatum.qualifiedName()));
+    Assert.assertFalse(
+        result.getCoreTerms().containsKey(OSGridTerm.gridReferenceGeodeticDatum.qualifiedName()));
+  }
+
+  @Test
+  public void suppliedGeodeticDatumStoredWhenLatLonSetFromGridReference() {
+    ExtendedRecord er = createTestRecord();
+    Map<String, String> coreTerms = er.getCoreTerms();
+
+    final String OSGB_GEODETIC_DATUM = "OSGB";
+
+    coreTerms.put(OSGridTerm.gridReference.qualifiedName(), "NM39");
+    coreTerms.put(DwcTerm.geodeticDatum.qualifiedName(), OSGB_GEODETIC_DATUM);
+
+    OSGridExtensionTransform transform = new OSGridExtensionTransform();
+    ExtendedRecord result = transform.process(er);
+
+    Assert.assertEquals(
+        PIPELINES_GEODETIC_DATUM, result.getCoreTerms().get(DwcTerm.geodeticDatum.qualifiedName()));
+    Assert.assertTrue(
+        result.getCoreTerms().containsKey(OSGridTerm.gridReferenceGeodeticDatum.qualifiedName()));
+    Assert.assertEquals(
+        OSGB_GEODETIC_DATUM,
+        result.getCoreTerms().get(OSGridTerm.gridReferenceGeodeticDatum.qualifiedName()));
   }
 
   @Test

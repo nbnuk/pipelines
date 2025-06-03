@@ -46,6 +46,7 @@ import org.gbif.pipelines.io.avro.NBNAccessControlledRecord;
 import org.jetbrains.annotations.NotNull;
 import uk.org.nbn.pipelines.interpreters.NBNAccessControlledDataInterpreter;
 import uk.org.nbn.pipelines.vocabulary.NBNOccurrenceIssue;
+import uk.org.nbn.term.OSGridTerm;
 
 /**
  * A transform that creates IndexRecords which are used downstream to push data to a search index
@@ -456,6 +457,15 @@ public class IndexRecordTransform implements Serializable, IndexFields {
       }
       if (raw.containsKey(DwcTerm.decimalLongitude.qualifiedName())) {
         raw.remove(DwcTerm.decimalLongitude.qualifiedName());
+      }
+
+      if (raw.containsKey(OSGridTerm.gridReferenceGeodeticDatum.qualifiedName())) {
+        raw.put(
+            DwcTerm.geodeticDatum.qualifiedName(),
+            raw.get(OSGridTerm.gridReferenceGeodeticDatum.qualifiedName()));
+        raw.remove(OSGridTerm.gridReferenceGeodeticDatum.qualifiedName());
+      } else if (raw.containsKey(DwcTerm.geodeticDatum.qualifiedName())) {
+        raw.remove(DwcTerm.geodeticDatum.qualifiedName());
       }
     }
 

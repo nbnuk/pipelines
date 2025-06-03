@@ -8,7 +8,8 @@ import org.gbif.dwc.terms.TermFactory;
 public enum OSGridTerm implements Term {
   gridReference,
   gridSizeInMeters,
-  issues;
+  issues,
+  gridReferenceGeodeticDatum;
   private static final URI NS_URI = URI.create("http://data.nbn.org/nbn/terms/");
 
   OSGridTerm() {}
