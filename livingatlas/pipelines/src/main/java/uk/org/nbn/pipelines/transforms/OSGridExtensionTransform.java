@@ -102,7 +102,8 @@ public class OSGridExtensionTransform extends DoFn<ExtendedRecord, ExtendedRecor
               DwcTerm.decimalLongitude.qualifiedName(),
               result.getResult().getLongitude().toString());
 
-      // we must set geodeticDatum to WGS84 so move supplied value to separate term for retrieval during indexing
+      // we must set geodeticDatum to WGS84 so move supplied value to separate term for retrieval
+      // during indexing
       if (alteredEr.getCoreTerms().containsKey(DwcTerm.geodeticDatum.qualifiedName())) {
         alteredEr
             .getCoreTerms()
