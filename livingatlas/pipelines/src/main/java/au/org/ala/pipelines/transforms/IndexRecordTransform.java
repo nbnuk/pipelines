@@ -335,6 +335,9 @@ public class IndexRecordTransform implements Serializable, IndexFields {
     // add event date
     applyTemporalRecord(tr, indexRecord);
 
+    // add grid resolutions to the index e.g. grid_ref_100 grid_ref_1000 etc
+    applyOSGridRecord(osGridRecord, indexRecord);
+
     // GBIF taxonomy - add if available
     if (txr != null) {
       addGBIFTaxonomy(txr, indexRecord, assertions);
@@ -786,6 +789,16 @@ public class IndexRecordTransform implements Serializable, IndexFields {
       } catch (ParseException ex) {
         // NOP
       }
+    }
+  }
+
+  private static void applyOSGridRecord(OSGridRecord osg, IndexRecord.Builder indexRecord) {
+    if (osg != null && !Strings.isNullOrEmpty(osg.getGridReference())) {
+      Map<String, String> gridAtResolutions =
+          uk.org.nbn.util.GridUtil.getGridRefAsResolutions(osg.getGridReference());
+      gridAtResolutions
+          .entrySet()
+          .forEach(r -> indexRecord.getStrings().put(r.getKey(), r.getValue()));
     }
   }
 
@@ -1320,18 +1333,6 @@ public class IndexRecordTransform implements Serializable, IndexFields {
   static void addToIndexRecord(
       SpecificRecordBase record, IndexRecord.Builder builder, Set<String> skipKeys) {
     addToIndexRecord(record, builder, skipKeys, true);
-
-    if (record.getClass() == OSGridRecord.class) {
-      OSGridRecord osg = (OSGridRecord) record;
-      // adds these to the index: grid_ref_100 grid_ref_1000 etc
-      if (!Strings.isNullOrEmpty(osg.getGridReference())) {
-        Map<String, String> gridAtResolutions =
-            uk.org.nbn.util.GridUtil.getGridRefAsResolutions(osg.getGridReference());
-        gridAtResolutions
-            .entrySet()
-            .forEach(r -> builder.getStrings().put(r.getKey(), r.getValue()));
-      }
-    }
   }
 
   static void addToIndexRecord(
