@@ -218,7 +218,7 @@ public class IndexRecordTransform implements Serializable, IndexFields {
     skipKeys.add(DwcTerm.preparations.simpleName());
     skipKeys.add(DwcTerm.datasetID.simpleName());
     skipKeys.add(DwcTerm.datasetName.simpleName());
-    //    skipKeys.add(DwcTerm.samplingProtocol.simpleName());
+    skipKeys.add(DwcTerm.samplingProtocol.simpleName());
     skipKeys.add(DwcTerm.otherCatalogNumbers.simpleName());
     skipKeys.add(DwcTerm.organismQuantity.simpleName());
 
@@ -481,8 +481,6 @@ public class IndexRecordTransform implements Serializable, IndexFields {
 
       // if we already have an interpreted value, prefix with raw_
       if (interpretedFields.contains(key)) {
-        indexRecord.getStrings().put(RAW_PREFIX + key, entry.getValue());
-      } else if (key.equals(DwcTerm.taxonID.simpleName())) {
         indexRecord.getStrings().put(RAW_PREFIX + key, entry.getValue());
       } else {
         if (key.endsWith(DwcTerm.dynamicProperties.simpleName())) {
