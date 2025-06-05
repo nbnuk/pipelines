@@ -434,7 +434,7 @@
 
   <!-- Large text fields -->
   <field name="raw_footprintWKT"         type="string" docValues="true"  useDocValuesAsStored="true" />
-  <field name="raw_dynamicProperties"    type="string" docValues="true"  useDocValuesAsStored="true" />
+  <!--<field name="raw_dynamicProperties"    type="string" docValues="true"  useDocValuesAsStored="true" />-->
   <field name="raw_verbatimCoordinates"  type="string" docValues="true"  useDocValuesAsStored="true" />
 
   <!-- recent GBIF additions -->
