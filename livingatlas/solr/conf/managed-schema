@@ -434,8 +434,8 @@
 
   <!-- Large text fields -->
   <field name="raw_footprintWKT"         type="string" docValues="true"  useDocValuesAsStored="true" />
-  <!--<field name="raw_dynamicProperties"    type="string" docValues="true"  useDocValuesAsStored="true" />-->
-  <field name="raw_verbatimCoordinates"  type="string" docValues="true"  useDocValuesAsStored="true" />
+  <!-- <field name="raw_dynamicProperties"    type="string" docValues="true"  useDocValuesAsStored="true" /> -->
+  <!-- <field name="raw_verbatimCoordinates"  type="string" docValues="true"  useDocValuesAsStored="true" /> -->
 
   <!-- recent GBIF additions -->
   <field name="identifiedByID"  type="string" docValues="true" indexed="true" multiValued="true"/>
@@ -661,11 +661,11 @@
   <field name="raw_taxonRank"					         type="string"  docValues="true" indexed="true" />
   <field name="raw_taxonRankID"					         type="string"  docValues="true" indexed="true" />
   <field name="raw_recordedByID"					     type="string"  docValues="true" indexed="true" />
-  <field name="raw_references"					         type="string"  docValues="true" indexed="true" />
+  <!-- <field name="raw_references"					         type="string"  docValues="true" indexed="true" /> -->
   <field name="raw_relativeOrganismQuantity"	         type="string"  docValues="true" indexed="true" />
   <field name="raw_repatriated"					         type="string"  docValues="true" indexed="true" />
   <field name="raw_rgt"					                 type="string"  docValues="true" indexed="true" />
-  <field name="raw_rightsHolder"			             type="string"  docValues="true" indexed="true" />
+  <!-- <field name="raw_rightsHolder"			             type="string"  docValues="true" indexed="true" /> -->
   <field name="raw_sampleSizeUnit"			             type="string"  docValues="true" indexed="true" />
   <field name="raw_sampleSizeValue"			             type="string"  docValues="true" indexed="true" />
   <field name="raw_scientificName"			             type="string"  docValues="true" indexed="true" />
@@ -682,7 +682,7 @@
   <field name="raw_stateProvince"					     type="string"  docValues="true" indexed="true" />
   <field name="raw_taxonConceptID"					     type="string"  docValues="true" indexed="true" />
   <field name="raw_title"					             type="string"  docValues="true" indexed="true" />
-  <field name="raw_type"					             type="string"  docValues="true" indexed="true" />
+  <!-- <field name="raw_type"					             type="string"  docValues="true" indexed="true" /> -->
   <field name="raw_typeStatus"					         type="string"  docValues="true" indexed="true" />
   <field name="raw_typifiedName"					     type="string"  docValues="true" indexed="true" />
   <field name="raw_vernacularName"					     type="string"  docValues="true" indexed="true" />
@@ -736,7 +736,9 @@
 
   <!-- NBN fields -->
   <field name="habitatsTaxon" type="string" docValues="true" multiValued="true" indexed="true"/>
+  <field name="raw_habitatsTaxon" type="string" docValues="true" multiValued="true" indexed="true"/>
   <field name="establishmentMeansTaxon" type="string" docValues="true" multiValued="false" indexed="true"/>
+  <field name="raw_establishmentMeansTaxon" type="string" docValues="true" multiValued="false" indexed="true"/>
   <field name="publicResolutionInMeters" type="int" docValues="true" multiValued="false" indexed="true"/>
   <field name="vitality" type="string" docValues="true" multiValued="false" indexed="true"/>
   <field name="raw_identificationVerificationStatus" type="string"  docValues="true" indexed="true" />

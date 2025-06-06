@@ -174,6 +174,8 @@ public class LocationTransform extends Transform<ExtendedRecord, LocationRecord>
             .via(ALALocationInterpreter::interpretCoordinateUncertaintyInMeters)
             .via(NBNLocationInterpreter::interpretCoordinateUncertaintyInMetersFromPrecisionFormat)
             .via(NBNLocationInterpreter::interpretCoordinateUncertaintyInMeters)
+            .via(LocationInterpreter::interpretHigherGeography)
+            .via(LocationInterpreter::interpretGeoreferencedBy)
             .via(alaLocationInterpreter::interpretGeoreferencedDate)
             .via(ALALocationInterpreter::interpretGeoreferenceTerms)
             .via(
