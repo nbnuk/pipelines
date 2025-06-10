@@ -215,7 +215,7 @@
   <field name="associatedOccurrences" type="string" docValues="true" indexed="true"/>
   <field name="associatedOrganisms" type="string" docValues="true" indexed="true"/>
   <field name="associatedReferences" type="string" docValues="true" indexed="true"/>
-  <field name="associatedSequences" type="string" docValues="true" indexed="true"/>
+  <field name="associatedSequences" type="string" docValues="true" indexed="true" multiValued="true"/>
   <field name="associatedTaxa" type="string" docValues="true" indexed="true"/>
   <field name="basisOfRecord" type="string" docValues="true" indexed="true"/>
   <field name="bed" type="string" docValues="true" indexed="true"/>
@@ -272,12 +272,12 @@
   <field name="georeferenceRemarks" type="string" docValues="true" indexed="true"/>
   <field name="georeferenceSources" type="string" docValues="true" indexed="true"/>
   <field name="georeferenceVerificationStatus" type="string" docValues="true" indexed="true"/>
-  <field name="georeferencedBy" type="string" docValues="true" indexed="true"/>
+  <field name="georeferencedBy" type="string" docValues="true" indexed="true" multiValued="true"/>
   <field name="georeferencedDate" type="string" docValues="true" indexed="true"/>
   <field name="group" type="string" docValues="true" indexed="true"/>
   <field name="habitat" type="string" docValues="true" indexed="true"/>
   <field name="higherClassification" type="string" docValues="true" indexed="true"/>
-  <field name="higherGeography" type="string" docValues="true" indexed="true"/>
+  <field name="higherGeography" type="string" docValues="true" indexed="true" multiValued="true"/>
   <field name="higherGeographyID" type="string" docValues="true" indexed="true"/>
   <field name="highestBiostratigraphicZone" type="string" docValues="true" indexed="true"/>
   <field name="identificationID" type="string" docValues="true" indexed="true"/>
