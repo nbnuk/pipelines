@@ -602,6 +602,7 @@
   <field name="raw_endDayOfYear"					     type="string"  docValues="true" indexed="true" />
   <field name="raw_establishmentMeans"				     type="string"  docValues="true" indexed="true" />
   <field name="raw_eventDate"					         type="string"  docValues="true" indexed="true" />
+  <field name="raw_eventDateEnd"					     type="string"  docValues="true" indexed="true" />
   <field name="raw_family"					             type="string"  docValues="true" indexed="true" />
   <field name="raw_familyID"					         type="string"  docValues="true" indexed="true" />
   <field name="raw_format"					             type="string"  docValues="true" indexed="true" />
