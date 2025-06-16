@@ -1026,7 +1026,7 @@ public class IndexRecordTransform implements Serializable, IndexFields {
                 .filter(
                     name ->
                         !DwcTerm.pathway.simpleName().equals(name)
-                        && !DwcTerm.recordedBy.simpleName().equals(name)
+                            && !DwcTerm.recordedBy.simpleName().equals(name)
                             && !DwcTerm.organismQuantity
                                 .simpleName()
                                 .equals(
