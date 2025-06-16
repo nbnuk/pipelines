@@ -757,13 +757,13 @@ public class IndexRecordTransform implements Serializable, IndexFields {
   private static void applyTemporalRecord(TemporalRecord tr, IndexRecord.Builder indexRecord) {
     if (tr.getEventDate() != null) {
 
-      Long date = parseInterpretedDate(tr.getEventDate().getGte(), false);
+      Long date = parseInterpretedDate(tr.getEventDate().getGte(), tr.getDatePrecision(), false);
       if (date != null) {
         indexRecord.getDates().put(DwcTerm.eventDate.simpleName(), date);
       }
 
       // eventDateEnd
-      Long endDate = parseInterpretedDate(tr.getEventDate().getLte(), true);
+      Long endDate = parseInterpretedDate(tr.getEventDate().getLte(), tr.getDatePrecision(), true);
       if (endDate != null) {
         indexRecord.getDates().put(EVENT_DATE_END, endDate);
       }
@@ -880,7 +880,8 @@ public class IndexRecordTransform implements Serializable, IndexFields {
    * @return
    * @throws ParseException
    */
-  private static Long parseInterpretedDate(String dateString, Boolean useEndOfPeriods) {
+  private static Long parseInterpretedDate(
+      String dateString, String datePrecision, Boolean useEndOfPeriods) {
 
     if (dateString == null) {
       return null;
@@ -904,7 +905,7 @@ public class IndexRecordTransform implements Serializable, IndexFields {
       } else if (r.getPayload() instanceof ZonedDateTime) {
         ZonedDateTime ldt = ((ZonedDateTime) r.getPayload());
         return ldt.toInstant().toEpochMilli();
-      } else if (r.getPayload() instanceof YearMonth) {
+      } else if (r.getPayload() instanceof YearMonth && "MONTH_RANGE".equals(datePrecision)) {
         YearMonth yearMonth = ((YearMonth) r.getPayload());
         if (useEndOfPeriods) {
           return yearMonth
@@ -916,7 +917,7 @@ public class IndexRecordTransform implements Serializable, IndexFields {
         } else {
           return yearMonth.atDay(1).atStartOfDay(ZoneId.of("UTC")).toInstant().toEpochMilli();
         }
-      } else if (r.getPayload() instanceof Year) {
+      } else if (r.getPayload() instanceof Year && "YEAR_RANGE".equals(datePrecision)) {
         Year year = ((Year) r.getPayload());
         if (useEndOfPeriods) {
           return year.atDay(1)

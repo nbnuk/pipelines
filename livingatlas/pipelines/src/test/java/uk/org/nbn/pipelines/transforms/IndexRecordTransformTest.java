@@ -119,13 +119,48 @@ public class IndexRecordTransformTest {
   }
 
   @Test
+  public void testYearIndexing() {
+
+    EventDate ed = new EventDate();
+    ed.setGte("2023");
+
+    TemporalRecord tr =
+        TemporalRecord.newBuilder().setId(ID).setEventDate(ed).setDatePrecision("YEAR").build();
+
+    IndexRecord ir = getIndexRecord(tr);
+
+    assertFalse(ir.getDates().containsKey(EVENT_DATE));
+    assertFalse(ir.getDates().containsKey(EVENT_DATE_END));
+  }
+
+  @Test
+  public void testMonthIndexing() {
+
+    EventDate ed = new EventDate();
+    ed.setGte("2023-03");
+
+    TemporalRecord tr =
+        TemporalRecord.newBuilder().setId(ID).setEventDate(ed).setDatePrecision("MONTH").build();
+
+    IndexRecord ir = getIndexRecord(tr);
+
+    assertFalse(ir.getDates().containsKey(EVENT_DATE));
+    assertFalse(ir.getDates().containsKey(EVENT_DATE_END));
+  }
+
+  @Test
   public void testYearRangeIndexing() {
 
     EventDate ed = new EventDate();
     ed.setGte("2023");
     ed.setLte("2024");
 
-    TemporalRecord tr = TemporalRecord.newBuilder().setId(ID).setEventDate(ed).build();
+    TemporalRecord tr =
+        TemporalRecord.newBuilder()
+            .setId(ID)
+            .setEventDate(ed)
+            .setDatePrecision("YEAR_RANGE")
+            .build();
 
     IndexRecord ir = getIndexRecord(tr);
 
@@ -153,7 +188,12 @@ public class IndexRecordTransformTest {
     ed.setGte("2023-03");
     ed.setLte("2023-05");
 
-    TemporalRecord tr = TemporalRecord.newBuilder().setId(ID).setEventDate(ed).build();
+    TemporalRecord tr =
+        TemporalRecord.newBuilder()
+            .setId(ID)
+            .setEventDate(ed)
+            .setDatePrecision("MONTH_RANGE")
+            .build();
 
     IndexRecord ir = getIndexRecord(tr);
 
