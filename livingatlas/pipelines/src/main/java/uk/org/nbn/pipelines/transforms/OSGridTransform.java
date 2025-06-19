@@ -120,8 +120,6 @@ public class OSGridTransform extends Transform<KV<String, CoGbkResult>, OSGridRe
             .via(OSGridInterpreter::addEastingAndNorthing)
             .get();
 
-    result.ifPresent(r -> this.incCounter());
-
     return result;
   }
 }
