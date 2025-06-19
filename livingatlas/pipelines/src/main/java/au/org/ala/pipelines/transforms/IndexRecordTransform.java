@@ -770,8 +770,9 @@ public class IndexRecordTransform implements Serializable, IndexFields {
         indexRecord.getDates().put(EVENT_DATE_END, endDate);
       }
 
-      // in the case of ranges year and month ranges tr does not have month and year set but we need
-      // to index it
+      // When a range spans multiple years no year is set on temporalRecord
+      // When a range spans multiple months no month is set on temporalRecord
+      // But we want to index the start
       if ((ALATemporalInterpreter.YEAR_RANGE_PRECISION.equals(tr.getDatePrecision())
               || ALATemporalInterpreter.MONTH_RANGE_PRECISION.equals(tr.getDatePrecision()))
           && date != null) {
@@ -779,15 +780,17 @@ public class IndexRecordTransform implements Serializable, IndexFields {
         LocalDateTime utcDateTime =
             Instant.ofEpochMilli(date).atZone(ZoneId.of("UTC")).toLocalDateTime();
         int year = utcDateTime.getYear();
+
         // this to mirror the addition on decade for tr.year() when present below
         int decade = ((utcDateTime.getYear() / 10) * 10);
+        indexRecord.getInts().put(DECADE, decade);
 
-        if (ALATemporalInterpreter.YEAR_RANGE_PRECISION.equals(tr.getDatePrecision())) {
-          indexRecord.getInts().put(DECADE, decade);
+        if (!indexRecord.getInts().containsKey(PipelinesVariables.Pipeline.Indexing.YEAR)) {
           indexRecord.getInts().put(PipelinesVariables.Pipeline.Indexing.YEAR, year);
-        } else if (ALATemporalInterpreter.MONTH_RANGE_PRECISION.equals(tr.getDatePrecision())) {
-          indexRecord.getInts().put(DECADE, decade);
-          indexRecord.getInts().put(PipelinesVariables.Pipeline.Indexing.YEAR, year);
+        }
+
+        if (ALATemporalInterpreter.MONTH_RANGE_PRECISION.equals(tr.getDatePrecision())
+            && !indexRecord.getInts().containsKey(PipelinesVariables.Pipeline.Indexing.MONTH)) {
           indexRecord
               .getInts()
               .put(PipelinesVariables.Pipeline.Indexing.MONTH, utcDateTime.getMonthValue());
