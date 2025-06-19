@@ -209,13 +209,13 @@ public class NBNAccessControlledDataInterpreter {
     }
 
     // clear the remaining access controlled values
-    blurred.put("locality", "");
-    blurred.put("verbatimLatitude", "");
-    blurred.put("verbatimLongitude", "");
-    blurred.put("verbatimLocality", "");
-    blurred.put("verbatimCoordinates", "");
-    blurred.put("footprintWKT", "");
-    blurred.put("locationRemarks", "");
+    blurred.put("locality", null);
+    blurred.put("verbatimLatitude", null);
+    blurred.put("verbatimLongitude", null);
+    blurred.put("verbatimLocality", null);
+    blurred.put("verbatimCoordinates", null);
+    blurred.put("footprintWKT", null);
+    blurred.put("locationRemarks", null);
     //    blurred.put("occurrenceRemarks", "");
 
     return blurred;
