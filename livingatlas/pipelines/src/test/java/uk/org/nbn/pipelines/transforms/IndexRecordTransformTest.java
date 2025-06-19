@@ -1,5 +1,6 @@
 package uk.org.nbn.pipelines.transforms;
 
+import static au.org.ala.pipelines.transforms.IndexFields.DECADE;
 import static au.org.ala.pipelines.transforms.IndexFields.EVENT_DATE_END;
 import static au.org.ala.pipelines.transforms.IndexRecordTransform.RAW_PREFIX;
 import static org.gbif.pipelines.common.PipelinesVariables.Pipeline.Indexing.*;
@@ -166,8 +167,11 @@ public class IndexRecordTransformTest {
 
     assertTrue(ir.getDates().containsKey(EVENT_DATE));
     assertTrue(ir.getDates().containsKey(EVENT_DATE_END));
+    assertTrue(ir.getInts().containsKey(YEAR));
+    assertTrue(ir.getInts().containsKey(DECADE));
 
     final int eventDateYear = 2023;
+    final int eventDateDecade = 2020;
     final int eventDateEndYear = 2024;
 
     LocalDateTime startDateTime = LocalDateTime.of(eventDateYear, 1, 1, 0, 0, 0);
@@ -179,6 +183,8 @@ public class IndexRecordTransformTest {
     assertEquals(
         (Long) Date.from(endDateTime.toInstant(ZoneOffset.UTC)).getTime(),
         ir.getDates().get(EVENT_DATE_END));
+    assertEquals(eventDateYear, (int) ir.getInts().get(YEAR));
+    assertEquals(eventDateDecade, (int) ir.getInts().get(DECADE));
   }
 
   @Test
@@ -199,10 +205,15 @@ public class IndexRecordTransformTest {
 
     assertTrue(ir.getDates().containsKey(EVENT_DATE));
     assertTrue(ir.getDates().containsKey(EVENT_DATE_END));
+    assertTrue(ir.getInts().containsKey(YEAR));
+    assertTrue(ir.getInts().containsKey(MONTH));
+    assertTrue(ir.getInts().containsKey(DECADE));
 
     final int eventDateYear = 2023;
+    final int eventDateDecade = 2020;
+    final int eventDateMonth = 3;
 
-    LocalDateTime startDateTime = LocalDateTime.of(eventDateYear, 3, 1, 0, 0, 0);
+    LocalDateTime startDateTime = LocalDateTime.of(eventDateYear, eventDateMonth, 1, 0, 0, 0);
     LocalDateTime endDateTime = LocalDateTime.of(eventDateYear, 5, 31, 23, 59, 59, 999_000_000);
 
     assertEquals(
@@ -211,5 +222,8 @@ public class IndexRecordTransformTest {
     assertEquals(
         (Long) Date.from(endDateTime.toInstant(ZoneOffset.UTC)).getTime(),
         ir.getDates().get(EVENT_DATE_END));
+    assertEquals(eventDateYear, (int) ir.getInts().get(YEAR));
+    assertEquals(eventDateMonth, (int) ir.getInts().get(MONTH));
+    assertEquals(eventDateDecade, (int) ir.getInts().get(DECADE));
   }
 }

@@ -6,6 +6,7 @@ import static org.apache.avro.Schema.Type.UNION;
 import static org.gbif.pipelines.common.PipelinesVariables.Metrics.AVRO_TO_JSON_COUNT;
 
 import au.org.ala.pipelines.common.SolrFieldSchema;
+import au.org.ala.pipelines.interpreters.ALATemporalInterpreter;
 import au.org.ala.pipelines.interpreters.SensitiveDataInterpreter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
@@ -41,6 +42,7 @@ import org.gbif.dwc.terms.DwcTerm;
 import org.gbif.dwc.terms.Term;
 import org.gbif.dwc.terms.TermFactory;
 import org.gbif.pipelines.common.PipelinesException;
+import org.gbif.pipelines.common.PipelinesVariables;
 import org.gbif.pipelines.io.avro.*;
 import org.gbif.pipelines.io.avro.NBNAccessControlledRecord;
 import org.jetbrains.annotations.NotNull;
@@ -767,6 +769,30 @@ public class IndexRecordTransform implements Serializable, IndexFields {
       if (endDate != null) {
         indexRecord.getDates().put(EVENT_DATE_END, endDate);
       }
+
+      // in the case of ranges year and month ranges tr does not have month and year set but we need
+      // to index it
+      if ((ALATemporalInterpreter.YEAR_RANGE_PRECISION.equals(tr.getDatePrecision())
+              || ALATemporalInterpreter.MONTH_RANGE_PRECISION.equals(tr.getDatePrecision()))
+          && date != null) {
+
+        LocalDateTime utcDateTime =
+            Instant.ofEpochMilli(date).atZone(ZoneId.of("UTC")).toLocalDateTime();
+        int year = utcDateTime.getYear();
+        // this to mirror the addition on decade for tr.year() when present below
+        int decade = ((utcDateTime.getYear() / 10) * 10);
+
+        if (ALATemporalInterpreter.YEAR_RANGE_PRECISION.equals(tr.getDatePrecision())) {
+          indexRecord.getInts().put(DECADE, decade);
+          indexRecord.getInts().put(PipelinesVariables.Pipeline.Indexing.YEAR, year);
+        } else if (ALATemporalInterpreter.MONTH_RANGE_PRECISION.equals(tr.getDatePrecision())) {
+          indexRecord.getInts().put(DECADE, decade);
+          indexRecord.getInts().put(PipelinesVariables.Pipeline.Indexing.YEAR, year);
+          indexRecord
+              .getInts()
+              .put(PipelinesVariables.Pipeline.Indexing.MONTH, utcDateTime.getMonthValue());
+        }
+      }
     }
 
     if (tr.getDatePrecision() != null) {
@@ -905,7 +931,8 @@ public class IndexRecordTransform implements Serializable, IndexFields {
       } else if (r.getPayload() instanceof ZonedDateTime) {
         ZonedDateTime ldt = ((ZonedDateTime) r.getPayload());
         return ldt.toInstant().toEpochMilli();
-      } else if (r.getPayload() instanceof YearMonth && "MONTH_RANGE".equals(datePrecision)) {
+      } else if (r.getPayload() instanceof YearMonth
+          && ALATemporalInterpreter.MONTH_RANGE_PRECISION.equals(datePrecision)) {
         YearMonth yearMonth = ((YearMonth) r.getPayload());
         if (useEndOfPeriods) {
           return yearMonth
@@ -917,7 +944,8 @@ public class IndexRecordTransform implements Serializable, IndexFields {
         } else {
           return yearMonth.atDay(1).atStartOfDay(ZoneId.of("UTC")).toInstant().toEpochMilli();
         }
-      } else if (r.getPayload() instanceof Year && "YEAR_RANGE".equals(datePrecision)) {
+      } else if (r.getPayload() instanceof Year
+          && ALATemporalInterpreter.YEAR_RANGE_PRECISION.equals(datePrecision)) {
         Year year = ((Year) r.getPayload());
         if (useEndOfPeriods) {
           return year.atDay(1)
