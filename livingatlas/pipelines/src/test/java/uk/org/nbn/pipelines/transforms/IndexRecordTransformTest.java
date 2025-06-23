@@ -231,21 +231,22 @@ public class IndexRecordTransformTest {
 
   @ParameterizedTest
   @CsvSource({
-          "2023-01-01, 2024-05-31, 2020, 2023, 1",
-          "2007-05-08, 2007-06-08, 2000, 2007, 5",
+    "2023-01-01, 2024-05-31, 2020, 2023, 1",
+    "2007-05-08, 2007-06-08, 2000, 2007, 5",
   })
-  public void testDayRangeIndexing(String gte, String lte, int expectedDecade, int expectedYear, int expectedMonth) {
+  public void testDayRangeIndexing(
+      String gte, String lte, int expectedDecade, int expectedYear, int expectedMonth) {
 
     EventDate ed = new EventDate();
     ed.setGte(gte);
     ed.setLte(lte);
 
     TemporalRecord tr =
-            TemporalRecord.newBuilder()
-                    .setId(ID)
-                    .setEventDate(ed)
-                    .setDatePrecision("DAY_RANGE")
-                    .build();
+        TemporalRecord.newBuilder()
+            .setId(ID)
+            .setEventDate(ed)
+            .setDatePrecision("DAY_RANGE")
+            .build();
 
     IndexRecord ir = getIndexRecord(tr);
 
