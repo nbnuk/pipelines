@@ -942,7 +942,7 @@ public class IndexRecordTransform implements Serializable, IndexFields {
         if (useEndOfPeriods) {
           return yearMonth
               .atEndOfMonth()
-              .atTime(23, 59, 59, 999_000_000)
+              .atStartOfDay()
               .atZone(ZoneId.of("UTC"))
               .toInstant()
               .toEpochMilli();
@@ -954,10 +954,11 @@ public class IndexRecordTransform implements Serializable, IndexFields {
         Year year = ((Year) r.getPayload());
         if (useEndOfPeriods) {
           return year.atDay(1)
-              .atStartOfDay(ZoneId.of("UTC"))
+              .atStartOfDay()
               .plusYears(1)
+              .minusDays(1)
+              .atZone(ZoneId.of("UTC"))
               .toInstant()
-              .minusMillis(1)
               .toEpochMilli();
         } else {
           return year.atDay(1).atStartOfDay(ZoneId.of("UTC")).toInstant().toEpochMilli();

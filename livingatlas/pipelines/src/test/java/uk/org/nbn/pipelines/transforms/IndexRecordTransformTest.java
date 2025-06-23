@@ -177,7 +177,7 @@ public class IndexRecordTransformTest {
     final int eventDateEndYear = 2024;
 
     LocalDateTime startDateTime = LocalDateTime.of(eventDateYear, 1, 1, 0, 0, 0);
-    LocalDateTime endDateTime = LocalDateTime.of(eventDateEndYear, 12, 31, 23, 59, 59, 999_000_000);
+    LocalDateTime endDateTime = LocalDateTime.of(eventDateEndYear, 12, 31, 0, 0, 0);
 
     assertEquals(
         (Long) Date.from(startDateTime.toInstant(ZoneOffset.UTC)).getTime(),
@@ -216,7 +216,7 @@ public class IndexRecordTransformTest {
     final int eventDateMonth = 3;
 
     LocalDateTime startDateTime = LocalDateTime.of(eventDateYear, eventDateMonth, 1, 0, 0, 0);
-    LocalDateTime endDateTime = LocalDateTime.of(eventDateYear, 5, 31, 23, 59, 59, 999_000_000);
+    LocalDateTime endDateTime = LocalDateTime.of(eventDateYear, 5, 31, 0, 0, 0);
 
     assertEquals(
         (Long) Date.from(startDateTime.toInstant(ZoneOffset.UTC)).getTime(),
