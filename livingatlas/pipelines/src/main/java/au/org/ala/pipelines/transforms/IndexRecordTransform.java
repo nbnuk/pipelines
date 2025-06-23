@@ -774,22 +774,24 @@ public class IndexRecordTransform implements Serializable, IndexFields {
       // When a range spans multiple months no month is set on temporalRecord
       // But we want to index the start
       if ((ALATemporalInterpreter.YEAR_RANGE_PRECISION.equals(tr.getDatePrecision())
-              || ALATemporalInterpreter.MONTH_RANGE_PRECISION.equals(tr.getDatePrecision()))
+              || ALATemporalInterpreter.MONTH_RANGE_PRECISION.equals(tr.getDatePrecision())
+              || ALATemporalInterpreter.DAY_RANGE_PRECISION.equals(tr.getDatePrecision()))
           && date != null) {
 
         LocalDateTime utcDateTime =
             Instant.ofEpochMilli(date).atZone(ZoneId.of("UTC")).toLocalDateTime();
-        int year = utcDateTime.getYear();
-
-        // this to mirror the addition on decade for tr.year() when present below
-        int decade = ((utcDateTime.getYear() / 10) * 10);
-        indexRecord.getInts().put(DECADE, decade);
 
         if (!indexRecord.getInts().containsKey(PipelinesVariables.Pipeline.Indexing.YEAR)) {
+          int year = utcDateTime.getYear();
           indexRecord.getInts().put(PipelinesVariables.Pipeline.Indexing.YEAR, year);
+
+          // this to mirror the addition on decade for tr.year() when present below
+          int decade = ((year / 10) * 10);
+          indexRecord.getInts().put(DECADE, decade);
         }
 
-        if (ALATemporalInterpreter.MONTH_RANGE_PRECISION.equals(tr.getDatePrecision())
+        if ((ALATemporalInterpreter.MONTH_RANGE_PRECISION.equals(tr.getDatePrecision())
+                || ALATemporalInterpreter.DAY_RANGE_PRECISION.equals(tr.getDatePrecision()))
             && !indexRecord.getInts().containsKey(PipelinesVariables.Pipeline.Indexing.MONTH)) {
           indexRecord
               .getInts()

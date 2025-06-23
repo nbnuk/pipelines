@@ -14,6 +14,8 @@ import java.util.Date;
 import org.gbif.dwc.terms.DwcTerm;
 import org.gbif.pipelines.io.avro.*;
 import org.junit.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import uk.org.nbn.pipelines.vocabulary.NBNOccurrenceIssue;
 import uk.org.nbn.term.OSGridTerm;
 
@@ -225,5 +227,34 @@ public class IndexRecordTransformTest {
     assertEquals(eventDateYear, (int) ir.getInts().get(YEAR));
     assertEquals(eventDateMonth, (int) ir.getInts().get(MONTH));
     assertEquals(eventDateDecade, (int) ir.getInts().get(DECADE));
+  }
+
+  @ParameterizedTest
+  @CsvSource({
+          "2023-01-01, 2024-05-31, 2020, 2023, 1",
+          "2007-05-08, 2007-06-08, 2000, 2007, 5",
+  })
+  public void testDayRangeIndexing(String gte, String lte, int expectedDecade, int expectedYear, int expectedMonth) {
+
+    EventDate ed = new EventDate();
+    ed.setGte(gte);
+    ed.setLte(lte);
+
+    TemporalRecord tr =
+            TemporalRecord.newBuilder()
+                    .setId(ID)
+                    .setEventDate(ed)
+                    .setDatePrecision("DAY_RANGE")
+                    .build();
+
+    IndexRecord ir = getIndexRecord(tr);
+
+    assertTrue(ir.getInts().containsKey(YEAR));
+    assertTrue(ir.getInts().containsKey(MONTH));
+    assertTrue(ir.getInts().containsKey(DECADE));
+
+    assertEquals(expectedYear, (int) ir.getInts().get(YEAR));
+    assertEquals(expectedMonth, (int) ir.getInts().get(MONTH));
+    assertEquals(expectedDecade, (int) ir.getInts().get(DECADE));
   }
 }
