@@ -745,6 +745,29 @@
   <field name="raw_identificationVerificationStatus" type="string"  docValues="true" indexed="true" />
   <field name="pathway" type="string" docValues="true" multiValued="false" indexed="true"/>
 
+  <!-- DNA terms for NBN  -->
+  <field name="dna_sequence" type="string" docValues="true" multiValued="false" indexed="true"/>
+
+ <!--target_gene -->
+  <field name="MIXS:0000044" type="string" docValues="true" multiValued="false" indexed="true"/>
+
+  <field name="pcr_primer_reference" type="string" docValues="true" multiValued="false" indexed="true"/>
+
+  <!--env_medium -->
+  <field name="MIXS:0000014" type="string" docValues="true" multiValued="false" indexed="true"/>
+
+  <!--env_broad_scale -->
+  <field name="MIXS:0000012" type="string" docValues="true" multiValued="false" indexed="true"/>
+
+  <!--otu_db -->
+   <field name="MIXS:0000087" type="string" docValues="true" multiValued="false" indexed="true"/>
+
+  <!--otu_seq_comp_appr -->
+  <field name="MIXS:0000086" type="string" docValues="true" multiValued="false" indexed="true"/>
+
+  <!--otu_class_app -->
+  <field name="MIXS:0000085" type="string" docValues="true" multiValued="false" indexed="true"/>
+
   <!-- Do we need this -->
   <copyField source="basisOfRecord" dest="text"/>
   <copyField source="catalogNumber" dest="text"/>
