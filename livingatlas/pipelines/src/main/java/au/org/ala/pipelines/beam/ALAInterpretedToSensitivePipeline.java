@@ -63,7 +63,7 @@ public class ALAInterpretedToSensitivePipeline {
 
   public static void run(InterpretationPipelineOptions options) {
 
-    OSGridTerm.RegisterTerms(TermFactory.instance());
+    OSGridTerm.registerTerms(TermFactory.instance());
 
     ALAPipelinesConfig config =
         ALAPipelinesConfigFactory.getInstance(

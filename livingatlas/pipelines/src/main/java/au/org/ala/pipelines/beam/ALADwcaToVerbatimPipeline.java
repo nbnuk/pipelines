@@ -49,7 +49,7 @@ public class ALADwcaToVerbatimPipeline {
 
   public static void run(DwcaToVerbatimPipelineOptions options) throws Exception {
 
-    OSGridTerm.RegisterTerms(TermFactory.instance());
+    OSGridTerm.registerTerms(TermFactory.instance());
 
     MDC.put("datasetKey", options.getDatasetId());
     MDC.put("attempt", options.getAttempt().toString());

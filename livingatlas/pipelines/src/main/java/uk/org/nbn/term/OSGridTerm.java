@@ -45,7 +45,7 @@ public enum OSGridTerm implements Term {
     return NS_URI;
   }
 
-  public static void RegisterTerms(TermFactory termFactory) {
+  public static void registerTerms(TermFactory termFactory) {
     termFactory.registerTerm(OSGridTerm.gridReference);
     termFactory.registerTerm(OSGridTerm.gridSizeInMeters);
   }

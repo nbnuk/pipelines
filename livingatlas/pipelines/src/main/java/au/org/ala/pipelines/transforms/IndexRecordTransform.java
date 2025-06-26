@@ -1186,7 +1186,7 @@ public class IndexRecordTransform implements Serializable, IndexFields {
 
           @Setup
           public void setup() {
-            OSGridTerm.RegisterTerms(TERM_FACTORY);
+            OSGridTerm.registerTerms(TERM_FACTORY);
           }
 
           @ProcessElement

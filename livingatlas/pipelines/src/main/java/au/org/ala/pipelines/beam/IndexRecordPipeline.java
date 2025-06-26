@@ -88,8 +88,7 @@ public class IndexRecordPipeline {
 
   public static void run(IndexingPipelineOptions options) throws Exception {
 
-    TermFactory.instance().registerTerm(OSGridTerm.gridReference);
-    TermFactory.instance().registerTerm(OSGridTerm.gridSizeInMeters);
+    OSGridTerm.registerTerms(TermFactory.instance());
 
     MDC.put("datasetId", options.getDatasetId());
     MDC.put("attempt", options.getAttempt().toString());

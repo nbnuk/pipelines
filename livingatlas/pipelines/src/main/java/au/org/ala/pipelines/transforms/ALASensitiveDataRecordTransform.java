@@ -138,7 +138,7 @@ public class ALASensitiveDataRecordTransform
   @Setup
   public void setup() {
 
-    OSGridTerm.RegisterTerms(TermFactory.instance());
+    OSGridTerm.registerTerms(TermFactory.instance());
 
     if (speciesStore == null && speciesStoreSupplier != null) {
       log.debug("Initialize Sensitive Species KvStore");
