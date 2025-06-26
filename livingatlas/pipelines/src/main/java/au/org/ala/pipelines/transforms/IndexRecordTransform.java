@@ -1184,6 +1184,11 @@ public class IndexRecordTransform implements Serializable, IndexFields {
           private final Counter counter =
               Metrics.counter(IndexRecordTransform.class, AVRO_TO_JSON_COUNT);
 
+          @Setup
+          public void setup() {
+            OSGridTerm.RegisterTerms(TERM_FACTORY);
+          }
+
           @ProcessElement
           public void processElement(ProcessContext c) {
             CoGbkResult v = c.element().getValue();

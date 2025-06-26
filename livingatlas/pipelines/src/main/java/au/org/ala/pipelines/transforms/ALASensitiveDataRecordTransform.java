@@ -27,6 +27,7 @@ import org.apache.beam.sdk.values.TupleTag;
 import org.apache.beam.sdk.values.TypeDescriptor;
 import org.gbif.dwc.terms.DwcTerm;
 import org.gbif.dwc.terms.Term;
+import org.gbif.dwc.terms.TermFactory;
 import org.gbif.kvs.KeyValueStore;
 import org.gbif.pipelines.core.functions.SerializableConsumer;
 import org.gbif.pipelines.core.functions.SerializableSupplier;
@@ -136,6 +137,9 @@ public class ALASensitiveDataRecordTransform
   /** Beam @Setup initializes resources */
   @Setup
   public void setup() {
+
+    OSGridTerm.RegisterTerms(TermFactory.instance());
+
     if (speciesStore == null && speciesStoreSupplier != null) {
       log.debug("Initialize Sensitive Species KvStore");
       speciesStore = speciesStoreSupplier.get();
