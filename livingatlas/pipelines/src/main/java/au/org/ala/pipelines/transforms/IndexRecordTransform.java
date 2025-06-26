@@ -472,6 +472,10 @@ public class IndexRecordTransform implements Serializable, IndexFields {
       } else if (raw.containsKey(DwcTerm.geodeticDatum.qualifiedName())) {
         raw.remove(DwcTerm.geodeticDatum.qualifiedName());
       }
+
+      if (raw.containsKey(OSGridTerm.issues.qualifiedName())) {
+        raw.remove(OSGridTerm.issues.qualifiedName());
+      }
     }
 
     for (Map.Entry<String, String> entry : raw.entrySet()) {
