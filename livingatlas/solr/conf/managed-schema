@@ -754,28 +754,28 @@
   <field name="pcr_primer_reverse" type="string" docValues="true" multiValued="false" indexed="true"/>
 
   <!--env_broad_scale -->
-  <field name="MIXS:0000012" type="string" docValues="true" multiValued="false" indexed="true"/>
+  <field name="0000012" type="string" docValues="true" multiValued="false" indexed="true"/>
 
   <!--env_local_scale -->
-  <field name="MIXS:0000013" type="string" docValues="true" multiValued="false" indexed="true"/>
+  <field name="0000013" type="string" docValues="true" multiValued="false" indexed="true"/>
 
   <!--env_medium -->
-  <field name="MIXS:0000014" type="string" docValues="true" multiValued="false" indexed="true"/>
+  <field name="0000014" type="string" docValues="true" multiValued="false" indexed="true"/>
 
   <!--target_gene -->
-  <field name="MIXS:0000044" type="string" docValues="true" multiValued="false" indexed="true"/>
+  <field name="0000044" type="string" docValues="true" multiValued="false" indexed="true"/>
 
   <!--target_subfragment -->
-  <field name="MIXS:0000045" type="string" docValues="true" multiValued="false" indexed="true"/>
+  <field name="0000045" type="string" docValues="true" multiValued="false" indexed="true"/>
 
   <!--otu_class_appr -->
-  <field name="MIXS:0000085" type="string" docValues="true" multiValued="false" indexed="true"/>
+  <field name="0000085" type="string" docValues="true" multiValued="false" indexed="true"/>
 
   <!--otu_seq_comp_appr -->
-  <field name="MIXS:0000086" type="string" docValues="true" multiValued="false" indexed="true"/>
+  <field name="0000086" type="string" docValues="true" multiValued="false" indexed="true"/>
 
   <!--otu_db -->
-  <field name="MIXS:0000087" type="string" docValues="true" multiValued="false" indexed="true"/>
+  <field name="0000087" type="string" docValues="true" multiValued="false" indexed="true"/>
 
   <!-- Do we need this -->
   <copyField source="basisOfRecord" dest="text"/>
