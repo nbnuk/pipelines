@@ -201,14 +201,19 @@ public class CoreCsvConverter {
           .addKeyTermFn(DcTerm.source, getString(DcTerm.source))
           .addKeyTermFn(DcTerm.type, getString(DcTerm.type))
           // ALA Terms
-//          .addKeyTermFn("http://rs.ala.org.au/terms/1.0/photographer", getString("photographer"))
-//          .addKeyTermFn("http://rs.ala.org.au/terms/1.0/northing", getString("northing"))
-//          .addKeyTermFn("http://rs.ala.org.au/terms/1.0/easting", getString("easting"))
-//          .addKeyTermFn("http://rs.ala.org.au/terms/1.0/species", getString("species"))
-//          .addKeyTermFn("http://rs.ala.org.au/terms/1.0/subfamily", getString("subfamily"))
-//          .addKeyTermFn("http://rs.ala.org.au/terms/1.0/subspecies", getString("subspecies"))
-//          .addKeyTermFn("http://rs.ala.org.au/terms/1.0/superfamily", getString("superfamily"))
-//          .addKeyTermFn("http://rs.ala.org.au/terms/1.0/zone", getString("zone"))
+          //          .addKeyTermFn("http://rs.ala.org.au/terms/1.0/photographer",
+          // getString("photographer"))
+          //          .addKeyTermFn("http://rs.ala.org.au/terms/1.0/northing",
+          // getString("northing"))
+          //          .addKeyTermFn("http://rs.ala.org.au/terms/1.0/easting", getString("easting"))
+          //          .addKeyTermFn("http://rs.ala.org.au/terms/1.0/species", getString("species"))
+          //          .addKeyTermFn("http://rs.ala.org.au/terms/1.0/subfamily",
+          // getString("subfamily"))
+          //          .addKeyTermFn("http://rs.ala.org.au/terms/1.0/subspecies",
+          // getString("subspecies"))
+          //          .addKeyTermFn("http://rs.ala.org.au/terms/1.0/superfamily",
+          // getString("superfamily"))
+          //          .addKeyTermFn("http://rs.ala.org.au/terms/1.0/zone", getString("zone"))
           // NBN Terms
           .addKeyTermFn(DwcTerm.organismRemarks, getString(DwcTerm.organismRemarks))
           .addKeyTermFn(DwcTerm.organismScope, getString(DwcTerm.organismScope))
