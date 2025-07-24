@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Date;
 import org.gbif.dwc.terms.DwcTerm;
 import org.gbif.pipelines.io.avro.*;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -119,6 +120,54 @@ public class IndexRecordTransformTest {
     assertTrue(ir.getStrings().containsKey(RAW_PREFIX + DwcTerm.geodeticDatum.simpleName()));
     assertEquals(
         OSGB_GEODETIC_DATUM, ir.getStrings().get(RAW_PREFIX + DwcTerm.geodeticDatum.simpleName()));
+  }
+
+  // inputs taken from GridUtil tests
+  @ParameterizedTest
+  @CsvSource({
+    "NH123123, NH, NH11, -, NH1212, NH123123",
+    "NH12341234, NH, NH11, -, NH1212, NH123123",
+    "NH1234512345, NH, NH11, NH11G, NH1212, NH123123",
+    "J12341234, J, J11, -, J1212, J123123",
+    "J43214321, J, J44, J44G, J4343, J432432"
+  })
+  public void givenAGridReference_whenIndexing_resolutionsShouldBeAdded(
+      String gridReference,
+      String grid_ref_100000,
+      String grid_ref_10000,
+      String grid_ref_2000,
+      String grid_ref_1000,
+      String grid_ref_100) {
+    ExtendedRecord er = ExtendedRecord.newBuilder().setId(ID).build();
+
+    OSGridRecord osgr = OSGridRecord.newBuilder().setId(ID).setGridReference(gridReference).build();
+
+    IndexRecord ir = getIndexRecord(er, osgr);
+
+    Assert.assertEquals(grid_ref_100000, ir.getStrings().get("grid_ref_100000"));
+    Assert.assertEquals(grid_ref_10000, ir.getStrings().get("grid_ref_10000"));
+    Assert.assertEquals(grid_ref_1000, ir.getStrings().get("grid_ref_1000"));
+    Assert.assertEquals(grid_ref_100, ir.getStrings().get("grid_ref_100"));
+
+    if (!grid_ref_2000.equals("-")) {
+      Assert.assertEquals(grid_ref_2000, ir.getStrings().get("grid_ref_2000"));
+    }
+  }
+
+  @Test
+  public void givenAGridReferenceThatFailsToGeneralise_whenIndexing_shouldNotThrow() {
+    ExtendedRecord er = ExtendedRecord.newBuilder().setId(ID).build();
+
+    OSGridRecord osgr =
+        OSGridRecord.newBuilder()
+            .setId(ID)
+            .setGridReference("K0156")
+            .setGridSizeInMeters(1000)
+            .build();
+
+    IndexRecord ir = getIndexRecord(er, osgr);
+
+    assertFalse(ir.getStrings().containsKey("grid_ref_10000"));
   }
 
   @Test

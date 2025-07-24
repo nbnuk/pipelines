@@ -68,7 +68,7 @@ public class NBNCompleteIngestJavaPipelineTestIT extends NBNPipelineIngestTestBa
         new HashMap<String, Integer>() {
           {
             put("dr2816", 165);
-            put("dr2811", 160); // this has 5 additional records compare to ma
+            put("dr2811", 161); // this has 6 additional records compare to ma
           }
         };
 

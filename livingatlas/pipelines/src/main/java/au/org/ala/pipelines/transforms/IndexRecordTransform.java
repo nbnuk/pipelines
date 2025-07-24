@@ -827,11 +827,17 @@ public class IndexRecordTransform implements Serializable, IndexFields {
 
   private static void applyOSGridRecord(OSGridRecord osg, IndexRecord.Builder indexRecord) {
     if (osg != null && !Strings.isNullOrEmpty(osg.getGridReference())) {
-      Map<String, String> gridAtResolutions =
-          uk.org.nbn.util.GridUtil.getGridRefAsResolutions(osg.getGridReference());
-      gridAtResolutions
-          .entrySet()
-          .forEach(r -> indexRecord.getStrings().put(r.getKey(), r.getValue()));
+      try {
+        Map<String, String> gridAtResolutions =
+            uk.org.nbn.util.GridUtil.getGridRefAsResolutions(osg.getGridReference());
+        gridAtResolutions
+            .entrySet()
+            .forEach(r -> indexRecord.getStrings().put(r.getKey(), r.getValue()));
+      } catch (Exception ex) {
+        log.warn(
+            "Problem converting grid reference to lower resolutions: " + osg.getGridReference(),
+            ex);
+      }
     }
   }
 
