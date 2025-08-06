@@ -12,7 +12,8 @@ echo 'Running spark uuid migration job'
 
 /usr/bin/spark-submit \
 --name "Migrate UUIDs" \
---conf spark.default.parallelism=48 \
+--conf spark.default.parallelism=8 \
+--conf spark.sql.shuffle.partitions=8 \
 --num-executors 8 \
 --executor-cores 8 \
 --executor-memory 18G \
