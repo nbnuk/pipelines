@@ -66,6 +66,10 @@ sensitive:
   inputPath: hdfs:///pipelines-data
   targetPath: hdfs:///pipelines-data
 
+accessControl:
+  inputPath: hdfs:///pipelines-data
+  targetPath: hdfs:///pipelines-data
+
 images:
   inputPath: hdfs:///pipelines-data
   targetPath: hdfs:///pipelines-data
