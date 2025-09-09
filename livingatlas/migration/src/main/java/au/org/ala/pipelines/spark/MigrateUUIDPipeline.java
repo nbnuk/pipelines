@@ -126,7 +126,8 @@ public class MigrateUUIDPipeline implements Serializable {
                   row.getString(1) == null || "firstLoaded".equals(row.getString(1)) // skip header
                       ? null
                       : LocalDateTime.parse(row.getString(1), DateTimeFormatter.ISO_DATE_TIME)
-                          .toEpochSecond(ZoneOffset.UTC)); // firstLoaded
+                          .toEpochSecond(ZoneOffset.UTC)
+                          * 1000); // firstLoaded in milliseconds
             },
             Encoders.tuple(Encoders.STRING(), Encoders.LONG()));
 
