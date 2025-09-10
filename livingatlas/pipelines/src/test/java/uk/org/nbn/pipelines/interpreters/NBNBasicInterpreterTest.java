@@ -172,6 +172,59 @@ public class NBNBasicInterpreterTest {
   }
 
   @Test
+  public void
+      givenMuseumSpecimensBasisOfRecord_whenInterpretBasisOfRecord_shouldInterpretAsPreservedSpecimen() {
+    // State
+    Map<String, String> coreMap = new HashMap<>();
+    coreMap.put(DwcTerm.basisOfRecord.qualifiedName(), "museum specimens");
+
+    ExtendedRecord er = ExtendedRecord.newBuilder().setId(ID).setCoreTerms(coreMap).build();
+    BasicRecord br = BasicRecord.newBuilder().setId(ID).build();
+
+    // When
+    BasicInterpreter.interpretBasisOfRecord(er, br);
+    NBNBasicInterpreter.interpretBasisOfRecord(er, br);
+
+    // Should
+    assertEquals(BasisOfRecord.PRESERVED_SPECIMEN.name(), br.getBasisOfRecord());
+  }
+
+  @Test
+  public void
+      givenMuseumSpecimensWithoutSpacesBasisOfRecord_whenInterpretBasisOfRecord_shouldInterpretAsPreservedSpecimen() {
+    // State
+    Map<String, String> coreMap = new HashMap<>();
+    coreMap.put(DwcTerm.basisOfRecord.qualifiedName(), "museumspecimens");
+
+    ExtendedRecord er = ExtendedRecord.newBuilder().setId(ID).setCoreTerms(coreMap).build();
+    BasicRecord br = BasicRecord.newBuilder().setId(ID).build();
+
+    // When
+    BasicInterpreter.interpretBasisOfRecord(er, br);
+    NBNBasicInterpreter.interpretBasisOfRecord(er, br);
+
+    // Should
+    assertEquals(BasisOfRecord.PRESERVED_SPECIMEN.name(), br.getBasisOfRecord());
+  }
+
+  @Test
+  public void givenImageBasisOfRecord_whenInterpretBasisOfRecord_shouldInterpretAsObservation() {
+    // State
+    Map<String, String> coreMap = new HashMap<>();
+    coreMap.put(DwcTerm.basisOfRecord.qualifiedName(), "image");
+
+    ExtendedRecord er = ExtendedRecord.newBuilder().setId(ID).setCoreTerms(coreMap).build();
+    BasicRecord br = BasicRecord.newBuilder().setId(ID).build();
+
+    // When
+    BasicInterpreter.interpretBasisOfRecord(er, br);
+    NBNBasicInterpreter.interpretBasisOfRecord(er, br);
+
+    // Should
+    assertEquals(BasisOfRecord.OBSERVATION.name(), br.getBasisOfRecord());
+  }
+
+  @Test
   public void givenNullIdentificationVerificationStatus_whenInterpret_shouldAddMissingIssue()
       throws FileNotFoundException {
     // State
