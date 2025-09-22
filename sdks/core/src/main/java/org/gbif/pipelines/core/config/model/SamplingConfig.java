@@ -37,4 +37,14 @@ public final class SamplingConfig implements Serializable {
 
   // Retry configuration
   private RetryConfig retryConfig = new RetryConfig();
+
+  public WsConfig asWsConfig() {
+    WsConfig wsConfig = new WsConfig();
+    wsConfig.setWsUrl(this.wsUrl);
+    wsConfig.setTimeoutSec(this.timeoutSec);
+    wsConfig.setCacheSizeMb(this.cacheSizeMb);
+    wsConfig.setHttpHeaders(this.httpHeaders);
+    wsConfig.setRetryConfig(this.retryConfig);
+    return wsConfig;
+  }
 }

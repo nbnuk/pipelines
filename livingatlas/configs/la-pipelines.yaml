@@ -62,6 +62,9 @@ speciesListService:
 samplingService:
   wsUrl: https://sampling.ala.org.au/sampling-service/
   timeoutSec: 70
+  retryConfig:
+    maxAttempts: 10
+    initialIntervalMillis: 10000
   batchSize: 25000
   batchStatusSleepTime: 1000
   downloadRetries: 5

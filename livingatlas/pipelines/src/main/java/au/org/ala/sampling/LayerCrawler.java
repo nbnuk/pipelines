@@ -6,6 +6,7 @@ import au.org.ala.pipelines.options.AllDatasetsPipelinesOptions;
 import au.org.ala.pipelines.options.SamplingPipelineOptions;
 import au.org.ala.utils.ALAFsUtils;
 import au.org.ala.utils.CombinedYamlConfiguration;
+import au.org.ala.utils.WsUtils;
 import java.io.*;
 import java.net.URL;
 import java.nio.ByteBuffer;
@@ -24,16 +25,16 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.OkHttpClient;
 import org.apache.hadoop.fs.FileSystem;
 import org.gbif.pipelines.common.PipelinesException;
 import org.gbif.pipelines.common.beam.options.PipelinesOptionsFactory;
+import org.gbif.pipelines.core.config.model.WsConfig;
 import org.gbif.pipelines.core.pojo.HdfsConfigs;
 import org.gbif.pipelines.core.utils.FsUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.MDC;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
 
 /**
  * A utility to crawl the ALA layers. Requires an input csv containing lat, lng (no header) and an
@@ -47,8 +48,7 @@ public class LayerCrawler {
   public static final String ERROR_STATUS = "error";
 
   private SamplingService service;
-
-  private Retrofit retrofit;
+  private OkHttpClient okHttpClient;
 
   ALAPipelinesConfig config;
 
@@ -76,15 +76,15 @@ public class LayerCrawler {
             .get();
 
     MDC.put("step", "SAMPLING");
-    retrofit =
-        new Retrofit.Builder()
-            .baseUrl(config.getSamplingService().getWsUrl())
-            .addConverterFactory(JacksonConverterFactory.create())
-            .validateEagerly(true)
-            .build();
 
     log.info("Initialising crawler....");
-    service = retrofit.create(SamplingService.class);
+
+    // NBN - Patched the way in which this client is created to include timeout and retry config
+    WsConfig wsConfig = config.getSamplingService().asWsConfig();
+    okHttpClient = WsUtils.createOKClient(wsConfig);
+    service = WsUtils.createClient(okHttpClient, wsConfig, SamplingService.class);
+    // NBN END
+
     log.info("Initialised.");
 
     FileSystem fs =
