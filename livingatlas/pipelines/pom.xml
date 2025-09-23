@@ -722,6 +722,12 @@
       <version>${resilience4j.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>io.github.resilience4j</groupId>
+      <artifactId>resilience4j-retrofit</artifactId>
+      <version>${resilience4j.version}</version>
+    </dependency>
+
     <!-- Maven plugin -->
     <dependency>
       <groupId>org.apache.maven</groupId>

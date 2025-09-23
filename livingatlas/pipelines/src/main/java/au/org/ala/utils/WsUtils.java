@@ -3,6 +3,8 @@ package au.org.ala.utils;
 import au.org.ala.ws.ClientConfiguration;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.resilience4j.retrofit.RetryCallAdapter;
+import io.github.resilience4j.retry.Retry;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -14,6 +16,8 @@ import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import org.gbif.pipelines.core.config.model.WsConfig;
+import org.gbif.pipelines.core.factory.RetryFactory;
+import retrofit2.Response;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 @Slf4j
@@ -58,6 +62,17 @@ public class WsUtils {
   public static <T> T createClient(
       OkHttpClient okHttpClient, WsConfig wsConfig, Class<T> theClass) {
 
+    // NBN to pr retrofit retry handling https://nbnatlas.atlassian.net/browse/APB-13
+    Retry retryGbif = RetryFactory.create(wsConfig.getRetryConfig(), theClass.getSimpleName());
+    Retry retry =
+        Retry.of(
+            theClass.getSimpleName(),
+            io.github.resilience4j.retry.RetryConfig.<Response<T>>from(retryGbif.getRetryConfig())
+                .retryOnResult(
+                    response ->
+                        response != null && (response.code() == 502 || response.code() == 503))
+                .build());
+
     // this is for https://github.com/AtlasOfLivingAustralia/la-pipelines/issues/113
     ObjectMapper om = new ObjectMapper();
     om.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
@@ -67,6 +82,7 @@ public class WsUtils {
         .baseUrl(wsConfig.getWsUrl())
         .addConverterFactory(JacksonConverterFactory.create(om))
         .validateEagerly(true)
+        .addCallAdapterFactory(RetryCallAdapter.of(retry))
         .build()
         .create(theClass);
   }
