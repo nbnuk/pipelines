@@ -10,6 +10,7 @@ import au.org.ala.utils.ValidationUtils;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Objects;
 import java.util.function.UnaryOperator;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -94,10 +95,15 @@ public class NBNInterpretedToAccessControlledPipeline {
     // https://registry.legacy.nbnatlas.org/ws/accessControl/dataResourceNbn/dr2818
     DataResourceNBN dataResourceNBN =
         DataResourceNBNKVStoreFactory.create(config).get(options.getDatasetId());
-    Integer publicResolutionToApplyInMeters =
-        dataResourceNBN != null
-            ? dataResourceNBN.getPublicResolutionToBeApplied()
-            : options.getDefaultPublicResolutionInMeters();
+
+    if (Objects.equals(dataResourceNBN, DataResourceNBN.EMPTY)) {
+      throw new IllegalStateException(
+          String.format(
+              "DataResourceNBN not available for %s. Cannot run access controls pipeline",
+              options.getDatasetId()));
+    }
+
+    Integer publicResolutionToApplyInMeters = dataResourceNBN.getPublicResolutionToBeApplied();
 
     log.info("Adding step 2: Creating transformations");
     // Core
