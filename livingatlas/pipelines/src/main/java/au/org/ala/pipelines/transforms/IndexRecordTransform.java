@@ -409,8 +409,11 @@ public class IndexRecordTransform implements Serializable, IndexFields {
     indexRecord.getBooleans().put(SPATIALLY_VALID, spatiallyValid);
 
     // see  https://github.com/AtlasOfLivingAustralia/la-pipelines/issues/162
+    // temp fix - ensureTimestampMilliseconds see https://nbnatlas.atlassian.net/browse/PM-108
     if (ur.getFirstLoaded() != null) {
-      indexRecord.getDates().put(FIRST_LOADED_DATE, ur.getFirstLoaded());
+      indexRecord
+          .getDates()
+          .put(FIRST_LOADED_DATE, ensureTimestampMilliseconds(ur.getFirstLoaded()));
     }
 
     // Add legacy collectory fields
@@ -1635,5 +1638,21 @@ public class IndexRecordTransform implements Serializable, IndexFields {
 
   private static boolean isNotBlank(String s) {
     return s != null && !s.trim().isEmpty();
+  }
+
+  public static long ensureTimestampMilliseconds(long timestamp) {
+    if (isTimestampSeconds(timestamp)) {
+      return timestamp * 1000L;
+    } else {
+      return timestamp;
+    }
+  }
+
+  // this is the timestamp for 2010-01-01 which all of out first loaded date would be greater than
+  static final long MILLISECONDS_2010 = 1262304000000L;
+
+  private static boolean isTimestampSeconds(long timestamp) {
+    // Anything smaller than the 2010 milliseconds timestamp must be in seconds
+    return timestamp < MILLISECONDS_2010;
   }
 }

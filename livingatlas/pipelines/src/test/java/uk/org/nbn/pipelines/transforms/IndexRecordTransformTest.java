@@ -307,4 +307,36 @@ public class IndexRecordTransformTest {
     assertEquals(expectedMonth, (int) ir.getInts().get(MONTH));
     assertEquals(expectedDecade, (int) ir.getInts().get(DECADE));
   }
+
+  @Test
+  public void testSecondsTimestamp() {
+    long tsSeconds = 1609459200L; // 2021-01-01 in seconds
+    long expectedMillis = 1609459200000L;
+
+    assertEquals(expectedMillis, IndexRecordTransform.ensureTimestampMilliseconds(tsSeconds));
+  }
+
+  @Test
+  public void testMillisecondsTimestamp() {
+    long tsMillis = 1609459200000L; // 2021-01-01 in milliseconds
+    long expectedMillis = 1609459200000L;
+
+    assertEquals(expectedMillis, IndexRecordTransform.ensureTimestampMilliseconds(tsMillis));
+  }
+
+  @Test
+  public void testRecentSecondsTimestamp() {
+    long tsSeconds = 1700000000L; // ~2023 in seconds
+    long expectedMillis = 1700000000000L;
+
+    assertEquals(expectedMillis, IndexRecordTransform.ensureTimestampMilliseconds(tsSeconds));
+  }
+
+  @Test
+  public void testRecentMillisecondsTimestamp() {
+    long tsMillis = 1700000000000L; // ~2023 in milliseconds
+    long expectedMillis = 1700000000000L;
+
+    assertEquals(expectedMillis, IndexRecordTransform.ensureTimestampMilliseconds(tsMillis));
+  }
 }
