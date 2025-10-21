@@ -71,6 +71,7 @@ public class WsUtils {
                 .retryOnResult(
                     response ->
                         response != null && (response.code() == 502 || response.code() == 503))
+                .retryOnException(e -> false)
                 .build());
 
     // this is for https://github.com/AtlasOfLivingAustralia/la-pipelines/issues/113
