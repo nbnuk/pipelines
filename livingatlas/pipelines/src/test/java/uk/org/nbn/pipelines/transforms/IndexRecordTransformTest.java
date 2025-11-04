@@ -1,7 +1,6 @@
 package uk.org.nbn.pipelines.transforms;
 
-import static au.org.ala.pipelines.transforms.IndexFields.DECADE;
-import static au.org.ala.pipelines.transforms.IndexFields.EVENT_DATE_END;
+import static au.org.ala.pipelines.transforms.IndexFields.*;
 import static au.org.ala.pipelines.transforms.IndexRecordTransform.RAW_PREFIX;
 import static org.gbif.pipelines.common.PipelinesVariables.Pipeline.Indexing.*;
 import static org.junit.Assert.*;
@@ -313,7 +312,11 @@ public class IndexRecordTransformTest {
     long tsSeconds = 1609459200L; // 2021-01-01 in seconds
     long expectedMillis = 1609459200000L;
 
-    assertEquals(expectedMillis, IndexRecordTransform.ensureTimestampMilliseconds(tsSeconds));
+    IndexRecord ir = IndexRecord.newBuilder().setId(ID).build();
+    ir.getDates().put(FIRST_LOADED_DATE, tsSeconds);
+    IndexRecordTransform.ensureFirstLoadedDateTimestampMilliseconds(ir);
+
+    assertEquals(expectedMillis, (long) ir.getDates().get(FIRST_LOADED_DATE));
   }
 
   @Test
@@ -321,7 +324,11 @@ public class IndexRecordTransformTest {
     long tsMillis = 1609459200000L; // 2021-01-01 in milliseconds
     long expectedMillis = 1609459200000L;
 
-    assertEquals(expectedMillis, IndexRecordTransform.ensureTimestampMilliseconds(tsMillis));
+    IndexRecord ir = IndexRecord.newBuilder().setId(ID).build();
+    ir.getDates().put(FIRST_LOADED_DATE, tsMillis);
+    IndexRecordTransform.ensureFirstLoadedDateTimestampMilliseconds(ir);
+
+    assertEquals(expectedMillis, (long) ir.getDates().get(FIRST_LOADED_DATE));
   }
 
   @Test
@@ -329,7 +336,11 @@ public class IndexRecordTransformTest {
     long tsSeconds = 1700000000L; // ~2023 in seconds
     long expectedMillis = 1700000000000L;
 
-    assertEquals(expectedMillis, IndexRecordTransform.ensureTimestampMilliseconds(tsSeconds));
+    IndexRecord ir = IndexRecord.newBuilder().setId(ID).build();
+    ir.getDates().put(FIRST_LOADED_DATE, tsSeconds);
+    IndexRecordTransform.ensureFirstLoadedDateTimestampMilliseconds(ir);
+
+    assertEquals(expectedMillis, (long) ir.getDates().get(FIRST_LOADED_DATE));
   }
 
   @Test
@@ -337,6 +348,10 @@ public class IndexRecordTransformTest {
     long tsMillis = 1700000000000L; // ~2023 in milliseconds
     long expectedMillis = 1700000000000L;
 
-    assertEquals(expectedMillis, IndexRecordTransform.ensureTimestampMilliseconds(tsMillis));
+    IndexRecord ir = IndexRecord.newBuilder().setId(ID).build();
+    ir.getDates().put(FIRST_LOADED_DATE, tsMillis);
+    IndexRecordTransform.ensureFirstLoadedDateTimestampMilliseconds(ir);
+
+    assertEquals(expectedMillis, (long) ir.getDates().get(FIRST_LOADED_DATE));
   }
 }

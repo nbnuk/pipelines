@@ -409,11 +409,8 @@ public class IndexRecordTransform implements Serializable, IndexFields {
     indexRecord.getBooleans().put(SPATIALLY_VALID, spatiallyValid);
 
     // see  https://github.com/AtlasOfLivingAustralia/la-pipelines/issues/162
-    // temp fix - ensureTimestampMilliseconds see https://nbnatlas.atlassian.net/browse/PM-108
     if (ur.getFirstLoaded() != null) {
-      indexRecord
-          .getDates()
-          .put(FIRST_LOADED_DATE, ensureTimestampMilliseconds(ur.getFirstLoaded()));
+      indexRecord.getDates().put(FIRST_LOADED_DATE, ur.getFirstLoaded());
     }
 
     // Add legacy collectory fields
@@ -1565,6 +1562,9 @@ public class IndexRecordTransform implements Serializable, IndexFields {
       doc.addField(s.getKey(), s.getValue());
     }
 
+    // temp fix - ensureTimestampMilliseconds see https://nbnatlas.atlassian.net/browse/PM-108
+    ensureFirstLoadedDateTimestampMilliseconds(indexRecord);
+
     // dates
     for (Map.Entry<String, Long> s : indexRecord.getDates().entrySet()) {
       doc.addField(s.getKey(), new Date(s.getValue()));
@@ -1638,6 +1638,15 @@ public class IndexRecordTransform implements Serializable, IndexFields {
 
   private static boolean isNotBlank(String s) {
     return s != null && !s.trim().isEmpty();
+  }
+
+  public static void ensureFirstLoadedDateTimestampMilliseconds(IndexRecord ir) {
+    if (ir.getDates().containsKey(FIRST_LOADED_DATE)
+        && ir.getDates().get(FIRST_LOADED_DATE) != null) {
+      ir.getDates()
+          .put(
+              FIRST_LOADED_DATE, ensureTimestampMilliseconds(ir.getDates().get(FIRST_LOADED_DATE)));
+    }
   }
 
   public static long ensureTimestampMilliseconds(long timestamp) {
