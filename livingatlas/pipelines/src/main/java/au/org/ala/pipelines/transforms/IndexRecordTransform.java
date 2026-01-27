@@ -397,6 +397,7 @@ public class IndexRecordTransform implements Serializable, IndexFields {
           indexRecord.getStrings().put(SENSITIVE_PREFIX + field.simpleName(), entry.getValue());
         }
       }
+      addAccessControlledGeo(indexRecord);
     }
 
     addGeo(indexRecord, lr);
@@ -1313,6 +1314,24 @@ public class IndexRecordTransform implements Serializable, IndexFields {
   static void addIfNotEmpty(IndexRecord.Builder doc, String fieldName, List<String> values) {
     if (values != null && !values.isEmpty()) {
       doc.getMultiValues().put(fieldName, values);
+    }
+  }
+
+  static void addAccessControlledGeo(IndexRecord.Builder ir) {
+    Double lat = Double.parseDouble(ir.getStrings().get(SENSITIVE_PREFIX + DwcTerm.decimalLatitude.simpleName()));
+    Double lon = Double.parseDouble(ir.getStrings().get(SENSITIVE_PREFIX + DwcTerm.decimalLongitude.simpleName()));
+
+    if (lat == null || lon == null) return;
+
+    String latlon = "";
+    // ensure that the lat longs are in the required range before
+    if (lat <= 90 && lat >= -90d && lon <= 180 && lon >= -180d) {
+      // https://lucene.apache.org/solr/guide/7_0/spatial-search.html#indexing-points
+      latlon = lat + "," + lon; // required format for indexing geodetic points in SOLR
+      //      ir.setSensitiveLatLng(latlon);
+      ir.getStrings().put(SENSITIVE_LAT_LONG, latlon); // is set to IGNORE in headerAttributes
+    } else {
+      return;
     }
   }
 
