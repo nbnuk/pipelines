@@ -36,6 +36,9 @@ import org.gbif.pipelines.io.avro.IndexRecord;
 import org.gbif.pipelines.io.avro.SampleRecord;
 import org.slf4j.MDC;
 
+import org.apache.beam.sdk.transforms.DoFn;
+import org.apache.beam.sdk.transforms.ParDo;
+
 /**
  * A pipeline that exports a unique set of coordinates for a dataset into CSV for downstream
  * sampling.
@@ -104,15 +107,21 @@ public class SamplingPipeline {
     log.info("Adding step 1: Get unique coordinates");
     PCollection<KV<String, String>> latLngs =
         ALAFsUtils.loadIndexRecords(options, p)
-            .apply(Filter.by(ir -> ir.getLatLng() != null))
-            .apply(
-                MapElements.via(
-                    new SimpleFunction<IndexRecord, String>() {
-                      @Override
-                      public String apply(IndexRecord input) {
-                        return input.getLatLng();
-                      }
-                    }))
+                .apply(
+                        ParDo.of(new DoFn<IndexRecord, String>() {
+                          @ProcessElement
+                          public void processElement(@Element IndexRecord ir, OutputReceiver<String> out) {
+                            // emit public lat/lon if present
+                            if (ir.getLatLng() != null) {
+                              out.output(ir.getLatLng());
+                            }
+                            // emit sensitive lat/lon if present
+                            String s = ir.getStrings().get("sensitive_lat_long");
+                            if (s != null) {
+                              out.output(s);
+                            }
+                          }
+                        }))
             .apply(Distinct.create())
             .apply(
                 MapElements.via(

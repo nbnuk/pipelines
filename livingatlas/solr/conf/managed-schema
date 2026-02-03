@@ -741,6 +741,7 @@
   <field name="sensitive_quad"          type="quad"        indexed="true"/>
   <copyField source="sensitive_lat_long"         dest="sensitive_geohash"/>
   <copyField source="sensitive_lat_long"         dest="sensitive_quad"/>
+  <dynamicField name="sensitive_cl*" type="string" docValues="true" indexed="true" />
 
   <field name="habitatsTaxon" type="string" docValues="true" multiValued="true" indexed="true"/>
   <field name="raw_habitatsTaxon" type="string" docValues="true" multiValued="true" indexed="true"/>

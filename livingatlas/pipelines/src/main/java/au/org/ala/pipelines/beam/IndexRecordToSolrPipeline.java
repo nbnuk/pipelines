@@ -167,7 +167,10 @@ public class IndexRecordToSolrPipeline {
                   }));
 
       // add sampling to the records with coordinates
-      readyToIndex = joinSampleRecord(indexRecordsKeyedLatng, sampleRecords);
+      readyToIndex = joinSampleRecord(indexRecordsKeyedLatng, sampleRecords, false);
+
+      readyToIndex = nbnIncludeSensitiveSampling(readyToIndex, sampleRecords, numOfPartitions);
+
       SolrIO.ConnectionConfiguration conn =
           SolrIO.ConnectionConfiguration.create(options.getZkHost());
 
@@ -225,7 +228,7 @@ public class IndexRecordToSolrPipeline {
 
   private static PCollection<IndexRecord> joinSampleRecord(
       PCollection<KV<String, IndexRecord>> indexRecords,
-      PCollection<KV<String, SampleRecord>> sampleRecords) {
+      PCollection<KV<String, SampleRecord>> sampleRecords, boolean sensitive) {
 
     // Co group IndexRecords with coordinates with Sample data
     final TupleTag<IndexRecord> indexRecordTag = new TupleTag<>();
@@ -238,7 +241,7 @@ public class IndexRecordToSolrPipeline {
             .apply(CoGroupByKey.create());
 
     // Create collection which contains samples keyed with indexRecord.id
-    return results.apply(ParDo.of(joinSampling(indexRecordTag, samplingTag)));
+    return results.apply(ParDo.of(joinSampling(indexRecordTag, samplingTag, sensitive)));
   }
 
   private static void writeToSolr(
@@ -436,7 +439,7 @@ public class IndexRecordToSolrPipeline {
   }
 
   private static DoFn<KV<String, CoGbkResult>, IndexRecord> joinSampling(
-      TupleTag<IndexRecord> indexRecordTag, TupleTag<SampleRecord> samplingTag) {
+      TupleTag<IndexRecord> indexRecordTag, TupleTag<SampleRecord> samplingTag, boolean sensitive) {
 
     return new DoFn<KV<String, CoGbkResult>, IndexRecord>() {
 
@@ -457,16 +460,19 @@ public class IndexRecordToSolrPipeline {
                 Map<String, Double> doubles =
                     indexRecord.getDoubles() != null ? indexRecord.getDoubles() : new HashMap<>();
 
+                Map<String, String> sampleStrings = nbnGetSampleStrings(sampleRecord, sensitive);
+                Map<String, Double> sampleDoubles = nbnGetSampleDoubles(sampleRecord, sensitive);
+
                 Map<String, String> stringsToPersist =
                     ImmutableMap.<String, String>builder()
                         .putAll(strings)
-                        .putAll(sampleRecord.getStrings())
+                        .putAll(sampleStrings)
                         .build();
 
                 Map<String, Double> doublesToPersist =
                     ImmutableMap.<String, Double>builder()
                         .putAll(doubles)
-                        .putAll(sampleRecord.getDoubles())
+                        .putAll(sampleDoubles)
                         .build();
 
                 IndexRecord ir =
@@ -721,4 +727,66 @@ public class IndexRecordToSolrPipeline {
               }
             }));
   }
+
+  private static PCollection<IndexRecord> nbnIncludeSensitiveSampling(
+          PCollection<IndexRecord> readyToIndex,
+          PCollection<KV<String, SampleRecord>> sampleRecords,
+          int numOfPartitions
+  ) {
+    PCollection<KV<String, IndexRecord>> indexRecordsKeyedSensitiveLatLng =
+            readyToIndex.apply(
+                    "KeyBySensitiveLatLng",
+                    MapElements.via(
+                            new SimpleFunction<IndexRecord, KV<String, IndexRecord>>() {
+                              @Override
+                              public KV<String, IndexRecord> apply(IndexRecord ir) {
+                                Random ran = new Random();
+                                int x = ran.nextInt(numOfPartitions - 1);
+
+                                String s =
+                                        (ir.getStrings() != null)
+                                                ? ir.getStrings().get("sensitive_lat_long")
+                                                : null;
+
+                                String key =
+                                        Strings.isEmpty(s)
+                                                ? ir.getId()
+                                                : x + "-" + s;
+
+                                return KV.of(key, ir);
+                              }
+                            }));
+
+    return joinSampleRecord(
+            indexRecordsKeyedSensitiveLatLng,
+            sampleRecords,
+            true
+    );
+  }
+
+  private static Map<String, String> nbnGetSampleStrings(SampleRecord sampleRecord, boolean sensitive){
+    Map<String, String> sampleStrings = sampleRecord.getStrings() != null ? sampleRecord.getStrings() : Collections.emptyMap();
+
+    if (sensitive) {
+      sampleStrings =
+              sampleStrings.entrySet().stream()
+                      .collect(Collectors.toMap(e2 -> "sensitive_" + e2.getKey(), Map.Entry::getValue));
+  }
+
+    return sampleStrings;
+
+  }
+  private static Map<String, Double> nbnGetSampleDoubles(SampleRecord sampleRecord, boolean sensitive){
+    Map<String, Double> sampleDoubles = sampleRecord.getDoubles() != null ? sampleRecord.getDoubles() : Collections.emptyMap();
+
+    if (sensitive) {
+        sampleDoubles =
+              sampleDoubles.entrySet().stream()
+                      .collect(Collectors.toMap(e2 -> "sensitive_" + e2.getKey(), Map.Entry::getValue));
+    }
+
+    return sampleDoubles;
+
+  }
+
 }
