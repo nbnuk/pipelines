@@ -1318,8 +1318,12 @@ public class IndexRecordTransform implements Serializable, IndexFields {
   }
 
   static void addAccessControlledGeo(IndexRecord.Builder ir) {
-    Double lat = Double.parseDouble(ir.getStrings().get(SENSITIVE_PREFIX + DwcTerm.decimalLatitude.simpleName()));
-    Double lon = Double.parseDouble(ir.getStrings().get(SENSITIVE_PREFIX + DwcTerm.decimalLongitude.simpleName()));
+    Double lat =
+        Double.parseDouble(
+            ir.getStrings().get(SENSITIVE_PREFIX + DwcTerm.decimalLatitude.simpleName()));
+    Double lon =
+        Double.parseDouble(
+            ir.getStrings().get(SENSITIVE_PREFIX + DwcTerm.decimalLongitude.simpleName()));
 
     if (lat == null || lon == null) return;
 
