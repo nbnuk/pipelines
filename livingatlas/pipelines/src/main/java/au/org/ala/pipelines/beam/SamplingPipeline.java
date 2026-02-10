@@ -23,6 +23,8 @@ import org.apache.beam.sdk.coders.AvroCoder;
 import org.apache.beam.sdk.io.AvroIO;
 import org.apache.beam.sdk.io.TextIO;
 import org.apache.beam.sdk.transforms.*;
+import org.apache.beam.sdk.transforms.DoFn;
+import org.apache.beam.sdk.transforms.ParDo;
 import org.apache.beam.sdk.values.KV;
 import org.apache.beam.sdk.values.PCollection;
 import org.apache.hadoop.fs.FileSystem;
@@ -104,13 +106,21 @@ public class SamplingPipeline {
     log.info("Adding step 1: Get unique coordinates");
     PCollection<KV<String, String>> latLngs =
         ALAFsUtils.loadIndexRecords(options, p)
-            .apply(Filter.by(ir -> ir.getLatLng() != null))
             .apply(
-                MapElements.via(
-                    new SimpleFunction<IndexRecord, String>() {
-                      @Override
-                      public String apply(IndexRecord input) {
-                        return input.getLatLng();
+                ParDo.of(
+                    new DoFn<IndexRecord, String>() {
+                      @ProcessElement
+                      public void processElement(
+                          @Element IndexRecord ir, OutputReceiver<String> out) {
+                        // emit public lat/lon if present
+                        if (ir.getLatLng() != null) {
+                          out.output(ir.getLatLng());
+                        }
+                        // emit sensitive lat/lon if present
+                        String s = ir.getStrings().get("sensitive_lat_long");
+                        if (s != null) {
+                          out.output(s);
+                        }
                       }
                     }))
             .apply(Distinct.create())
