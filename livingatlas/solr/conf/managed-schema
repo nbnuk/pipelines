@@ -736,6 +736,12 @@
   <copyField source="occurrenceYear"   dest="occurrence_year"/>
 
   <!-- NBN fields -->
+  <field name="sensitive_lat_long"      type="string" docValues="true" indexed="false" />
+  <field name="sensitive_geohash"       type="geohash"     indexed="true"/>
+  <field name="sensitive_quad"          type="quad"        indexed="true"/>
+  <copyField source="sensitive_lat_long"         dest="sensitive_geohash"/>
+  <copyField source="sensitive_lat_long"         dest="sensitive_quad"/>
+
   <field name="habitatsTaxon" type="string" docValues="true" multiValued="true" indexed="true"/>
   <field name="raw_habitatsTaxon" type="string" docValues="true" multiValued="true" indexed="true"/>
   <field name="establishmentMeansTaxon" type="string" docValues="true" multiValued="false" indexed="true"/>
