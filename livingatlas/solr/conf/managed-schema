@@ -736,6 +736,7 @@
   <copyField source="occurrenceYear"   dest="occurrence_year"/>
 
   <!-- NBN fields -->
+  <field name="generalisedStatus_nbnComputedField" type="string" indexed="false"  stored="true" docValues="true"/>
   <field name="habitatsTaxon" type="string" docValues="true" multiValued="true" indexed="true"/>
   <field name="raw_habitatsTaxon" type="string" docValues="true" multiValued="true" indexed="true"/>
   <field name="establishmentMeansTaxon" type="string" docValues="true" multiValued="false" indexed="true"/>
