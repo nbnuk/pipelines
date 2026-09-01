@@ -632,7 +632,7 @@
   <field name="raw_license"					             type="string"  docValues="true" indexed="true" />
   <field name="raw_licenseType"					         type="string"  docValues="true" indexed="true" />
   <field name="raw_licenseVersion"					     type="string"  docValues="true" indexed="true" />
-  <field name="raw_lifeStage"					         type="string"  docValues="true" indexed="true" />
+  <!--<field name="raw_lifeStage"					         type="string"  docValues="true" indexed="true" />-->
   <field name="raw_lifeStageLineage"					 type="string"  docValues="true" indexed="true" />
   <field name="raw_locality"					         type="string"  docValues="true" indexed="true" />
   <field name="raw_machineTags"					         type="string"  docValues="true" indexed="true" />
@@ -672,7 +672,7 @@
   <field name="raw_scientificName"			             type="string"  docValues="true" indexed="true" />
   <field name="raw_scientificNameAuthorship"		     type="string"  docValues="true" indexed="true" />
   <field name="raw_sensitive"					         type="string"  docValues="true" indexed="true" />
-  <field name="raw_sex"					                 type="string"  docValues="true" indexed="true" />
+  <!--<field name="raw_sex"					                 type="string"  docValues="true" indexed="true" />-->
   <field name="raw_source"					             type="string"  docValues="true" indexed="true" />
   <field name="raw_species"					             type="string"  docValues="true" indexed="true" />
   <field name="raw_speciesGroup"					     type="string"  docValues="true" indexed="true" />

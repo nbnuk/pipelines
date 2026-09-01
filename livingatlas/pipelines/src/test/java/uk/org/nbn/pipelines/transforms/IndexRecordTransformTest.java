@@ -9,6 +9,7 @@ import au.org.ala.pipelines.transforms.IndexRecordTransform;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import org.gbif.dwc.terms.DwcTerm;
 import org.gbif.pipelines.io.avro.*;
@@ -23,21 +24,26 @@ public class IndexRecordTransformTest {
   private static final String ID = "777";
   private static final String UUID = "777";
 
+  private IndexRecord getIndexRecord(ExtendedRecord er, BasicRecord br) {
+    return getIndexRecord(er, TemporalRecord.newBuilder().setId(ID).build(), OSGridRecord.newBuilder().setId(ID).build(), br);
+  }
+
   private IndexRecord getIndexRecord(TemporalRecord tr) {
     return getIndexRecord(
         ExtendedRecord.newBuilder().setId(ID).build(),
         tr,
-        OSGridRecord.newBuilder().setId(ID).build());
+        OSGridRecord.newBuilder().setId(ID).build(),
+        BasicRecord.newBuilder().setId(ID).build());
   }
 
   private IndexRecord getIndexRecord(ExtendedRecord er, OSGridRecord osgr) {
-    return getIndexRecord(er, TemporalRecord.newBuilder().setId(ID).build(), osgr);
+    return getIndexRecord(er, TemporalRecord.newBuilder().setId(ID).build(), osgr, BasicRecord.newBuilder().setId(ID).build());
   }
 
-  private IndexRecord getIndexRecord(ExtendedRecord er, TemporalRecord tr, OSGridRecord osgr) {
+  private IndexRecord getIndexRecord(ExtendedRecord er, TemporalRecord tr, OSGridRecord osgr, BasicRecord br) {
     ALAUUIDRecord ur = ALAUUIDRecord.newBuilder().setId(ID).setUuid(UUID).build();
     return IndexRecordTransform.createIndexRecord(
-        BasicRecord.newBuilder().setId(ID).build(),
+        br,
         tr,
         LocationRecord.newBuilder().setId(ID).build(),
         null,
@@ -353,5 +359,123 @@ public class IndexRecordTransformTest {
     IndexRecordTransform.ensureFirstLoadedDateTimestampMilliseconds(ir);
 
     assertEquals(expectedMillis, (long) ir.getDates().get(FIRST_LOADED_DATE));
+  }
+
+  @Test
+  public void givenAParsableLifeStage_whenIndexing_rawLifeStageShouldBeUsed()
+  {
+      final String expected = "obscure lifestage variant";
+
+      BasicRecord br = BasicRecord
+              .newBuilder()
+              .setLifeStage(VocabularyConcept.newBuilder()
+                      .setConcept("Adult")
+                      .setLineage(Collections.emptyList())
+                      .build())
+              .setId(ID)
+              .build();
+
+    ExtendedRecord er = ExtendedRecord.newBuilder().setId(ID).build();
+    er.getCoreTerms().put(DwcTerm.lifeStage.qualifiedName(), expected);
+
+    IndexRecord ir = getIndexRecord(er, br);
+
+    Assert.assertNull(ir.getStrings().get(RAW_PREFIX + DwcTerm.lifeStage.simpleName()));
+    Assert.assertEquals(expected, ir.getStrings().get(DwcTerm.lifeStage.simpleName()));
+  }
+
+  @Test
+  public void givenAnUnparsableLifeStage_whenIndexing_rawLifeStageShouldBeUsed()
+  {
+    final String expected = "obscure lifestage variant";
+
+    BasicRecord br = BasicRecord
+            .newBuilder()
+            .setLifeStage(VocabularyConcept.newBuilder()
+                    .setConcept("xxxxxx")
+                    .setLineage(Collections.emptyList())
+                    .build())
+            .setId(ID)
+            .build();
+
+    ExtendedRecord er = ExtendedRecord.newBuilder().setId(ID).build();
+    er.getCoreTerms().put(DwcTerm.lifeStage.qualifiedName(), expected);
+
+    IndexRecord ir = getIndexRecord(er, br);
+
+    Assert.assertNull(ir.getStrings().get(RAW_PREFIX + DwcTerm.lifeStage.simpleName()));
+    Assert.assertEquals(expected, ir.getStrings().get(DwcTerm.lifeStage.simpleName()));
+  }
+
+  @Test
+  public void givenNoLifeStage_whenIndexing_lifeStageShouldBeNull()
+  {
+    BasicRecord br = BasicRecord
+            .newBuilder()
+            .setId(ID)
+            .build();
+
+    ExtendedRecord er = ExtendedRecord.newBuilder().setId(ID).build();
+
+    IndexRecord ir = getIndexRecord(er, br);
+
+    Assert.assertNull(ir.getStrings().get(RAW_PREFIX + DwcTerm.lifeStage.simpleName()));
+    Assert.assertNull(ir.getStrings().get(DwcTerm.lifeStage.simpleName()));
+  }
+
+  @Test
+  public void givenAParsableSex_whenIndexing_rawSexShouldBeUsed()
+  {
+    final String expected = "obscure sex variant";
+
+    BasicRecord br = BasicRecord
+            .newBuilder()
+            .setSex("Male")
+            .setId(ID)
+            .build();
+
+    ExtendedRecord er = ExtendedRecord.newBuilder().setId(ID).build();
+    er.getCoreTerms().put(DwcTerm.sex.qualifiedName(), expected);
+
+    IndexRecord ir = getIndexRecord(er, br);
+
+    Assert.assertNull(ir.getStrings().get(RAW_PREFIX + DwcTerm.sex.simpleName()));
+    Assert.assertEquals(expected, ir.getStrings().get(DwcTerm.sex.simpleName()));
+  }
+
+  @Test
+  public void givenAnUnparsableSex_whenIndexing_rawSexShouldBeUsed()
+  {
+    final String expected = "obscure sex variant";
+
+    BasicRecord br = BasicRecord
+            .newBuilder()
+            .setSex("xxxxxx")
+            .setId(ID)
+            .build();
+
+    ExtendedRecord er = ExtendedRecord.newBuilder().setId(ID).build();
+    er.getCoreTerms().put(DwcTerm.sex.qualifiedName(), expected);
+
+    IndexRecord ir = getIndexRecord(er, br);
+
+    Assert.assertNull(ir.getStrings().get(RAW_PREFIX + DwcTerm.sex.simpleName()));
+    Assert.assertEquals(expected, ir.getStrings().get(DwcTerm.sex.simpleName()));
+  }
+
+  @Test
+  public void givenNoSex_whenIndexing_SexShouldBeNull()
+  {
+    BasicRecord br = BasicRecord
+            .newBuilder()
+            .setId(ID)
+            .build();
+
+    ExtendedRecord er = ExtendedRecord.newBuilder().setId(ID).build();
+
+    IndexRecord ir = getIndexRecord(er, br);
+
+    Assert.assertNull(ir.getStrings().get(RAW_PREFIX + DwcTerm.sex.simpleName()));
+    Assert.assertNull(ir.getStrings().get(DwcTerm.sex.simpleName()));
   }
 }
